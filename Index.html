@@ -1,0 +1,642 @@
+Index.html
+const char REMOTE_APP_HTML[] PROGMEM = R"RAWHTML(
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<title>SARVOPARI DHAM - Remote</title>
+<link rel="icon" href="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png">
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:'Segoe UI',sans-serif;
+  background:linear-gradient(135deg,#0d0d0d 0%,#1a0a2e 100%);
+  color:#fff;margin:0;padding-bottom:30px;
+  text-align:center;user-select:none;min-height:100vh;
+}
+.nav{
+  background:rgba(0,0,0,0.8);padding:12px;
+  display:flex;justify-content:space-between;align-items:center;
+  position:sticky;top:0;z-index:100;
+  border-bottom:1px solid #333;backdrop-filter:blur(10px);
+}
+.nav-title{font-size:13px;font-weight:900;color:#fdd835;letter-spacing:1px}
+.badge{
+  font-size:10px;padding:4px 10px;border-radius:15px;font-weight:bold;
+  display:inline-flex;align-items:center;gap:4px;
+}
+.online{background:#1b5e20;color:#69f0ae;border:1px solid #69f0ae}
+.offline{background:#b71c1c;color:#ff8a80;border:1px solid #ff8a80}
+.connecting{background:#e65100;color:#ffcc80;border:1px solid #ffcc80}
+.c{padding:12px;max-width:480px;margin:auto}
+
+/* Status Card */
+.status-card{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;padding:16px;margin-bottom:16px;
+  backdrop-filter:blur(5px);
+}
+.temple-name{
+  font-size:13px;font-weight:900;
+  background:linear-gradient(90deg,#ff6f00,#fdd835,#ff6f00);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:1px;margin-bottom:8px;
+}
+.status-msg{
+  font-size:18px;font-weight:bold;color:#69f0ae;
+  padding:8px;background:rgba(0,0,0,0.3);
+  border-radius:10px;margin:8px 0;min-height:40px;
+  display:flex;align-items:center;justify-content:center;
+}
+.info-row{
+  display:flex;justify-content:space-around;
+  margin-top:10px;gap:8px;
+}
+.info-box{
+  flex:1;background:rgba(0,0,0,0.3);
+  border-radius:10px;padding:8px 4px;
+}
+.info-val{font-size:20px;font-weight:bold;color:#fdd835}
+.info-lbl{font-size:9px;color:#888;margin-top:2px}
+
+/* Section Headers */
+.sec-hdr{
+  font-size:11px;font-weight:bold;color:#888;
+  text-transform:uppercase;letter-spacing:2px;
+  margin:16px 0 8px;text-align:left;
+  padding-left:4px;border-left:3px solid #ff9800;
+}
+
+/* Play Grid */
+.play-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;margin-bottom:16px;
+}
+.pbtn{
+  border:none;border-radius:14px;
+  padding:14px 8px;color:#fff;font-weight:700;
+  cursor:pointer;font-size:13px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.4);
+  touch-action:manipulation;
+  transition:transform 0.1s,box-shadow 0.1s;
+  display:flex;flex-direction:column;
+  align-items:center;gap:4px;
+}
+.pbtn:active{transform:scale(0.95);box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+.pbtn .icon{font-size:22px}
+.pbtn .lbl{font-size:11px;opacity:0.9}
+.p-mangla{background:linear-gradient(135deg,#1565c0,#1e88e5)}
+.p-arti{background:linear-gradient(135deg,#4a148c,#7b1fa2)}
+.p-tarti{background:linear-gradient(135deg,#e65100,#f57c00)}
+.p-godi{background:linear-gradient(135deg,#1b5e20,#388e3c)}
+.p-dhun1{background:linear-gradient(135deg,#880e4f,#c2185b)}
+.p-dhun2{background:linear-gradient(135deg,#4e342e,#795548)}
+
+/* Track Control */
+.track-card{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;padding:14px;margin-bottom:16px;
+}
+.track-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.trk-btn{
+  width:46px;height:46px;border-radius:12px;
+  background:rgba(33,150,243,0.3);border:1px solid #2196f3;
+  color:#2196f3;font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  touch-action:manipulation;flex-shrink:0;
+  transition:background 0.2s;
+}
+.trk-btn:active{background:rgba(33,150,243,0.6)}
+.track-name{
+  flex:1;background:rgba(0,0,0,0.4);
+  height:46px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:#e0e0e0;padding:0 8px;
+  border:1px solid rgba(255,255,255,0.1);
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+}
+.track-controls{
+  display:flex;justify-content:space-around;
+  gap:8px;
+}
+.tc-btn{
+  flex:1;border:none;border-radius:12px;
+  padding:10px 4px;color:#fff;font-weight:600;
+  cursor:pointer;font-size:11px;
+  touch-action:manipulation;
+  transition:opacity 0.2s,transform 0.1s;
+  display:flex;flex-direction:column;
+  align-items:center;gap:2px;
+}
+.tc-btn:active{transform:scale(0.95)}
+.tc-btn .ti{font-size:18px}
+.tc-stop{background:linear-gradient(135deg,#b71c1c,#d32f2f)}
+.tc-rep{background:linear-gradient(135deg,#4a148c,#6a1b9a);opacity:0.5}
+.tc-shuf{background:linear-gradient(135deg,#e65100,#f57c00);opacity:0.5}
+.tc-mute{background:linear-gradient(135deg,#263238,#37474f)}
+.tc-bell{background:linear-gradient(135deg,#f57f17,#f9a825)}
+.tc-btn.active-mode{opacity:1!important;box-shadow:0 0 12px rgba(255,255,255,0.3)}
+
+/* Volume */
+.vol-row{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(0,0,0,0.3);border-radius:14px;
+  padding:10px 14px;margin-bottom:16px;
+  border:1px solid rgba(255,255,255,0.08);
+}
+.vol-btn{
+  width:42px;height:42px;border-radius:10px;
+  border:1px solid rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.1);color:#fff;
+  font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  touch-action:manipulation;flex-shrink:0;
+  transition:background 0.2s;
+}
+.vol-btn:active{background:rgba(255,255,255,0.25)}
+.vol-slider{
+  flex:1;-webkit-appearance:none;height:6px;
+  border-radius:3px;background:#333;outline:none;cursor:pointer;
+}
+.vol-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;width:22px;height:22px;
+  border-radius:50%;background:#2196f3;cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,0.4);
+}
+.vol-num{
+  font-size:20px;font-weight:bold;color:#fdd835;
+  min-width:30px;text-align:center;
+}
+
+/* Device Controls */
+.dev-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:8px;margin-bottom:16px;
+}
+.dev-btn{
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:14px;padding:10px 4px;
+  color:#fff;font-weight:700;cursor:pointer;
+  font-size:9px;touch-action:manipulation;
+  transition:all 0.2s;
+  display:flex;flex-direction:column;
+  align-items:center;gap:4px;
+  background:rgba(255,255,255,0.05);
+}
+.dev-btn .di{font-size:20px}
+.dev-btn:active{transform:scale(0.93)}
+.dev-btn.dev-on{
+  border-color:rgba(105,240,174,0.6);
+  background:rgba(105,240,174,0.12);
+  box-shadow:0 0 12px rgba(105,240,174,0.2);
+}
+.dev-btn.dev-on .di::after{
+  content:'';display:block;width:6px;height:6px;
+  background:#69f0ae;border-radius:50%;
+  margin:2px auto 0;box-shadow:0 0 6px #69f0ae;
+}
+
+/* Track Selector */
+.trk-select{
+  width:100%;background:rgba(0,0,0,0.5);
+  border:1px solid rgba(255,255,255,0.15);
+  color:#fff;border-radius:12px;padding:10px;
+  font-size:13px;margin-bottom:16px;
+  -webkit-appearance:none;
+}
+
+/* Restart Button */
+.restart-btn{
+  width:100%;border:1px solid rgba(244,67,54,0.4);
+  background:rgba(244,67,54,0.1);color:#ef9a9a;
+  border-radius:14px;padding:12px;font-size:13px;
+  font-weight:600;cursor:pointer;margin-bottom:16px;
+  touch-action:manipulation;
+}
+.restart-btn:active{background:rgba(244,67,54,0.3)}
+
+/* Toast */
+#toast{
+  visibility:hidden;background:rgba(255,255,255,0.95);
+  color:#000;padding:10px 20px;position:fixed;
+  bottom:30px;left:50%;transform:translateX(-50%);
+  border-radius:30px;z-index:999;font-weight:600;
+  font-size:13px;box-shadow:0 4px 20px rgba(0,0,0,0.3);
+  white-space:nowrap;
+}
+.toast-show{visibility:visible!important;animation:fadeInOut 2s forwards}
+@keyframes fadeInOut{0%{opacity:0;transform:translateX(-50%) translateY(10px)}20%{opacity:1;transform:translateX(-50%) translateY(0)}80%{opacity:1}100%{opacity:0}}
+
+/* Last update */
+.last-upd{font-size:10px;color:#444;margin-top:6px}
+
+/* Pulse dot */
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.dot-green{background:#69f0ae;box-shadow:0 0 6px #69f0ae;animation:pulse 2s infinite}
+.dot-red{background:#ff5252}
+.dot-orange{background:#ffab40;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-title">🙏 SARVOPARI DHAM</div>
+  <span id="netBadge" class="badge connecting">
+    <span class="dot dot-orange"></span> Connecting...
+  </span>
+</div>
+
+<div class="c">
+
+  <!-- Status Card -->
+  <div class="status-card">
+    <div class="temple-name">🔴 SWAMINARAYAN MANDIR VARIYAV SURAT 🔴</div>
+    <div class="status-msg" id="statusMsg">Connecting to cloud...</div>
+    <div class="info-row">
+      <div class="info-box">
+        <div class="info-val" id="volDisp">--</div>
+        <div class="info-lbl">🔊 Volume</div>
+      </div>
+      <div class="info-box">
+        <div class="info-val" id="trackDisp">--</div>
+        <div class="info-lbl">🎵 Track</div>
+      </div>
+      <div class="info-box">
+        <div class="info-val" id="ampDisp">--</div>
+        <div class="info-lbl">🎚 Amp</div>
+      </div>
+      <div class="info-box">
+        <div class="info-val" id="mixDisp">--</div>
+        <div class="info-lbl">🎛 Mixer</div>
+      </div>
+    </div>
+    <div class="last-upd" id="lastUpd">Last update: --</div>
+  </div>
+
+  <!-- Quick Play Buttons -->
+  <div class="sec-hdr">▶ QUICK PLAY</div>
+  <div class="play-grid">
+    <button class="pbtn p-mangla" onclick="cmd('play_mangla')">
+      <span class="icon">🌅</span><span class="lbl">Mangla Aarti</span>
+    </button>
+    <button class="pbtn p-arti" onclick="cmd('play_arti')">
+      <span class="icon">🙏</span><span class="lbl">Today's Arti</span>
+    </button>
+    <button class="pbtn p-tarti" onclick="cmd('play',1,9)">
+      <span class="icon">🔔</span><span class="lbl">Arti &amp; Jay</span>
+    </button>
+    <button class="pbtn p-godi" onclick="cmd('play_godi')">
+      <span class="icon">🎋</span><span class="lbl">Today's Godi</span>
+    </button>
+    <button class="pbtn p-dhun1" onclick="cmd('play_dhun1')">
+      <span class="icon">🎵</span><span class="lbl">Dhun Morning</span>
+    </button>
+    <button class="pbtn p-dhun2" onclick="cmd('play_dhun2')">
+      <span class="icon">🎶</span><span class="lbl">Dhun Evening</span>
+    </button>
+  </div>
+
+  <!-- Track Player -->
+  <div class="sec-hdr">🎵 FOLDER 4 - BHAJAN PLAYER</div>
+  <div class="track-card">
+    <div class="track-row">
+      <div class="trk-btn" onclick="prevTrack()">⏮</div>
+      <div class="track-name" id="trackName">Select a track</div>
+      <div class="trk-btn" onclick="nextTrack()">⏭</div>
+    </div>
+
+    <select class="trk-select" id="trackSel" onchange="selectTrack(this)">
+      <option value="">-- Select Track --</option>
+    </select>
+
+    <div class="track-controls">
+      <button class="tc-btn tc-stop" onclick="cmd('stop')">
+        <span class="ti">⏹</span>STOP
+      </button>
+      <button class="tc-btn tc-rep" id="repBtn" onclick="toggleRepeat()">
+        <span class="ti">🔁</span>REPEAT
+      </button>
+      <button class="tc-btn tc-shuf" id="shufBtn" onclick="toggleShuffle()">
+        <span class="ti">🔀</span>SHUFFLE
+      </button>
+      <button class="tc-btn tc-mute" onclick="cmd('toggle_mute')">
+        <span class="ti">🔇</span>MUTE
+      </button>
+      <button class="tc-btn tc-bell" onclick="cmd('bell')">
+        <span class="ti">🔔</span>BELL
+      </button>
+    </div>
+  </div>
+
+  <!-- Volume Control -->
+  <div class="sec-hdr">🔊 VOLUME</div>
+  <div class="vol-row">
+    <div class="vol-btn" onclick="cmd('voldown')">➖</div>
+    <input type="range" class="vol-slider" id="volSlider"
+      min="0" max="30" value="19"
+      oninput="updateVolDisplay(this.value)"
+      onchange="setVolume(this.value)">
+    <div class="vol-num" id="volNum">19</div>
+    <div class="vol-btn" onclick="cmd('volup')">➕</div>
+  </div>
+
+  <!-- Device Controls -->
+  <div class="sec-hdr">⚡ DEVICE CONTROL (AUTO SCHEDULES)</div>
+  <div class="dev-grid">
+    <div class="dev-btn" id="devAmp" onclick="cmd('toggle_amp')">
+      <span class="di">🎚️</span>AMPLI
+    </div>
+    <div class="dev-btn" id="devMini" onclick="cmd('toggle_mini')">
+      <span class="di">📻</span>MINI
+    </div>
+    <div class="dev-btn" id="devMiniSpk" onclick="cmd('toggle_minispk')">
+      <span class="di">📢</span>M-SPK
+    </div>
+    <div class="dev-btn" id="devMixer" onclick="cmd('toggle_mixer')">
+      <span class="di">🎛️</span>MIXER
+    </div>
+    <div class="dev-btn" id="devSpk" onclick="cmd('toggle_spk')">
+      <span class="di">🔈</span>SPIKER
+    </div>
+  </div>
+
+  <!-- Restart -->
+  <button class="restart-btn" onclick="confirmRestart()">
+    💫 RESTART DEVICE
+  </button>
+
+  <div style="font-size:11px;color:#333;margin-top:10px">
+    SMARAN V1 · Firebase Remote · JAY SWAMINARAYAN
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ============================================================
+// FIREBASE CONFIG - Replace with your actual config
+// ============================================================html
+const FB_CONFIG = {
+  apiKey:            "AIzaSyD7yn5qvHzhNBKc3BIITR5jd9sVwqCjhUQ",
+  authDomain:        "smaran-v1.firebaseapp.com",
+  databaseURL:       "https://smaran-v1-default-rtdb.firebaseio.com",
+  projectId:         "smaran-v1",
+  storageBucket:     "smaran-v1.appspot.com",
+  messagingSenderId: "29055392334",
+  appId:             "1:29055392334:web:ab4e784646ab1cbbe9011f"
+};
+// ============================================================
+
+const TRACKS = [
+  "ORDA-SARADHAR","ORA AAVO-GURUJI","ORDA-KUNDAL","MHATMAY CHINTA",
+  "SUKH CHINTA MANI","MURTI CHINTA MANI","BLANCK","TERE DWAR apadyo",
+  "NVAL SNEHI nathji","Shriji daya karo","Aekalda kem rahevay","Prabhu tam vina",
+  "Tum mere swami","Kyare have dekhu","Dukhi divas ne rat","Mara nath mara nath",
+  "Aakhadiyo aklay","Dhun_Amrut swami","DHUN VED mandir","JAMO JAMO mara",
+  "CHESHTA","RAM & CHESHTA","Track 23","Track 24","Track 25",
+  "Track 26","Track 27","Track 28","Track 29","Track 30",
+  "Track 31","Track 32","Track 33","Track 34","Track 35",
+  "Track 36","Track 37","Track 38","Track 39","Track 40"
+];
+
+let db, cmdRef, statusRef;
+let curTrack = 1;
+let isRepeat  = false;
+let isShuffle = false;
+let curVol    = 19;
+let isConnected = false;
+
+// ---- Init Firebase ----
+function initFB() {
+  try {
+    firebase.initializeApp(FB_CONFIG);
+    db        = firebase.database();
+    cmdRef    = db.ref("/smaran_v1/command");
+    statusRef = db.ref("/smaran_v1/status");
+
+    firebase.auth().signInAnonymously()
+      .then(() => {
+        setConnected(true);
+        listenStatus();
+        toast("☁ Cloud Connected!");
+      })
+      .catch(e => {
+        setConnected(false);
+        toast("❌ Auth failed: " + e.message);
+      });
+
+    firebase.auth().onAuthStateChanged(user => {
+      setConnected(!!user);
+    });
+
+  } catch(e) {
+    setConnected(false);
+    document.getElementById('statusMsg').innerText = "Firebase Init Error!";
+  }
+}
+
+// ---- Listen to status from device ----
+function listenStatus() {
+  statusRef.on("value", snap => {
+    if (!snap.exists()) return;
+    const d = snap.val();
+
+    if (d.msg)     document.getElementById("statusMsg").innerText = d.msg;
+    if (d.volume !== undefined) {
+      curVol = d.volume;
+      document.getElementById("volDisp").innerText = d.volume;
+      document.getElementById("volNum").innerText  = d.volume;
+      document.getElementById("volSlider").value   = d.volume;
+    }
+    if (d.f4track) {
+      curTrack = d.f4track;
+      updateTrackDisplay();
+    }
+    if (d.repeat  !== undefined) { isRepeat  = d.repeat;  updateModes(); }
+    if (d.shuffle !== undefined) { isShuffle = d.shuffle; updateModes(); }
+
+    // Device states
+    setDevState("devAmp",    d.ampAct);
+    setDevState("devMini",   d.maAct);
+    setDevState("devMiniSpk",d.msAct);
+    setDevState("devMixer",  d.r4Act);
+    setDevState("devSpk",    d.spkAct);
+
+    document.getElementById("ampDisp").innerText  = d.ampAct  ? "ON" : "OFF";
+    document.getElementById("mixDisp").innerText  = d.r4Act   ? "ON" : "OFF";
+    document.getElementById("trackDisp").innerText = curTrack;
+
+    const now = new Date();
+    document.getElementById("lastUpd").innerText =
+      "Last update: " + now.toLocaleTimeString();
+
+    setConnected(true);
+  }, err => {
+    setConnected(false);
+  });
+}
+
+// ---- Send Command ----
+function cmd(action, folder, track) {
+  if (!isConnected) { toast("❌ Not connected to cloud"); return; }
+
+  const payload = {
+    action:    action,
+    timestamp: Date.now()
+  };
+  if (folder !== undefined) payload.folder = String(folder);
+  if (track  !== undefined) payload.track  = String(track);
+
+  cmdRef.set(payload)
+    .then(() => {
+      let label = actionLabel(action);
+      toast("✓ " + label);
+    })
+    .catch(() => toast("❌ Command failed"));
+}
+
+function actionLabel(a) {
+  const map = {
+    "play_mangla":"Mangla", "play_arti":"Today Arti", "play_godi":"Today Godi",
+    "play_dhun1":"Dhun Morning", "play_dhun2":"Dhun Evening",
+    "stop":"Stopped", "bell":"Bell Ringing!", "toggle_mute":"Mute Toggle",
+    "toggle_amp":"Amp Toggle", "toggle_mini":"Mini Toggle",
+    "toggle_minispk":"M-Spk Toggle", "toggle_mixer":"Mixer Toggle",
+    "toggle_spk":"Spiker Toggle", "volup":"Volume ▲", "voldown":"Volume ▼",
+    "restart":"Device Restarting...", "repeat_toggle":"Repeat Toggle",
+    "shuffle_toggle":"Shuffle Toggle"
+  };
+  return map[a] || a;
+}
+
+// ---- Track Controls ----
+function nextTrack() {
+  curTrack++;
+  if (curTrack > TRACKS.length) curTrack = 1;
+  updateTrackDisplay();
+  cmd("f4_next");
+}
+
+function prevTrack() {
+  curTrack--;
+  if (curTrack < 1) curTrack = TRACKS.length;
+  updateTrackDisplay();
+  cmd("f4_prev");
+}
+
+function selectTrack(el) {
+  const t = parseInt(el.value);
+  if (!t) return;
+  curTrack = t;
+  updateTrackDisplay();
+  if (!isConnected) { toast("❌ Not connected"); return; }
+  const payload = { action:"play", folder:"4", track:String(t), timestamp:Date.now() };
+  cmdRef.set(payload).then(() => toast("▶ " + TRACKS[t-1])).catch(() => toast("❌ Failed"));
+  el.value = "";
+}
+
+function updateTrackDisplay() {
+  document.getElementById("trackName").innerText =
+    curTrack + ". " + (TRACKS[curTrack-1] || "Unknown");
+  document.getElementById("trackDisp").innerText = curTrack;
+}
+
+// ---- Volume ----
+let volTimer;
+function updateVolDisplay(v) {
+  document.getElementById("volNum").innerText = v;
+  document.getElementById("volDisp").innerText = v;
+}
+function setVolume(v) {
+  if (!isConnected) return;
+  clearTimeout(volTimer);
+  volTimer = setTimeout(() => {
+    const payload = { action:"vol_set", value:parseInt(v), timestamp:Date.now() };
+    cmdRef.set(payload).then(() => toast("🔊 Volume: " + v));
+  }, 400);
+}
+
+// ---- Repeat / Shuffle ----
+function toggleRepeat() {
+  isRepeat = !isRepeat;
+  if (isRepeat) isShuffle = false;
+  updateModes();
+  cmd("repeat_toggle");
+}
+function toggleShuffle() {
+  isShuffle = !isShuffle;
+  if (isShuffle) isRepeat = false;
+  updateModes();
+  cmd("shuffle_toggle");
+}
+function updateModes() {
+  document.getElementById("repBtn").classList.toggle("active-mode",  isRepeat);
+  document.getElementById("shufBtn").classList.toggle("active-mode", isShuffle);
+}
+
+// ---- Device State Display ----
+function setDevState(id, state) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (state) el.classList.add("dev-on");
+  else       el.classList.remove("dev-on");
+}
+
+// ---- Restart Confirm ----
+function confirmRestart() {
+  if (confirm("Device restart કરવું છે? (Are you sure?)")) {
+    cmd("restart");
+  }
+}
+// ---- Connection Status ----
+function setConnected(ok) {
+  isConnected = ok;
+  const badge = document.getElementById("netBadge");
+  if (ok) {
+    badge.className = "badge online";
+    badge.innerHTML = '<span class="dot dot-green"></span> ONLINE';
+  } else {
+    badge.className = "badge offline";
+    badge.innerHTML = '<span class="dot dot-red"></span> OFFLINE';
+  }
+}
+
+// ---- Toast ----
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.innerText = msg;
+  t.className = "toast-show";
+  setTimeout(() => t.className = "", 2200);
+}
+
+// ---- Build Track Selector ----
+function buildTrackList() {
+  const sel = document.getElementById("trackSel");
+  TRACKS.forEach((n,i) => {
+    const o = document.createElement("option");
+    o.value = i+1;
+    o.text  = (i+1) + ". " + n;
+    sel.add(o);
+  });
+}
+
+// ---- Init ----
+window.onload = () => {
+  buildTrackList();
+  updateTrackDisplay();
+  initFB();
+};
+</script>
+</body>
+</html>
+)RAWHTML";
