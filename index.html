@@ -1,286 +1,389 @@
+index.html
 <!DOCTYPE html>
 <html lang="gu">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
-<title>SARVOPARI DHAM</title>
+<title>SARVOPARI DHAM - Remote</title>
+<link rel="icon" href="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png">
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-body{font-family:'Segoe UI',sans-serif;background:#1a1a2e;color:#fff;padding-bottom:30px;text-align:center;user-select:none;min-height:100vh}
-.nav{background:#0f0f23;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;border-bottom:2px solid #ff9800}
-.nav-title{font-size:14px;font-weight:900;color:#fdd835;letter-spacing:1px}
-.badge{font-size:11px;padding:4px 12px;border-radius:15px;font-weight:bold}
-.bon{background:#1b5e20;color:#69f0ae;border:1px solid #69f0ae}
-.boff{background:#b71c1c;color:#ff8a80;border:1px solid #ff8a80}
-.bcon{background:#e65100;color:#ffcc80;border:1px solid #ffcc80}
-.c{padding:12px;max-width:480px;margin:auto}
-.card{background:#16213e;border:1px solid #0f3460;border-radius:16px;padding:16px;margin-bottom:14px}
-.temple{font-size:13px;font-weight:900;color:#ff9800;letter-spacing:1px;margin-bottom:10px}
-.status-box{background:#0f0f23;border-radius:10px;padding:10px;margin:8px 0;font-size:18px;font-weight:bold;color:#69f0ae;min-height:44px;display:flex;align-items:center;justify-content:center}
-.info-row{display:flex;gap:8px;margin-top:10px}
-.info-box{flex:1;background:#0f0f23;border-radius:10px;padding:8px 4px;border:1px solid #0f3460}
-.info-val{font-size:20px;font-weight:bold;color:#fdd835}
-.info-lbl{font-size:9px;color:#888;margin-top:2px}
-.sec-hdr{font-size:11px;font-weight:bold;color:#ff9800;text-transform:uppercase;letter-spacing:2px;margin:14px 0 8px;text-align:left;padding-left:4px;border-left:3px solid #ff9800}
-.play-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.pbtn{border:none;border-radius:14px;padding:16px 8px;color:#fff;font-weight:700;cursor:pointer;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:6px;touch-action:manipulation;transition:transform 0.1s}
-.pbtn:active{transform:scale(0.95)}
-.pbtn .ic{font-size:24px}
-.pbtn .lb{font-size:11px;opacity:0.9}
-.p1{background:linear-gradient(135deg,#1565c0,#1e88e5)}
-.p2{background:linear-gradient(135deg,#4a148c,#7b1fa2)}
-.p3{background:linear-gradient(135deg,#e65100,#f57c00)}
-.p4{background:linear-gradient(135deg,#1b5e20,#388e3c)}
-.p5{background:linear-gradient(135deg,#880e4f,#c2185b)}
-.p6{background:linear-gradient(135deg,#4e342e,#795548)}
-.trk-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.trk-btn{width:46px;height:46px;border-radius:12px;background:#0f3460;border:1px solid #2196f3;color:#2196f3;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;flex-shrink:0}
-.trk-btn:active{background:#2196f3;color:#fff}
-.trk-name{flex:1;background:#0f0f23;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#e0e0e0;padding:0 8px;border:1px solid #0f3460;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.trk-sel{width:100%;background:#0f0f23;border:1px solid #0f3460;color:#fff;border-radius:10px;padding:10px;font-size:13px;margin-bottom:12px;-webkit-appearance:none}
-.ctrl-row{display:flex;gap:6px}
-.cbtn{flex:1;border:none;border-radius:12px;padding:10px 4px;color:#fff;font-weight:600;cursor:pointer;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:3px;touch-action:manipulation}
-.cbtn:active{opacity:0.7}
-.cbtn .ci{font-size:20px}
-.cs{background:#b71c1c}.cr{background:#4a148c;opacity:0.5}.csh{background:#e65100;opacity:0.5}.cm{background:#263238}.cb{background:#f57f17}
-.cbtn.aon{opacity:1!important;box-shadow:0 0 10px rgba(255,255,255,0.3)}
-.vol-row{display:flex;align-items:center;gap:10px;background:#0f0f23;border-radius:14px;padding:10px 14px;margin-bottom:14px;border:1px solid #0f3460}
-.vbtn{width:44px;height:44px;border-radius:10px;border:1px solid #0f3460;background:#16213e;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;flex-shrink:0}
-.vbtn:active{background:#2196f3}
-.vslider{flex:1;-webkit-appearance:none;height:6px;border-radius:3px;background:#0f3460;outline:none;cursor:pointer}
-.vslider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#2196f3;cursor:pointer}
-.vnum{font-size:22px;font-weight:bold;color:#fdd835;min-width:32px;text-align:center}
-.dev-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
-.dbtn{border:1px solid #0f3460;border-radius:14px;padding:10px 4px;color:#fff;font-weight:700;cursor:pointer;font-size:9px;touch-action:manipulation;background:#16213e;display:flex;flex-direction:column;align-items:center;gap:4px}
-.dbtn:active{opacity:0.7}
-.dbtn .di{font-size:22px}
-.dbtn.don{border-color:#69f0ae;background:rgba(105,240,174,0.12);box-shadow:0 0 10px rgba(105,240,174,0.2)}
-.rbtn{width:100%;border:1px solid rgba(244,67,54,0.4);background:rgba(244,67,54,0.1);color:#ef9a9a;border-radius:14px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:14px;touch-action:manipulation}
-.rbtn:active{background:rgba(244,67,54,0.3)}
-#toast{visibility:hidden;background:#fff;color:#000;padding:10px 20px;position:fixed;bottom:30px;left:50%;transform:translateX(-50%);border-radius:30px;z-index:999;font-weight:600;font-size:13px;box-shadow:0 4px 20px rgba(0,0,0,0.3);white-space:nowrap}
-.tsh{visibility:visible!important;animation:fio 2.2s forwards}
-@keyframes fio{0%{opacity:0;transform:translateX(-50%) translateY(10px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}85%{opacity:1}100%{opacity:0}}
-.lupd{font-size:10px;color:#555;margin-top:6px}
-.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
-.dg{background:#69f0ae;box-shadow:0 0 6px #69f0ae;animation:pl 2s infinite}
-.dr{background:#ff5252}
-.do{background:#ffab40;animation:pl 1.5s infinite}
-@keyframes pl{0%,100%{opacity:1}50%{opacity:0.4}}
-.top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',sans-serif;background:#1a1a1a;color:#fff;margin:0;padding-bottom:20px;text-align:center;user-select:none;touch-action:manipulation}
+.c{padding:10px;max-width:600px;margin:auto}
+
+/* Top Navigation Tabs */
+.nav-tabs{background:#111;padding:12px;display:flex;justify-content:center;gap:15px;position:sticky;top:0;z-index:100;border-bottom:1px solid #333}
+.nt-btn{padding:8px 25px;border-radius:5px;font-weight:bold;font-size:14px;background:#333;color:#888;border:none;cursor:pointer}
+.nt-btn.act{background:#2196f3;color:#fff;box-shadow:0 0 10px rgba(33,150,243,0.5)}
+
+/* Cards */
+.card{background:#333;border-radius:15px;padding:15px;margin-bottom:15px;box-shadow:0 4px 6px rgba(0,0,0,0.3)}
+
+/* Status Card */
+.stat-hdr{color:#2196f3;font-weight:900;font-size:13px;margin-bottom:10px}
+.stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.time-text{font-size:22px;color:#fbc02d;font-weight:bold}
+.badge{font-size:10px;padding:3px 8px;border-radius:5px;font-weight:bold;background:#4caf50;color:#fff}
+.badge.offline{background:#f44336}
+.status-msg{color:#69f0ae;font-weight:600;font-size:14px;margin-top:5px}
+
+/* Quick Play Grid */
+.q-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}
+.q-btn{border:none;border-radius:10px;padding:15px 5px;color:#fff;font-weight:bold;font-size:13px;cursor:pointer;box-shadow:0 3px 6px rgba(0,0,0,0.3)}
+.q-btn:active{transform:scale(0.95)}
+.b-blu{background:#2196f3} .b-org{background:#ff9800} .b-yel{background:#fbc02d;color:#000} .b-grn{background:#4caf50} .b-pur{background:#9c27b0}
+
+/* Track Player */
+.t-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}
+.sq-btn{width:45px;height:45px;border-radius:8px;background:#2196f3;color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer}
+.sq-btn:active{background:#1976d2}
+.t-name{flex:1;background:#222;height:45px;margin:0 10px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;overflow:hidden;white-space:nowrap}
+.cir-row{display:flex;justify-content:space-around;align-items:center}
+.cir-btn{width:55px;height:55px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:22px;color:#fff;border:none;cursor:pointer;position:relative}
+.cir-btn:active{transform:scale(0.95)}
+.c-pur{background:#9c27b0} .c-org{background:#ff9800} .c-teal{background:#0097a7}
+.act-mode{box-shadow:inset 0 0 10px #000; opacity:1 !important}
+.inact-mode{opacity:0.4}
+
+/* Bottom Controls */
+.c-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.tile-btn{width:18.5%;padding:10px 0;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;font-weight:bold;color:#fff;border:none;cursor:pointer;box-shadow:0 3px 6px rgba(0,0,0,0.3)}
+.tile-btn:active{transform:scale(0.95)}
+.tile-btn .icon{font-size:20px;margin-bottom:2px}
+.t-red{background:#f44336} .t-blu{background:#2196f3} .t-org{background:#ff9800} .t-pur{background:#9c27b0} .t-teal{background:#00bcd4} .t-pnk{background:#e91e63}
+.vol-box{width:18.5%;background:#222;height:45px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;box-shadow:inset 0 0 5px #000}
+.tile-btn.act{box-shadow:inset 0 0 12px #000}
+
+select{opacity:0;position:absolute;width:100%;height:100%;left:0;top:0;cursor:pointer}
+#toast{visibility:hidden;background:#fff;color:#000;padding:10px 20px;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);border-radius:30px;z-index:99;font-weight:bold;font-size:13px}
+.toast-show{visibility:visible!important;animation:fade 2s}
+@keyframes fade{0%{opacity:0}20%{opacity:1}80%{opacity:1}100%{opacity:0}}
+
+/* Settings Area */
+#view-sett{display:none}
+.set-tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:15px}
+.set-tb{background:#121212;border:1px solid #333;color:#888;padding:8px 10px;border-radius:20px;font-size:11px;font-weight:bold;flex:1;cursor:pointer}
+.set-tb.act{background:#ff9800;color:#000;border-color:#ff9800}
+.set-cont{display:none}
+.set-cont.act{display:block}
+.cd{background:#121212;padding:12px;margin-bottom:12px;border-radius:12px;text-align:left;border:1px solid #333;border-left:4px solid #ff9800}
+.hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:bold;font-size:13px;color:#ff9800}
+.rw{display:flex;justify-content:space-between;align-items:center;margin-top:6px;background:#222;padding:8px;border-radius:6px;font-size:12px;}
+input[type="time"]{background:#333;color:#fff;border:1px solid #555;padding:6px;border-radius:6px;font-size:14px;outline:none}
+.sw{position:relative;display:inline-block;width:36px;height:20px}
+.sw input{opacity:0;width:0;height:0}
+.sw span{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#555;transition:.3s;border-radius:20px}
+.sw span:before{position:absolute;content:'';height:16px;width:16px;left:2px;bottom:2px;background:#ccc;transition:.3s;border-radius:50%}
+input:checked+span{background:#4caf50}
+input:checked+span:before{transform:translateX(16px);background:#fff}
+.sync-btn{background:#4caf50;color:#fff;border:none;padding:15px;width:100%;border-radius:15px;font-weight:bold;font-size:15px;cursor:pointer;margin-top:10px}
 </style>
 </head>
 <body>
 
-<div class="nav">
-  <div class="nav-title">🙏 SARVOPARI DHAM</div>
-  <span id="netBadge" class="badge bcon"><span class="dot do"></span>Connecting</span>
+<div class="nav-tabs">
+  <button class="nt-btn act" id="tab-dash" onclick="switchView('dash')">CONTROL</button>
+  <button class="nt-btn" id="tab-sett" onclick="switchView('sett')">SETTING</button>
 </div>
 
 <div class="c">
 
-  <div class="card">
-    <div class="temple">🔴 SWAMINARAYAN MANDIR VARIYAV SURAT 🔴</div>
-    <div class="status-box" id="statusMsg">Connecting to cloud...</div>
-    <div class="info-row">
-      <div class="info-box"><div class="info-val" id="volDisp">--</div><div class="info-lbl">🔊 Volume</div></div>
-      <div class="info-box"><div class="info-val" id="trkDisp">--</div><div class="info-lbl">🎵 Track</div></div>
-      <div class="info-box"><div class="info-val" id="ampDisp">--</div><div class="info-lbl">🎚 Amp</div></div>
-      <div class="info-box"><div class="info-val" id="mixDisp">--</div><div class="info-lbl">🎛 Mixer</div></div>
+  <div id="view-dash">
+    
+    <div class="card">
+      <div class="stat-hdr">🔴🙏 SWAMINARAYAN SARVOPARI DHAM 🙏🔴</div>
+      <div class="stat-row">
+        <div id="clock" class="time-text">--:--</div>
+        <span id="netBadge" class="badge offline">OFFLINE</span>
+      </div>
+      <div id="statusMsg" class="status-msg">Wait...</div>
     </div>
-    <div class="lupd" id="lastUpd">Last update: --</div>
-  </div>
 
-  <div class="sec-hdr">▶ QUICK PLAY</div>
-  <div class="play-grid">
-    <button class="pbtn p1" onclick="cmd('play_mangla')"><span class="ic">🌅</span><span class="lb">Mangla Aarti</span></button>
-    <button class="pbtn p2" onclick="cmd('play_arti')"><span class="ic">🙏</span><span class="lb">Today's Arti</span></button>
-    <button class="pbtn p3" onclick="cmd('play',1,9)"><span class="ic">🔔</span><span class="lb">Arti &amp; Jay</span></button>
-    <button class="pbtn p4" onclick="cmd('play_godi')"><span class="ic">🎋</span><span class="lb">Today's Godi</span></button>
-    <button class="pbtn p5" onclick="cmd('play_dhun1')"><span class="ic">🎵</span><span class="lb">Dhun Morning</span></button>
-    <button class="pbtn p6" onclick="cmd('play_dhun2')"><span class="ic">🎶</span><span class="lb">Dhun Evening</span></button>
-  </div>
-
-  <div class="sec-hdr">🎵 BHAJAN PLAYER - FOLDER 4</div>
-  <div class="card">
-    <div class="trk-row">
-      <div class="trk-btn" onclick="prevT()">⏮</div>
-      <div class="trk-name" id="trkName">Select track</div>
-      <div class="trk-btn" onclick="nextT()">⏭</div>
+    <div class="q-grid">
+      <button class="q-btn b-blu" onclick="cmd('play_mangla')">Mangla</button>
+      <button class="q-btn b-org" onclick="cmd('play',1,9)">Arti &amp; Jay</button>
+      <button class="q-btn b-yel" onclick="cmd('play_arti')">Today Arti</button>
+      <button class="q-btn b-grn" onclick="cmd('play_godi')">Today Godi</button>
+      <button class="q-btn b-pur" onclick="cmd('play_dhun1')">Dhun Morning</button>
+      <button class="q-btn b-pur" onclick="cmd('play_dhun2')">Dhun Evening</button>
     </div>
-    <select class="trk-sel" id="trkSel" onchange="selTrack(this)">
-      <option value="">-- Select Track --</option>
-    </select>
-    <div class="ctrl-row">
-      <button class="cbtn cs" onclick="cmd('stop')"><span class="ci">⏹</span>STOP</button>
-      <button class="cbtn cr" id="repBtn" onclick="togRep()"><span class="ci">🔁</span>REPEAT</button>
-      <button class="cbtn csh" id="shufBtn" onclick="togShuf()"><span class="ci">🔀</span>SHUFFLE</button>
-      <button class="cbtn cm" onclick="cmd('toggle_mute')"><span class="ci">🔇</span>MUTE</button>
-      <button class="cbtn cb" onclick="cmd('bell')"><span class="ci">🔔</span>BELL</button>
+
+    <div class="card">
+      <div class="t-row">
+        <button class="sq-btn" onclick="prevTrack()">&#9198;</button>
+        <div class="t-name" id="trackName">-</div>
+        <button class="sq-btn" onclick="nextTrack()">&#9197;</button>
+      </div>
+      <div class="cir-row">
+        <div class="cir-btn c-pur">
+          📁<select id="trackSel" onchange="selectTrack(this)"><option value="">.</option></select>
+        </div>
+        <button class="cir-btn c-org inact-mode" id="btnShuf" onclick="toggleShuffle()">🔀</button>
+        <button class="cir-btn c-org inact-mode" id="btnRep" onclick="toggleRepeat()">🔁</button>
+        <button class="cir-btn c-pur" onclick="cmd('toggle_mute')">🔇</button>
+        <button class="cir-btn c-teal" id="devMiniSpk" onclick="cmd('toggle_minispk')">
+          📢<span style="font-size:7px">M-SPK</span>
+        </button>
+      </div>
     </div>
+
+    <div class="card">
+      <div class="c-row">
+        <button class="tile-btn t-red" onclick="cmd('restart')"><span class="icon">💧</span>RESTART</button>
+        <button class="tile-btn t-blu" onclick="cmd('voldown')"><span class="icon">➖</span>VOL -</button>
+        <div class="vol-box" id="volNum">19</div>
+        <button class="tile-btn t-blu" onclick="cmd('volup')"><span class="icon">➕</span>VOL +</button>
+        <button class="tile-btn t-red" onclick="cmd('stop')"><span class="icon">⏹</span>STOP</button>
+      </div>
+      <div class="c-row" style="margin-bottom:0">
+        <button class="tile-btn t-org" onclick="cmd('bell')"><span class="icon">🔔</span>BELL</button>
+        <button class="tile-btn t-pur" id="devAmp" onclick="cmd('toggle_amp')">
+          <span style="font-size:7px;margin-bottom:4px">AUTO</span><span class="icon">🎚️</span>AMPLI
+        </button>
+        <button class="tile-btn t-teal" id="devMini" onclick="cmd('toggle_mini')">
+          <span style="font-size:7px;margin-bottom:4px">AUTO</span><span class="icon">📻</span>MINI
+        </button>
+        <button class="tile-btn t-pnk" id="devMixer" onclick="cmd('toggle_mixer')">
+          <span style="font-size:7px;margin-bottom:4px">AUTO</span><span class="icon">🎛️</span>MIXER
+        </button>
+        <button class="tile-btn t-org" id="devSpk" onclick="cmd('toggle_spk')">
+          <span style="font-size:7px;margin-bottom:4px">AUTO</span><span class="icon">📢</span>SPIKER
+        </button>
+      </div>
+    </div>
+
+    <div style="font-size:11px;color:#555">SMARAN V1 | Cloud Edition | JAY SWAMINARAYAN</div>
   </div>
 
-  <div class="sec-hdr">🔊 VOLUME</div>
-  <div class="vol-row">
-    <div class="vbtn" onclick="cmd('voldown')">➖</div>
-    <input type="range" class="vslider" id="volSlider" min="0" max="30" value="19" oninput="updVol(this.value)" onchange="setVol(this.value)">
-    <div class="vnum" id="volNum">19</div>
-    <div class="vbtn" onclick="cmd('volup')">➕</div>
+  <div id="view-sett">
+    <div class="set-tabs">
+      <button class="set-tb act" onclick="openSetTab('g', this)">MAIN</button>
+      <button class="set-tb" onclick="openSetTab('a', this)">AMPLI</button>
+      <button class="set-tb" onclick="openSetTab('ma', this)">M-AMP</button>
+      <button class="set-tb" onclick="openSetTab('ms', this)">M-SPK</button>
+      <button class="set-tb" onclick="openSetTab('mx', this)">MIXER</button>
+      <button class="set-tb" onclick="openSetTab('sp', this)">SPIKER</button>
+    </div>
+    <div id="settings-container"></div>
+    <button class="sync-btn" onclick="syncSettingsToCloud()">💾 SAVE & SYNC TO MODULE</button>
+    <div style="font-size:10px;margin-top:10px;color:#888">Module will take 5 seconds to sync after saving.</div>
   </div>
 
-  <div class="sec-hdr">⚡ DEVICE CONTROL</div>
-  <div class="dev-grid">
-    <div class="dbtn" id="dAmp" onclick="cmd('toggle_amp')"><span class="di">🎚️</span>AMPLI</div>
-    <div class="dbtn" id="dMini" onclick="cmd('toggle_mini')"><span class="di">📻</span>MINI</div>
-    <div class="dbtn" id="dMSpk" onclick="cmd('toggle_minispk')"><span class="di">📢</span>M-SPK</div>
-    <div class="dbtn" id="dMix" onclick="cmd('toggle_mixer')"><span class="di">🎛️</span>MIXER</div>
-    <div class="dbtn" id="dSpk" onclick="cmd('toggle_spk')"><span class="di">🔈</span>SPIKER</div>
-  </div>
-
-  <button class="rbtn" onclick="if(confirm('Restart device?'))cmd('restart')">💫 RESTART DEVICE</button>
-
-  <div style="font-size:11px;color:#333">SMARAN V1 · JAY SWAMINARAYAN 🙏</div>
 </div>
-
 <div id="toast"></div>
 
 <script>
+// 🔴 FIREBASE CONFIGURATION 🔴
 const FB_CONFIG = {
-  apiKey:            "AIzaSyD7yn5qvHzhNBKc3BIITR5jd9sVwqCjhUQ",
-  authDomain:        "smaran-v1.firebaseapp.com",
-  databaseURL:       "https://smaran-v1-default-rtdb.firebaseio.com",
-  projectId:         "smaran-v1",
-  storageBucket:     "smaran-v1.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId:             "YOUR_APP_ID"
+  apiKey: "AIzaSyD7yn5qvHzhNBKc3BIITR5jd9sVwqCjhUQ",
+  authDomain: "smaran-v1.firebaseapp.com",
+  databaseURL: "https://smaran-v1-default-rtdb.firebaseio.com",
+  projectId: "smaran-v1",
+  storageBucket: "smaran-v1.firebasestorage.app",
+  messagingSenderId: "29055392334",
+  appId: "1:29055392334:web:ab4e784646ab1cbbe9011f"
 };
 
-const TRACKS = [
-  "ORDA-SARADHAR","ORA AAVO-GURUJI","ORDA-KUNDAL","MHATMAY CHINTA",
-  "SUKH CHINTA MANI","MURTI CHINTA MANI","BLANCK","TERE DWAR apadyo",
-  "NVAL SNEHI nathji","Shriji daya karo","Aekalda kem rahevay","Prabhu tam vina",
-  "Tum mere swami","Kyare have dekhu","Dukhi divas ne rat","Mara nath mara nath",
-  "Aakhadiyo aklay","Dhun Amrut swami","DHUN VED mandir","JAMO JAMO mara",
-  "CHESHTA","RAM & CHESHTA","Track 23","Track 24","Track 25",
-  "Track 26","Track 27","Track 28","Track 29","Track 30",
-  "Track 31","Track 32","Track 33","Track 34","Track 35",
-  "Track 36","Track 37","Track 38","Track 39","Track 40"
+const TRACKS = ["ORDA-SARADHAR","ORA AAVO-GURUJI","ORDA-KUNDAL","MHATMAY CHINTA","SUKH CHINTA MANI","MURTI CHINTA MANI","BLANCK","TERE DWAR apadyo","NVAL SNEHI nathji","Shriji daya karo","Aekalda kem rahevay","Prabhu tam vina","Tum mere swami","Kyare have dekhu","Dukhi divas ne rat","Mara nath mara nath","Aakhadiyo aklay","Dhun_Amrut swami","DHUN VED mandir","JAMO JAMO mara","CHESHTA","RAM & CHESHTA","Track 23","Track 24","Track 25","Track 26","Track 27","Track 28","Track 29","Track 30","Track 31","Track 32","Track 33","Track 34","Track 35","Track 36","Track 37","Track 38","Track 39","Track 40"];
+
+const S_CONF = [
+  { t:'g', id:'bm', type:'bell', lbl:'Morning Bell', c:'#d32f2f', v:['bAH','bAM','enBM'] },
+  { t:'g', id:'be', type:'bell', lbl:'Evening Bell', c:'#d32f2f', v:['bPH','bPM','enBE'] },
+  { t:'g', id:'gd', type:'slot', lbl:'Auto Godi', c:'#388e3c', v:['gPH','gPM','gPEH','gPEM','enGD'] },
+  { t:'g', id:'sb', type:'bell', lbl:'Sunday Bell', c:'#ff6f00', v:['sunBH','sunBM','enSunB'] },
+  { t:'g', id:'sg', type:'bell', lbl:'Sunday Godi', c:'#388e3c', v:['sunGH','sunGM','enSunG'] },
+  { t:'g', id:'md', type:'slot', lbl:'Morning Dhun', c:'#fbc02d', v:['mDhSH','mDhSM','mDhEH','mDhEM','enMDh'] },
+  { t:'g', id:'ed', type:'slot', lbl:'Evening Dhun', c:'#7b1fa2', v:['eDhSH','eDhSM','eDhEH','eDhEM','enEDh'] },
+  { t:'g', id:'ds', type:'slot', lbl:'Sun Dhun (5:30-6:30pm)', c:'#1976d2', v:['dhSH','dhSM','dhEH','dhEM','enDS'] },
+  { t:'a', id:'a1', type:'slot', lbl:'A1: Morning 1', c:'#388e3c', v:['a1SH','a1SM','a1EH','a1EM','enA1'] },
+  { t:'a', id:'a2', type:'slot', lbl:'A2: Morning 2', c:'#388e3c', v:['a2SH','a2SM','a2EH','a2EM','enA2'] },
+  { t:'a', id:'a3', type:'slot', lbl:'A3: Mon-Sat 4:00-6:15pm', c:'#ff6f00', v:['a3SH','a3SM','a3EH','a3EM','enA3'] },
+  { t:'a', id:'a4', type:'slot', lbl:'A4: Mon-Sat 6:18-7:45pm', c:'#ff6f00', v:['a4SH','a4SM','a4EH','a4EM','enA4'] },
+  { t:'a', id:'a7', type:'slot', lbl:'A7: Mon-Sat 9:00-10:45pm', c:'#ff6f00', v:['a7SH','a7SM','a7EH','a7EM','enA7'] },
+  { t:'a', id:'a8', type:'slot', lbl:'A8: Mon-Sat Extra', c:'#FF4081', v:['a8SH','a8SM','a8EH','a8EM','enA8'] },
+  { t:'a', id:'a6', type:'slot', lbl:'A6: Tue Only 9:00-11:15pm', c:'#7b1fa2', v:['a6SH','a6SM','a6EH','a6EM','enA6'] },
+  { t:'a', id:'a5', type:'slot', lbl:'A5: Sun Only 4:00-9:15pm', c:'#1976d2', v:['a5SH','a5SM','a5EH','a5EM','enA5'] },
+  { t:'a', id:'as1', type:'slot', lbl:'AS1: Sat Evening 1', c:'#ff9800', v:['as1H','as1M','ae1H','ae1M','enAs1'] },
+  { t:'a', id:'as2', type:'slot', lbl:'AS2: Sat Evening 2', c:'#ff9800', v:['as2H','as2M','ae2H','ae2M','enAs2'] },
+  { t:'ma', id:'mas1', type:'slot', lbl:'MA1: Morning 1', c:'#0097a7', v:['maS1H','maS1M','maE1H','maE1M','enMaS1'] },
+  { t:'ma', id:'mas6', type:'slot', lbl:'MA6: Morning 2', c:'#0097a7', v:['maS6H','maS6M','maE6H','maE6M','enMaS6'] },
+  { t:'ma', id:'mas2', type:'slot', lbl:'MA2: Mon-Sat', c:'#0097a7', v:['maS2H','maS2M','maE2H','maE2M','enMaS2'] },
+  { t:'ma', id:'mas3', type:'slot', lbl:'MA3: Mon-Sat', c:'#0097a7', v:['maS3H','maS3M','maE3H','maE3M','enMaS3'] },
+  { t:'ma', id:'masun', type:'slot', lbl:'MA4: Sunday Slot-1', c:'#fbc02d', v:['maSunH','maSunM','maESunH','maESunM','enMaSun'] },
+  { t:'ma', id:'masun2', type:'slot', lbl:'MA5: Sunday Slot-2', c:'#fbc02d', v:['maSun2H','maSun2M','maESun2H','maESun2M','enMaSun2'] },
+  { t:'ms', id:'mss1', type:'slot', lbl:'MS1: Morning 1', c:'#cddc39', v:['msS1H','msS1M','msE1H','msE1M','enMsS1'] },
+  { t:'ms', id:'mss6', type:'slot', lbl:'MS6: Morning 2', c:'#cddc39', v:['msS6H','msS6M','msE6H','msE6M','enMsS6'] },
+  { t:'ms', id:'mss2', type:'slot', lbl:'MS2: Mon-Sat', c:'#cddc39', v:['msS2H','msS2M','msE2H','msE2M','enMsS2'] },
+  { t:'ms', id:'mss3', type:'slot', lbl:'MS3: Mon-Sat', c:'#cddc39', v:['msS3H','msS3M','msE3H','msE3M','enMsS3'] },
+  { t:'ms', id:'mssun', type:'slot', lbl:'MS4: Sunday Slot-1', c:'#fbc02d', v:['msSunH','msSunM','msESunH','msESunM','enMsSun'] },
+  { t:'ms', id:'mssun2', type:'slot', lbl:'MS5: Sunday Slot-2', c:'#fbc02d', v:['msSun2H','msSun2M','msESun2H','msESun2M','enMsSun2'] },
+  { t:'mx', id:'r4s1', type:'slot', lbl:'M1: Morning 1', c:'#d32f2f', v:['r4S1H','r4S1M','r4E1H','r4E1M','enR4S1'] },
+  { t:'mx', id:'r4s5', type:'slot', lbl:'M8: Morning 2', c:'#d32f2f', v:['r4S5H','r4S5M','r4E5H','r4E5M','enR4S5'] },
+  { t:'mx', id:'r4s2', type:'slot', lbl:'M2: Mon-Sat Night', c:'#FF4081', v:['r4S2H','r4S2M','r4E2H','r4E2M','enR4S2'] },
+  { t:'mx', id:'a9', type:'slot', lbl:'M5: Mon-Sat Extra', c:'#ff6f00', v:['a9SH','a9SM','a9EH','a9EM','enA9'] },
+  { t:'mx', id:'r4s4', type:'slot', lbl:'M4: Tue Only 9-11:30pm', c:'#7b1fa2', v:['r4S4H','r4S4M','r4E4H','r4E4M','enR4S4'] },
+  { t:'mx', id:'r4s3', type:'slot', lbl:'M3: Sun Only 5:30-8:45pm', c:'#1976d2', v:['r4S3H','r4S3M','r4E3H','r4E3M','enR4S3'] },
+  { t:'mx', id:'mxs1', type:'slot', lbl:'M6: Sat Only Evening 1', c:'#e91e63', v:['mxs1H','mxs1M','mxe1H','mxe1M','enMxs1'] },
+  { t:'mx', id:'mxs2', type:'slot', lbl:'M7: Sat Only Evening 2', c:'#e91e63', v:['mxs2H','mxs2M','mxe2H','mxe2M','enMxs2'] },
+  { t:'sp', id:'spks1', type:'slot', lbl:'SPK1: Morning 1', c:'#00796b', v:['spkS1H','spkS1M','spkE1H','spkE1M','enSpkS1'] },
+  { t:'sp', id:'spks7', type:'slot', lbl:'SPK9: Morning 2', c:'#00796b', v:['spkS7H','spkS7M','spkE7H','spkE7M','enSpkS7'] },
+  { t:'sp', id:'spks2', type:'slot', lbl:'SPK2: Mon-Sat Night', c:'#00796b', v:['spkS2H','spkS2M','spkE2H','spkE2M','enSpkS2'] },
+  { t:'sp', id:'spks5', type:'slot', lbl:'SPK5: Mon-Sat Extra 1', c:'#e91e63', v:['spkS5H','spkS5M','spkE5H','spkE5M','enSpkS5'] },
+  { t:'sp', id:'spks6', type:'slot', lbl:'SPK6: Mon-Sat Extra 2', c:'#ff6f00', v:['spkS6H','spkS6M','spkE6H','spkE6M','enSpkS6'] },
+  { t:'sp', id:'spks4', type:'slot', lbl:'SPK4: Tue Only', c:'#7b1fa2', v:['spkS4H','spkS4M','spkE4H','spkE4M','enSpkS4'] },
+  { t:'sp', id:'spks3', type:'slot', lbl:'SPK3: Sun 5:30-8:45pm', c:'#1976d2', v:['spkS3H','spkS3M','spkE3H','spkE3M','enSpkS3'] },
+  { t:'sp', id:'ss1', type:'slot', lbl:'SPK7: Sat Evening 1', c:'#00bcd4', v:['ss1H','ss1M','se1H','se1M','enSs1'] },
+  { t:'sp', id:'ss2', type:'slot', lbl:'SPK8: Sat Evening 2', c:'#00bcd4', v:['ss2H','ss2M','se2H','se2M','enSs2'] }
 ];
 
-var db, cmdRef, statusRef;
-var curT=1, isRep=false, isShuf=false, curVol=19, isConn=false;
+let db, cmdRef, statusRef, setRef;
+let curTrack=1, isRepeat=false, isShuffle=false, curVol=19, isConnected=false;
 
-function initFB(){
-  try{
-    firebase.initializeApp(FB_CONFIG);
-    db=firebase.database();
-    cmdRef=db.ref("/smaran_v1/command");
-    statusRef=db.ref("/smaran_v1/status");
-    firebase.auth().signInAnonymously()
-      .then(function(){setConn(true);listenStatus();toast("☁ Cloud Connected!");})
-      .catch(function(e){setConn(false);toast("Auth failed");});
-  }catch(e){setConn(false);}
+function initFB() {
+  firebase.initializeApp(FB_CONFIG);
+  db = firebase.database();
+  cmdRef = db.ref("/smaran_v1/command");
+  statusRef = db.ref("/smaran_v1/status");
+  setRef = db.ref("/smaran_v1/settings");
+
+  firebase.auth().signInAnonymously().then(() => {
+    setConnected(true); listenStatus(); loadSettingsFromCloud(); toast("☁ Cloud Connected!");
+  }).catch(() => { setConnected(false); document.getElementById('statusMsg').innerText="Auth Error"; });
 }
 
-function listenStatus(){
-  statusRef.on("value",function(snap){
-    if(!snap.exists())return;
-    var d=snap.val();
-    if(d.msg) document.getElementById("statusMsg").innerText=d.msg;
-    if(d.volume!==undefined){
-      curVol=d.volume;
-      document.getElementById("volDisp").innerText=d.volume;
-      document.getElementById("volNum").innerText=d.volume;
-      document.getElementById("volSlider").value=d.volume;
+function listenStatus() {
+  statusRef.on("value", snap => {
+    if (!snap.exists()) return;
+    const d = snap.val();
+    if(d.msg) document.getElementById("statusMsg").innerText = d.msg;
+    if(d.volume !== undefined) { curVol = d.volume; document.getElementById("volNum").innerText=d.volume; }
+    if(d.f4track) { curTrack=d.f4track; updateTrackDisplay(); }
+    
+    // Modes
+    if(d.repeat !== undefined) { 
+      isRepeat=d.repeat; 
+      document.getElementById("btnRep").className = isRepeat ? "cir-btn c-org act-mode" : "cir-btn c-org inact-mode"; 
     }
-    if(d.f4track){curT=d.f4track;updTrk();}
-    if(d.repeat!==undefined){isRep=d.repeat;updModes();}
-    if(d.shuffle!==undefined){isShuf=d.shuffle;updModes();}
-    setDev("dAmp",d.ampAct);
-    setDev("dMini",d.maAct);
-    setDev("dMSpk",d.msAct);
-    setDev("dMix",d.r4Act);
-    setDev("dSpk",d.spkAct);
-    document.getElementById("ampDisp").innerText=d.ampAct?"ON":"OFF";
-    document.getElementById("mixDisp").innerText=d.r4Act?"ON":"OFF";
-    document.getElementById("trkDisp").innerText=curT;
-    document.getElementById("lastUpd").innerText="Last update: "+new Date().toLocaleTimeString();
-    setConn(true);
-  },function(){setConn(false);});
-}
+    if(d.shuffle !== undefined) { 
+      isShuffle=d.shuffle; 
+      document.getElementById("btnShuf").className = isShuffle ? "cir-btn c-org act-mode" : "cir-btn c-org inact-mode"; 
+    }
+// Devices
+    setDevState("devAmp", d.ampAct); 
+    setDevState("devMini", d.maAct); 
+    setDevState("devMiniSpk", d.msAct, true); 
+    setDevState("devMixer", d.r4Act); 
+    setDevState("devSpk", d.spkAct);
 
-function cmd(action,folder,track){
-  if(!isConn){toast("Not connected!");return;}
-  var p={action:action,timestamp:Date.now()};
-  if(folder!==undefined) p.folder=String(folder);
-  if(track!==undefined) p.track=String(track);
-  cmdRef.set(p).then(function(){toast("✓ "+action.replace(/_/g," "));}).catch(function(){toast("Failed!");});
-}
-
-function nextT(){curT++;if(curT>40)curT=1;updTrk();cmd("f4_next");}
-function prevT(){curT--;if(curT<1)curT=40;updTrk();cmd("f4_prev");}
-
-function selTrack(el){
-  var x=parseInt(el.value);if(!x)return;
-  curT=x;updTrk();
-  var p={action:"play",folder:"4",track:String(x),timestamp:Date.now()};
-  cmdRef.set(p).then(function(){toast("▶ "+TRACKS[x-1]);});
-  el.value="";
-}
-
-function updTrk(){
-  document.getElementById("trkName").innerText=curT+". "+(TRACKS[curT-1]||"Unknown");
-  document.getElementById("trkDisp").innerText=curT;
-}
-
-var vt;
-function updVol(v){document.getElementById("volNum").innerText=v;document.getElementById("volDisp").innerText=v;}
-function setVol(v){
-  clearTimeout(vt);
-  vt=setTimeout(function(){
-    var p={action:"vol_set",value:parseInt(v),timestamp:Date.now()};
-    cmdRef.set(p).then(function(){toast("🔊 Vol: "+v);});
-  },400);
-}
-
-function togRep(){isRep=!isRep;if(isRep)isShuf=false;updModes();cmd("repeat_toggle");}
-function togShuf(){isShuf=!isShuf;if(isShuf)isRep=false;updModes();cmd("shuffle_toggle");}
-function updModes(){
-  document.getElementById("repBtn").classList.toggle("aon",isRep);
-  document.getElementById("shufBtn").classList.toggle("aon",isShuf);
-}
-
-function setDev(id,state){
-  var el=document.getElementById(id);
-  if(!el)return;
-  if(state)el.classList.add("don");
-  else el.classList.remove("don");
-}
-
-function setConn(ok){
-  isConn=ok;
-  var b=document.getElementById("netBadge");
-  if(ok){b.className="badge bon";b.innerHTML='<span class="dot dg"></span>ONLINE';}
-  else{b.className="badge boff";b.innerHTML='<span class="dot dr"></span>OFFLINE';}
-}
-
-function toast(msg){
-  var t=document.getElementById("toast");
-  t.innerText=msg;t.className="tsh";
-  setTimeout(function(){t.className="";},2200);
-}
-
-function buildList(){
-  var sl=document.getElementById("trkSel");
-  TRACKS.forEach(function(n,i){
-    var o=document.createElement("option");
-    o.value=i+1;o.text=(i+1)+". "+n;sl.add(o);
+    setConnected(true);
   });
 }
 
-window.onload=function(){buildList();updTrk();initFB();};
+function cmd(action, folder, track) {
+  if(!isConnected){ toast("❌ Not connected"); return; }
+  const p = { action: action, timestamp: Date.now() };
+  if(folder) p.folder = String(folder);
+  if(track) p.track = String(track);
+  cmdRef.set(p); toast("✓ Sent");
+}
+
+function nextTrack() { curTrack++; if(curTrack>TRACKS.length) curTrack=1; updateTrackDisplay(); cmd("f4_next"); }
+function prevTrack() { curTrack--; if(curTrack<1) curTrack=TRACKS.length; updateTrackDisplay(); cmd("f4_prev"); }
+function selectTrack(el) { let t=parseInt(el.value); if(!t)return; curTrack=t; updateTrackDisplay(); cmd("play",4,t); el.value=""; }
+function updateTrackDisplay() { document.getElementById("trackName").innerText = TRACKS[curTrack-1]||"-"; }
+function toggleRepeat() { isRepeat=!isRepeat; cmd("repeat_toggle"); }
+function toggleShuffle() { isShuffle=!isShuffle; cmd("shuffle_toggle"); }
+
+function setDevState(id, state, isCir=false) { 
+  let el=document.getElementById(id); if(!el)return; 
+  if(state) el.classList.add(isCir ? "act-mode" : "act"); 
+  else el.classList.remove(isCir ? "act-mode" : "act"); 
+}
+function setConnected(ok) { 
+  isConnected=ok; let b=document.getElementById("netBadge"); 
+  if(ok){ b.className="badge"; b.innerText="ONLINE"; }
+  else { b.className="badge offline"; b.innerText="OFFLINE"; } 
+}
+function toast(msg) { let t=document.getElementById("toast"); t.innerText=msg; t.className="toast-show"; setTimeout(()=>t.className="",2000); }
+
+// UI View Switcher
+function switchView(v) {
+  document.getElementById('view-dash').style.display = v==='dash'?'block':'none';
+  document.getElementById('view-sett').style.display = v==='sett'?'block':'none';
+  document.getElementById('tab-dash').className = `nt-btn ${v==='dash'?'act':''}`;
+  document.getElementById('tab-sett').className = `nt-btn ${v==='sett'?'act':''}`;
+}
+
+function openSetTab(id, btn) {
+  document.querySelectorAll('.set-cont').forEach(e => e.classList.remove('act'));
+  document.querySelectorAll('.set-tb').forEach(e => e.classList.remove('act'));
+  document.getElementById(`tc-${id}`).classList.add('act');
+  btn.classList.add('act');
+}
+
+// Dynamic Settings Generation
+function genSettings() {
+  let html = { 'g':'', 'a':'', 'ma':'', 'ms':'', 'mx':'', 'sp':'' };
+  S_CONF.forEach(c => {
+    let cd = `<div class='cd' style='border-left-color:${c.c}'><div class='hd'><span style='color:${c.c}'>${c.lbl}</span>`;
+    cd += `<label class='sw'><input type='checkbox' id='${c.id}_en'><span></span></label></div>`;
+    if(c.type === 'bell') { cd += `<div class='rw'><span>TIME</span><input type='time' id='${c.id}_s'></div>`; } 
+    else { cd += `<div class='rw'><span>START</span><input type='time' id='${c.id}_s'></div><div class='rw'><span>STOP</span><input type='time' id='${c.id}_e'></div>`; }
+    cd += `</div>`; html[c.t] += cd;
+  });
+  const cont = document.getElementById('settings-container');
+  ['g','a','ma','ms','mx','sp'].forEach(t => {
+    let div = document.createElement('div'); div.className = `set-cont ${t==='g'?'act':''}`; div.id = `tc-${t}`; div.innerHTML = html[t]; cont.appendChild(div);
+  });
+}
+
+function loadSettingsFromCloud() {
+  setRef.once("value").then(snap => {
+    if(!snap.exists()) return; const d = snap.val(); const p = n => (n<10?'0':'')+n;
+    S_CONF.forEach(c => {
+      document.getElementById(`${c.id}_en`).checked = (d[c.v[c.v.length-1]] == 1);
+      document.getElementById(`${c.id}_s`).value = `${p(d[c.v[0]]||0)}:${p(d[c.v[1]]||0)}`;
+      if(c.type === 'slot') document.getElementById(`${c.id}_e`).value = `${p(d[c.v[2]]||0)}:${p(d[c.v[3]]||0)}`;
+    });
+  });
+}
+
+function syncSettingsToCloud() {
+  if(!isConnected){ toast("❌ Off!"); return; }
+  let payload = {};
+  S_CONF.forEach(c => {
+    payload[c.v[c.v.length-1]] = document.getElementById(`${c.id}_en`).checked ? 1 : 0;
+    let tv_s = document.getElementById(`${c.id}_s`).value;
+    if(tv_s) { let p = tv_s.split(':'); payload[c.v[0]] = parseInt(p[0]); payload[c.v[1]] = parseInt(p[1]); }
+    if(c.type === 'slot') {
+      let tv_e = document.getElementById(`${c.id}_e`).value;
+      if(tv_e) { let p = tv_e.split(':'); payload[c.v[2]] = parseInt(p[0]); payload[c.v[3]] = parseInt(p[1]); }
+    }
+  });
+  toast("⏳ Uploading...");
+  setRef.set(payload).then(() => { cmd("sync_settings"); toast("✅ Syncing!"); switchView('dash'); });
+}
+
+function updateClock() {
+  const d = new Date();
+  let h = d.getHours(); const m = d.getMinutes(); const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12; h = h ? h : 12; 
+  const days = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+  document.getElementById('clock').innerText = `${days[d.getDay()]} ${h}:${m < 10 ? '0'+m : m} ${ampm}`;
+}
+
+window.onload = () => {
+  const sel = document.getElementById("trackSel");
+  TRACKS.forEach((n,i) => { let o=document.createElement("option"); o.value=i+1; o.text=(i+1)+". "+n; sel.add(o); });
+  genSettings();
+  setInterval(updateClock, 1000); updateClock();
+  initFB();
+};
 </script>
 </body>
 </html>
