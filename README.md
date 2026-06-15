@@ -1,2 +1,2 @@
 # smaran-
-SARVOPARI DHAM Remote 
+SARVOPARI DHAM Nityam 
