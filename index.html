@@ -3,10 +3,19 @@ index.html
 <html lang="gu">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SARVOPARI DHAM - Remote</title>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#111111">
+<link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;SARVOPARI&quot;,&quot;short_name&quot;:&quot;SARVOPARI&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#111111&quot;,&quot;theme_color&quot;:&quot;#111111&quot;}">
 <link rel="icon" href="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png">
-
+<script>
+  if(window.location.href.indexOf("index.html") > -1) { 
+    window.history.replaceState(null, null, window.location.href.replace("index.html", "")); 
+  }
+</script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -87,153 +96,153 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
 <body>
 
 <div class="nav-tabs">
-  <button class="nt-btn act" id="tab-dash" onclick="switchView('dash')">CONTROL</button>
-  <button class="nt-btn" id="tab-sett" onclick="switchView('sett')">SETTING</button>
+  <button class="nt-btn act" id="tab-dash" onclick="switchView('dash')">CONTROL</button>
+  <button class="nt-btn" id="tab-sett" onclick="switchView('sett')">SETTING</button>
 </div>
 
 <div class="c">
-  <div id="view-dash">
-    <div class="card">
-      <div class="stat-hdr">🔴🙏 SWAMINARAYAN SARVOPARI DHAM 🙏🔴</div>
-      <div class="stat-row">
-        <div id="clock" class="time-text">--:--</div>
-        <span id="netBadge" class="badge offline">OFFLINE</span>
-      </div>
-      <div id="statusMsg" class="status-msg">Wait...</div>
-    </div>
+  <div id="view-dash">
+    <div class="card">
+      <div class="stat-hdr">🔴🙏 SWAMINARAYAN SARVOPARI DHAM 🙏🔴</div>
+      <div class="stat-row">
+        <div id="clock" class="time-text">--:--</div>
+        <span id="netBadge" class="badge offline">OFFLINE</span>
+      </div>
+      <div id="statusMsg" class="status-msg">Wait...</div>
+    </div>
 
-    <div class="q-grid">
-      <button class="q-btn b-blu" onclick="cmd('play_mangla')">Mangla</button>
-      <button class="q-btn b-org" onclick="cmd('play',1,9)">Arti &amp; Jay</button>
-      <button class="q-btn b-yel" onclick="cmd('play_arti')">Today Arti</button>
-      <button class="q-btn b-grn" onclick="cmd('play_godi')">Today Godi</button>
-      <button class="q-btn b-pur" onclick="cmd('play_dhun1')">Dhun Morning</button>
-      <button class="q-btn b-pur" onclick="cmd('play_dhun2')">Dhun Evening</button>
-    </div>
+    <div class="q-grid">
+      <button class="q-btn b-blu" onclick="cmd('play_mangla')">Mangla</button>
+      <button class="q-btn b-org" onclick="cmd('play',1,9)">Arti &amp; Jay</button>
+      <button class="q-btn b-yel" onclick="cmd('play_arti')">Today Arti</button>
+      <button class="q-btn b-grn" onclick="cmd('play_godi')">Today Godi</button>
+      <button class="q-btn b-pur" onclick="cmd('play_dhun1')">Dhun Morning</button>
+      <button class="q-btn b-pur" onclick="cmd('play_dhun2')">Dhun Evening</button>
+    </div>
 
-    <div class="card">
-      <div class="t-row">
-        <button class="sq-btn" onclick="prevTrack()">&#9198;</button>
-        <div class="t-name" id="trackName">-</div>
-        <button class="sq-btn" onclick="nextTrack()">&#9197;</button>
-      </div>
-      <div class="cir-row">
-        <div class="cir-btn c-pur">
-          📁<select id="trackSel" onchange="selectTrack(this)"><option value="">.</option></select>
-        </div>
-        <button class="cir-btn c-org inact-mode" id="btnShuf" onclick="toggleShuffle()">🔀</button>
-        <button class="cir-btn c-org inact-mode" id="btnRep" onclick="toggleRepeat()">🔁</button>
-        <button class="cir-btn c-pur inact-mode" id="btnMute" onclick="toggleMute()">🔇</button>
-        <button class="cir-btn c-teal" id="devMiniSpk" onclick="cmd('toggle_minispk')">
-          📢<span style="font-size:7px">M-SPK</span>
-        </button>
-      </div>
-    </div>
+    <div class="card">
+      <div class="t-row">
+        <button class="sq-btn" onclick="prevTrack()">&#9198;</button>
+        <div class="t-name" id="trackName">-</div>
+        <button class="sq-btn" onclick="nextTrack()">&#9197;</button>
+      </div>
+      <div class="cir-row">
+        <div class="cir-btn c-pur">
+          📁<select id="trackSel" onchange="selectTrack(this)"><option value="">.</option></select>
+        </div>
+        <button class="cir-btn c-org inact-mode" id="btnShuf" onclick="toggleShuffle()">🔀</button>
+        <button class="cir-btn c-org inact-mode" id="btnRep" onclick="toggleRepeat()">🔁</button>
+        <button class="cir-btn c-pur inact-mode" id="btnMute" onclick="toggleMute()">🔇</button>
+        <button class="cir-btn c-teal" id="devMiniSpk" onclick="cmd('toggle_minispk')">
+          📢<span style="font-size:7px">M-SPK</span>
+        </button>
+      </div>
+    </div>
 
-    <div class="card">
-      <div class="c-row">
-        <button class="tile-btn t-red" onclick="cmd('restart')"><span class="icon">💧</span>RESTART</button>
-        <button class="tile-btn t-blu" onclick="cmd('voldown')"><span class="icon">➖</span>VOL -</button>
-        <div class="vol-box" id="volNum">19</div>
-        <button class="tile-btn t-blu" onclick="cmd('volup')"><span class="icon">➕</span>VOL +</button>
-        <button class="tile-btn t-red" onclick="cmd('stop')"><span class="icon">⏹</span>STOP</button>
-      </div>
-      <div class="c-row" style="margin-bottom:0">
-        <button class="tile-btn t-org" onclick="cmd('bell')"><span class="icon">🔔</span>BELL</button>
-        <button class="tile-btn t-pur" id="devAmp" onclick="cmd('toggle_amp')">
-          <span style="font-size:7px;margin-bottom:4px">AUTO</span><span class="icon">🎚️</span>AMPLI
-        </button>
-        <button class="tile-btn t-teal" id="devMini" onclick="cmd('toggle_mini')">
-          <span style="font-size:7px;margin-bottom:4px">AUTO</span><span class="icon">📻</span>MINI
-        </button>
-        <button class="tile-btn t-pnk" id="devMixer" onclick="cmd('toggle_mixer')">
-          <span style="font-size:7px;margin-bottom:4px">AUTO</span><span class="icon">🎛️</span>MIXER
-        </button>
-        <button class="tile-btn t-org" id="devSpk" onclick="cmd('toggle_spk')">
-          <span style="font-size:7px;margin-bottom:4px">AUTO</span><span class="icon">📢</span>SPIKER
-        </button>
-      </div>
-    </div>
+    <div class="card">
+      <div class="c-row">
+        <button class="tile-btn t-red" onclick="cmd('restart')"><span class="icon">💧</span>RESTART</button>
+        <button class="tile-btn t-blu" onclick="cmd('voldown')"><span class="icon">➖</span>VOL -</button>
+        <div class="vol-box" id="volNum">19</div>
+        <button class="tile-btn t-blu" onclick="cmd('volup')"><span class="icon">➕</span>VOL +</button>
+        <button class="tile-btn t-red" onclick="cmd('stop')"><span class="icon">⏹</span>STOP</button>
+      </div>
+      <div class="c-row" style="margin-bottom:0">
+        <button class="tile-btn t-org" onclick="cmd('bell')"><span class="icon">🔔</span>BELL</button>
+        <button class="tile-btn t-pur" id="devAmp" onclick="cmd('toggle_amp')">
+          <span style="font-size:7px;margin-bottom:4px">AUTO</span><span class="icon">🎚️</span>AMPLI
+        </button>
+        <button class="tile-btn t-teal" id="devMini" onclick="cmd('toggle_mini')">
+          <span style="font-size:7px;margin-bottom:4px">AUTO</span><span class="icon">📻</span>MINI
+        </button>
+        <button class="tile-btn t-pnk" id="devMixer" onclick="cmd('toggle_mixer')">
+          <span style="font-size:7px;margin-bottom:4px">AUTO</span><span class="icon">🎛️</span>MIXER
+        </button>
+        <button class="tile-btn t-org" id="devSpk" onclick="cmd('toggle_spk')">
+          <span style="font-size:7px;margin-bottom:4px">AUTO</span><span class="icon">📢</span>SPIKER
+        </button>
+      </div>
+    </div>
 
-    <div style="font-size:11px;color:#555">SMARAN V1 | Cloud Edition | JAY SWAMINARAYAN</div>
-  </div>
+    <div style="font-size:11px;color:#555">SMARAN V1 | Cloud Edition | JAY SWAMINARAYAN</div>
+  </div>
 
-  <div id="view-sett">
-    <div class="set-tabs">
-      <button class="set-tb act" onclick="openSetTab('g', this)">MAIN</button>
-      <button class="set-tb" onclick="openSetTab('a', this)">AMPLI</button>
-      <button class="set-tb" onclick="openSetTab('ma', this)">M-AMP</button>
-      <button class="set-tb" onclick="openSetTab('ms', this)">M-SPK</button>
-      <button class="set-tb" onclick="openSetTab('mx', this)">MIXER</button>
-      <button class="set-tb" onclick="openSetTab('sp', this)">SPIKER</button>
-    </div>
-    <div id="settings-container"></div>
-    <button class="sync-btn" onclick="syncSettingsToCloud()">💾 SAVE & SYNC TO MODULE</button>
-  </div>
+  <div id="view-sett">
+    <div class="set-tabs">
+      <button class="set-tb act" onclick="openSetTab('g', this)">MAIN</button>
+      <button class="set-tb" onclick="openSetTab('a', this)">AMPLI</button>
+      <button class="set-tb" onclick="openSetTab('ma', this)">M-AMP</button>
+      <button class="set-tb" onclick="openSetTab('ms', this)">M-SPK</button>
+      <button class="set-tb" onclick="openSetTab('mx', this)">MIXER</button>
+      <button class="set-tb" onclick="openSetTab('sp', this)">SPIKER</button>
+    </div>
+    <div id="settings-container"></div>
+    <button class="sync-btn" onclick="syncSettingsToCloud()">💾 SAVE & SYNC TO MODULE</button>
+  </div>
 </div>
 <div id="toast"></div>
 
 <script>
 const FB_CONFIG = {
-  apiKey: "AIzaSyD7yn5qvHzhNBKc3BIITR5jd9sVwqCjhUQ",
-  authDomain: "smaran-v1.firebaseapp.com",
-  databaseURL: "https://smaran-v1-default-rtdb.firebaseio.com",
-  projectId: "smaran-v1",
-  storageBucket: "smaran-v1.firebasestorage.app",
-  messagingSenderId: "29055392334",
-  appId: "1:29055392334:web:ab4e784646ab1cbbe9011f"
+  apiKey: "AIzaSyD7yn5qvHzhNBKc3BIITR5jd9sVwqCjhUQ",
+  authDomain: "smaran-v1.firebaseapp.com",
+  databaseURL: "https://smaran-v1-default-rtdb.firebaseio.com",
+  projectId: "smaran-v1",
+  storageBucket: "smaran-v1.firebasestorage.app",
+  messagingSenderId: "29055392334",
+  appId: "1:29055392334:web:ab4e784646ab1cbbe9011f"
 };
 
 const TRACKS = ["ORDA-SARADHAR","ORA AAVO-GURUJI","ORDA-KUNDAL","MHATMAY CHINTA","SUKH CHINTA MANI","MURTI CHINTA MANI","BLANCK","TERE DWAR apadyo","NVAL SNEHI nathji","Shriji daya karo","Aekalda kem rahevay","Prabhu tam vina","Tum mere swami","Kyare have dekhu","Dukhi divas ne rat","Mara nath mara nath","Aakhadiyo aklay","Dhun_Amrut swami","DHUN VED mandir","JAMO JAMO mara","CHESHTA","RAM & CHESHTA","Track 23","Track 24","Track 25","Track 26","Track 27","Track 28","Track 29","Track 30","Track 31","Track 32","Track 33","Track 34","Track 35","Track 36","Track 37","Track 38","Track 39","Track 40"];
 
 const S_CONF = [
-  { t:'g', id:'bm', type:'bell', lbl:'Morning Bell', c:'#d32f2f', v:['bAH','bAM','enBM'] },
-  { t:'g', id:'be', type:'bell', lbl:'Evening Bell', c:'#d32f2f', v:['bPH','bPM','enBE'] },
-  { t:'g', id:'gd', type:'slot', lbl:'Auto Godi', c:'#388e3c', v:['gPH','gPM','gPEH','gPEM','enGD'] },
-  { t:'g', id:'sb', type:'bell', lbl:'Sunday Bell', c:'#ff6f00', v:['sunBH','sunBM','enSunB'] },
-  { t:'g', id:'sg', type:'bell', lbl:'Sunday Godi', c:'#388e3c', v:['sunGH','sunGM','enSunG'] },
-  { t:'g', id:'md', type:'slot', lbl:'Morning Dhun', c:'#fbc02d', v:['mDhSH','mDhSM','mDhEH','mDhEM','enMDh'] },
-  { t:'g', id:'ed', type:'slot', lbl:'Evening Dhun', c:'#7b1fa2', v:['eDhSH','eDhSM','eDhEH','eDhEM','enEDh'] },
-  { t:'g', id:'ds', type:'slot', lbl:'Sun Dhun (5:30-6:30pm)', c:'#1976d2', v:['dhSH','dhSM','dhEH','dhEM','enDS'] },
-  { t:'a', id:'a1', type:'slot', lbl:'A1: Morning 1', c:'#388e3c', v:['a1SH','a1SM','a1EH','a1EM','enA1'] },
-  { t:'a', id:'a2', type:'slot', lbl:'A2: Morning 2', c:'#388e3c', v:['a2SH','a2SM','a2EH','a2EM','enA2'] },
-  { t:'a', id:'a3', type:'slot', lbl:'A3: Mon-Sat 4:00-6:15pm', c:'#ff6f00', v:['a3SH','a3SM','a3EH','a3EM','enA3'] },
-  { t:'a', id:'a4', type:'slot', lbl:'A4: Mon-Sat 6:18-7:45pm', c:'#ff6f00', v:['a4SH','a4SM','a4EH','a4EM','enA4'] },
-  { t:'a', id:'a7', type:'slot', lbl:'A7: Mon-Sat 9:00-10:45pm', c:'#ff6f00', v:['a7SH','a7SM','a7EH','a7EM','enA7'] },
-  { t:'a', id:'a8', type:'slot', lbl:'A8: Mon-Sat Extra', c:'#FF4081', v:['a8SH','a8SM','a8EH','a8EM','enA8'] },
-  { t:'a', id:'a6', type:'slot', lbl:'A6: Tue Only 9:00-11:15pm', c:'#7b1fa2', v:['a6SH','a6SM','a6EH','a6EM','enA6'] },
-  { t:'a', id:'a5', type:'slot', lbl:'A5: Sun Only 4:00-9:15pm', c:'#1976d2', v:['a5SH','a5SM','a5EH','a5EM','enA5'] },
-  { t:'a', id:'as1', type:'slot', lbl:'AS1: Sat Evening 1', c:'#ff9800', v:['as1H','as1M','ae1H','ae1M','enAs1'] },
-  { t:'a', id:'as2', type:'slot', lbl:'AS2: Sat Evening 2', c:'#ff9800', v:['as2H','as2M','ae2H','ae2M','enAs2'] },
-  { t:'ma', id:'mas1', type:'slot', lbl:'MA1: Morning 1', c:'#0097a7', v:['maS1H','maS1M','maE1H','maE1M','enMaS1'] },
-  { t:'ma', id:'mas6', type:'slot', lbl:'MA6: Morning 2', c:'#0097a7', v:['maS6H','maS6M','maE6H','maE6M','enMaS6'] },
-  { t:'ma', id:'mas2', type:'slot', lbl:'MA2: Mon-Sat', c:'#0097a7', v:['maS2H','maS2M','maE2H','maE2M','enMaS2'] },
-  { t:'ma', id:'mas3', type:'slot', lbl:'MA3: Mon-Sat', c:'#0097a7', v:['maS3H','maS3M','maE3H','maE3M','enMaS3'] },
-  { t:'ma', id:'masun', type:'slot', lbl:'MA4: Sunday Slot-1', c:'#fbc02d', v:['maSunH','maSunM','maESunH','maESunM','enMaSun'] },
-  { t:'ma', id:'masun2', type:'slot', lbl:'MA5: Sunday Slot-2', c:'#fbc02d', v:['maSun2H','maSun2M','maESun2H','maESun2M','enMaSun2'] },
-  { t:'ms', id:'mss1', type:'slot', lbl:'MS1: Morning 1', c:'#cddc39', v:['msS1H','msS1M','msE1H','msE1M','enMsS1'] },
-  { t:'ms', id:'mss6', type:'slot', lbl:'MS6: Morning 2', c:'#cddc39', v:['msS6H','msS6M','msE6H','msE6M','enMsS6'] },
-  { t:'ms', id:'mss2', type:'slot', lbl:'MS2: Mon-Sat', c:'#cddc39', v:['msS2H','msS2M','msE2H','msE2M','enMsS2'] },
-  { t:'ms', id:'mss3', type:'slot', lbl:'MS3: Mon-Sat', c:'#cddc39', v:['msS3H','msS3M','msE3H','msE3M','enMsS3'] },
-  { t:'ms', id:'mssun', type:'slot', lbl:'MS4: Sunday Slot-1', c:'#fbc02d', v:['msSunH','msSunM','msESunH','msESunM','enMsSun'] },
-  { t:'ms', id:'mssun2', type:'slot', lbl:'MS5: Sunday Slot-2', c:'#fbc02d', v:['msSun2H','msSun2M','msESun2H','msESun2M','enMsSun2'] },
-  { t:'mx', id:'r4s1', type:'slot', lbl:'M1: Morning 1', c:'#d32f2f', v:['r4S1H','r4S1M','r4E1H','r4E1M','enR4S1'] },
-  { t:'mx', id:'r4s5', type:'slot', lbl:'M8: Morning 2', c:'#d32f2f', v:['r4S5H','r4S5M','r4E5H','r4E5M','enR4S5'] },
-  { t:'mx', id:'r4s2', type:'slot', lbl:'M2: Mon-Sat Night', c:'#FF4081', v:['r4S2H','r4S2M','r4E2H','r4E2M','enR4S2'] },
-  { t:'mx', id:'a9', type:'slot', lbl:'M5: Mon-Sat Extra', c:'#ff6f00', v:['a9SH','a9SM','a9EH','a9EM','enA9'] },
-  { t:'mx', id:'r4s4', type:'slot', lbl:'M4: Tue Only 9-11:30pm', c:'#7b1fa2', v:['r4S4H','r4S4M','r4E4H','r4E4M','enR4S4'] },
-  { t:'mx', id:'r4s3', type:'slot', lbl:'M3: Sun Only 5:30-8:45pm', c:'#1976d2', v:['r4S3H','r4S3M','r4E3H','r4E3M','enR4S3'] },
-  { t:'mx', id:'mxs1', type:'slot', lbl:'M6: Sat Only Evening 1', c:'#e91e63', v:['mxs1H','mxs1M','mxe1H','mxe1M','enMxs1'] },
-  { t:'mx', id:'mxs2', type:'slot', lbl:'M7: Sat Only Evening 2', c:'#e91e63', v:['mxs2H','mxs2M','mxe2H','mxe2M','enMxs2'] },
-  { t:'sp', id:'spks1', type:'slot', lbl:'SPK1: Morning 1', c:'#00796b', v:['spkS1H','spkS1M','spkE1H','spkE1M','enSpkS1'] },
-  { t:'sp', id:'spks7', type:'slot', lbl:'SPK9: Morning 2', c:'#00796b', v:['spkS7H','spkS7M','spkE7H','spkE7M','enSpkS7'] },
-  { t:'sp', id:'spks2', type:'slot', lbl:'SPK2: Mon-Sat Night', c:'#00796b', v:['spkS2H','spkS2M','spkE2H','spkE2M','enSpkS2'] },
-  { t:'sp', id:'spks5', type:'slot', lbl:'SPK5: Mon-Sat Extra 1', c:'#e91e63', v:['spkS5H','spkS5M','spkE5H','spkE5M','enSpkS5'] },
-  { t:'sp', id:'spks6', type:'slot', lbl:'SPK6: Mon-Sat Extra 2', c:'#ff6f00', v:['spkS6H','spkS6M','spkE6H','spkE6M','enSpkS6'] },
-  { t:'sp', id:'spks4', type:'slot', lbl:'SPK4: Tue Only', c:'#7b1fa2', v:['spkS4H','spkS4M','spkE4H','spkE4M','enSpkS4'] },
-  { t:'sp', id:'spks3', type:'slot', lbl:'SPK3: Sun 5:30-8:45pm', c:'#1976d2', v:['spkS3H','spkS3M','spkE3H','spkE3M','enSpkS3'] },
-  { t:'sp', id:'ss1', type:'slot', lbl:'SPK7: Sat Evening 1', c:'#00bcd4', v:['ss1H','ss1M','se1H','se1M','enSs1'] },
-  { t:'sp', id:'ss2', type:'slot', lbl:'SPK8: Sat Evening 2', c:'#00bcd4', v:['ss2H','ss2M','se2H','se2M','enSs2'] }
+  { t:'g', id:'bm', type:'bell', lbl:'Morning Bell', c:'#d32f2f', v:['bAH','bAM','enBM'] },
+  { t:'g', id:'be', type:'bell', lbl:'Evening Bell', c:'#d32f2f', v:['bPH','bPM','enBE'] },
+  { t:'g', id:'gd', type:'slot', lbl:'Auto Godi', c:'#388e3c', v:['gPH','gPM','gPEH','gPEM','enGD'] },
+  { t:'g', id:'sb', type:'bell', lbl:'Sunday Bell', c:'#ff6f00', v:['sunBH','sunBM','enSunB'] },
+  { t:'g', id:'sg', type:'bell', lbl:'Sunday Godi', c:'#388e3c', v:['sunGH','sunGM','enSunG'] },
+  { t:'g', id:'md', type:'slot', lbl:'Morning Dhun', c:'#fbc02d', v:['mDhSH','mDhSM','mDhEH','mDhEM','enMDh'] },
+  { t:'g', id:'ed', type:'slot', lbl:'Evening Dhun', c:'#7b1fa2', v:['eDhSH','eDhSM','eDhEH','eDhEM','enEDh'] },
+  { t:'g', id:'ds', type:'slot', lbl:'Sun Dhun (5:30-6:30pm)', c:'#1976d2', v:['dhSH','dhSM','dhEH','dhEM','enDS'] },
+  { t:'a', id:'a1', type:'slot', lbl:'A1: Morning 1', c:'#388e3c', v:['a1SH','a1SM','a1EH','a1EM','enA1'] },
+  { t:'a', id:'a2', type:'slot', lbl:'A2: Morning 2', c:'#388e3c', v:['a2SH','a2SM','a2EH','a2EM','enA2'] },
+  { t:'a', id:'a3', type:'slot', lbl:'A3: Mon-Sat 4:00-6:15pm', c:'#ff6f00', v:['a3SH','a3SM','a3EH','a3EM','enA3'] },
+  { t:'a', id:'a4', type:'slot', lbl:'A4: Mon-Sat 6:18-7:45pm', c:'#ff6f00', v:['a4SH','a4SM','a4EH','a4EM','enA4'] },
+  { t:'a', id:'a7', type:'slot', lbl:'A7: Mon-Sat 9:00-10:45pm', c:'#ff6f00', v:['a7SH','a7SM','a7EH','a7EM','enA7'] },
+  { t:'a', id:'a8', type:'slot', lbl:'A8: Mon-Sat Extra', c:'#FF4081', v:['a8SH','a8SM','a8EH','a8EM','enA8'] },
+  { t:'a', id:'a6', type:'slot', lbl:'A6: Tue Only 9:00-11:15pm', c:'#7b1fa2', v:['a6SH','a6SM','a6EH','a6EM','enA6'] },
+  { t:'a', id:'a5', type:'slot', lbl:'A5: Sun Only 4:00-9:15pm', c:'#1976d2', v:['a5SH','a5SM','a5EH','a5EM','enA5'] },
+  { t:'a', id:'as1', type:'slot', lbl:'AS1: Sat Evening 1', c:'#ff9800', v:['as1H','as1M','ae1H','ae1M','enAs1'] },
+  { t:'a', id:'as2', type:'slot', lbl:'AS2: Sat Evening 2', c:'#ff9800', v:['as2H','as2M','ae2H','ae2M','enAs2'] },
+  { t:'ma', id:'mas1', type:'slot', lbl:'MA1: Morning 1', c:'#0097a7', v:['maS1H','maS1M','maE1H','maE1M','enMaS1'] },
+  { t:'ma', id:'mas6', type:'slot', lbl:'MA6: Morning 2', c:'#0097a7', v:['maS6H','maS6M','maE6H','maE6M','enMaS6'] },
+  { t:'ma', id:'mas2', type:'slot', lbl:'MA2: Mon-Sat', c:'#0097a7', v:['maS2H','maS2M','maE2H','maE2M','enMaS2'] },
+  { t:'ma', id:'mas3', type:'slot', lbl:'MA3: Mon-Sat', c:'#0097a7', v:['maS3H','maS3M','maE3H','maE3M','enMaS3'] },
+  { t:'ma', id:'masun', type:'slot', lbl:'MA4: Sunday Slot-1', c:'#fbc02d', v:['maSunH','maSunM','maESunH','maESunM','enMaSun'] },
+  { t:'ma', id:'masun2', type:'slot', lbl:'MA5: Sunday Slot-2', c:'#fbc02d', v:['maSun2H','maSun2M','maESun2H','maESun2M','enMaSun2'] },
+  { t:'ms', id:'mss1', type:'slot', lbl:'MS1: Morning 1', c:'#cddc39', v:['msS1H','msS1M','msE1H','msE1M','enMsS1'] },
+  { t:'ms', id:'mss6', type:'slot', lbl:'MS6: Morning 2', c:'#cddc39', v:['msS6H','msS6M','msE6H','msE6M','enMsS6'] },
+  { t:'ms', id:'mss2', type:'slot', lbl:'MS2: Mon-Sat', c:'#cddc39', v:['msS2H','msS2M','msE2H','msE2M','enMsS2'] },
+  { t:'ms', id:'mss3', type:'slot', lbl:'MS3: Mon-Sat', c:'#cddc39', v:['msS3H','msS3M','msE3H','msE3M','enMsS3'] },
+  { t:'ms', id:'mssun', type:'slot', lbl:'MS4: Sunday Slot-1', c:'#fbc02d', v:['msSunH','msSunM','msESunH','msESunM','enMsSun'] },
+  { t:'ms', id:'mssun2', type:'slot', lbl:'MS5: Sunday Slot-2', c:'#fbc02d', v:['msSun2H','msSun2M','msESun2H','msESun2M','enMsSun2'] },
+  { t:'mx', id:'r4s1', type:'slot', lbl:'M1: Morning 1', c:'#d32f2f', v:['r4S1H','r4S1M','r4E1H','r4E1M','enR4S1'] },
+  { t:'mx', id:'r4s5', type:'slot', lbl:'M8: Morning 2', c:'#d32f2f', v:['r4S5H','r4S5M','r4E5H','r4E5M','enR4S5'] },
+  { t:'mx', id:'r4s2', type:'slot', lbl:'M2: Mon-Sat Night', c:'#FF4081', v:['r4S2H','r4S2M','r4E2H','r4E2M','enR4S2'] },
+  { t:'mx', id:'a9', type:'slot', lbl:'M5: Mon-Sat Extra', c:'#ff6f00', v:['a9SH','a9SM','a9EH','a9EM','enA9'] },
+  { t:'mx', id:'r4s4', type:'slot', lbl:'M4: Tue Only 9-11:30pm', c:'#7b1fa2', v:['r4S4H','r4S4M','r4E4H','r4E4M','enR4S4'] },
+  { t:'mx', id:'r4s3', type:'slot', lbl:'M3: Sun Only 5:30-8:45pm', c:'#1976d2', v:['r4S3H','r4S3M','r4E3H','r4E3M','enR4S3'] },
+  { t:'mx', id:'mxs1', type:'slot', lbl:'M6: Sat Only Evening 1', c:'#e91e63', v:['mxs1H','mxs1M','mxe1H','mxe1M','enMxs1'] },
+  { t:'mx', id:'mxs2', type:'slot', lbl:'M7: Sat Only Evening 2', c:'#e91e63', v:['mxs2H','mxs2M','mxe2H','mxe2M','enMxs2'] },
+  { t:'sp', id:'spks1', type:'slot', lbl:'SPK1: Morning 1', c:'#00796b', v:['spkS1H','spkS1M','spkE1H','spkE1M','enSpkS1'] },
+  { t:'sp', id:'spks7', type:'slot', lbl:'SPK9: Morning 2', c:'#00796b', v:['spkS7H','spkS7M','spkE7H','spkE7M','enSpkS7'] },
+  { t:'sp', id:'spks2', type:'slot', lbl:'SPK2: Mon-Sat Night', c:'#00796b', v:['spkS2H','spkS2M','spkE2H','spkE2M','enSpkS2'] },
+  { t:'sp', id:'spks5', type:'slot', lbl:'SPK5: Mon-Sat Extra 1', c:'#e91e63', v:['spkS5H','spkS5M','spkE5H','spkE5M','enSpkS5'] },
+  { t:'sp', id:'spks6', type:'slot', lbl:'SPK6: Mon-Sat Extra 2', c:'#ff6f00', v:['spkS6H','spkS6M','spkE6H','spkE6M','enSpkS6'] },
+  { t:'sp', id:'spks4', type:'slot', lbl:'SPK4: Tue Only', c:'#7b1fa2', v:['spkS4H','spkS4M','spkE4H','spkE4M','enSpkS4'] },
+  { t:'sp', id:'spks3', type:'slot', lbl:'SPK3: Sun 5:30-8:45pm', c:'#1976d2', v:['spkS3H','spkS3M','spkE3H','spkE3M','enSpkS3'] },
+  { t:'sp', id:'ss1', type:'slot', lbl:'SPK7: Sat Evening 1', c:'#00bcd4', v:['ss1H','ss1M','se1H','se1M','enSs1'] },
+  { t:'sp', id:'ss2', type:'slot', lbl:'SPK8: Sat Evening 2', c:'#00bcd4', v:['ss2H','ss2M','se2H','se2M','enSs2'] }
 ];
 
 let db, cmdRef, statusRef, setRef;
@@ -241,37 +250,37 @@ let curTrack=1, isRepeat=false, isShuffle=false, curVol=19, isConnected=false;
 let isMute = false; // 🔴 Mute Variable 🔴
 
 function initFB() {
-  firebase.initializeApp(FB_CONFIG);
-  db = firebase.database();
-  cmdRef = db.ref("/smaran_v1/command");
-  statusRef = db.ref("/smaran_v1/status");
-  setRef = db.ref("/smaran_v1/settings");
+  firebase.initializeApp(FB_CONFIG);
+  db = firebase.database();
+  cmdRef = db.ref("/smaran_v1/command");
+  statusRef = db.ref("/smaran_v1/status");
+  setRef = db.ref("/smaran_v1/settings");
 
-  firebase.auth().signInAnonymously().then(() => {
-    setConnected(true); listenStatus(); loadSettingsFromCloud(); toast("☁ Cloud Connected!");
-  }).catch(() => { setConnected(false); document.getElementById('statusMsg').innerText="Auth Error"; });
+  firebase.auth().signInAnonymously().then(() => {
+    setConnected(true); listenStatus(); loadSettingsFromCloud(); toast("☁ Cloud Connected!");
+  }).catch(() => { setConnected(false); document.getElementById('statusMsg').innerText="Auth Error"; });
 }
 
 function listenStatus() {
-  statusRef.on("value", snap => {
-    if (!snap.exists()) return;
-    const d = snap.val();
-    if(d.msg) document.getElementById("statusMsg").innerText = d.msg;
-    if(d.volume !== undefined) { curVol = d.volume; document.getElementById("volNum").innerText=d.volume; }
-    if(d.f4track) { curTrack=d.f4track; updateTrackDisplay(); }
-    if(d.repeat !== undefined) { isRepeat=d.repeat; document.getElementById("btnRep").className = isRepeat ? "cir-btn c-org act-mode" : "cir-btn c-org inact-mode"; }
-    if(d.shuffle !== undefined) { isShuffle=d.shuffle; document.getElementById("btnShuf").className = isShuffle ? "cir-btn c-org act-mode" : "cir-btn c-org inact-mode"; }
-    setDevState("devAmp", d.ampAct); setDevState("devMini", d.maAct); setDevState("devMiniSpk", d.msAct, true); setDevState("devMixer", d.r4Act); setDevState("devSpk", d.spkAct);
-    setConnected(true);
-  });
+  statusRef.on("value", snap => {
+    if (!snap.exists()) return;
+    const d = snap.val();
+    if(d.msg) document.getElementById("statusMsg").innerText = d.msg;
+    if(d.volume !== undefined) { curVol = d.volume; document.getElementById("volNum").innerText=d.volume; }
+    if(d.f4track) { curTrack=d.f4track; updateTrackDisplay(); }
+    if(d.repeat !== undefined) { isRepeat=d.repeat; document.getElementById("btnRep").className = isRepeat ? "cir-btn c-org act-mode" : "cir-btn c-org inact-mode"; }
+    if(d.shuffle !== undefined) { isShuffle=d.shuffle; document.getElementById("btnShuf").className = isShuffle ? "cir-btn c-org act-mode" : "cir-btn c-org inact-mode"; }
+    setDevState("devAmp", d.ampAct); setDevState("devMini", d.maAct); setDevState("devMiniSpk", d.msAct, true); setDevState("devMixer", d.r4Act); setDevState("devSpk", d.spkAct);
+    setConnected(true);
+  });
 }
 
 function cmd(action, folder, track) {
-  if(!isConnected){ toast("❌ Not connected"); return; }
-  const p = { action: action, timestamp: Date.now() };
-  if(folder) p.folder = String(folder);
-  if(track) p.track = String(track);
-  cmdRef.set(p); toast("✓ Sent");
+  if(!isConnected){ toast("❌ Not connected"); return; }
+  const p = { action: action, timestamp: Date.now() };
+  if(folder) p.folder = String(folder);
+  if(track) p.track = String(track);
+  cmdRef.set(p); toast("✓ Sent");
 }
 
 function nextTrack() { curTrack++; if(curTrack>TRACKS.length) curTrack=1; updateTrackDisplay(); cmd("f4_next"); }
@@ -282,9 +291,9 @@ function toggleRepeat() { isRepeat=!isRepeat; cmd("repeat_toggle"); }
 function toggleShuffle() { isShuffle=!isShuffle; cmd("shuffle_toggle"); }
 // 🔴 MUTE TOGGLE FUNCTION 🔴
 function toggleMute() { 
-  isMute = !isMute; 
-  cmd("toggle_mute"); 
-  document.getElementById("btnMute").className = isMute ? "cir-btn c-pur act-mode" : "cir-btn c-pur inact-mode";
+  isMute = !isMute; 
+  cmd("toggle_mute"); 
+  document.getElementById("btnMute").className = isMute ? "cir-btn c-pur act-mode" : "cir-btn c-pur inact-mode";
 }
 
 function setDevState(id, state, isCir=false) { let el=document.getElementById(id); if(!el)return; if(state) el.classList.add(isCir ? "act-mode" : "act"); else el.classList.remove(isCir ? "act-mode" : "act"); }
@@ -294,83 +303,83 @@ function switchView(v) { document.getElementById('view-dash').style.display = v=
 function openSetTab(id, btn) { document.querySelectorAll('.set-cont').forEach(e => e.classList.remove('act')); document.querySelectorAll('.set-tb').forEach(e => e.classList.remove('act')); document.getElementById(`tc-${id}`).classList.add('act'); btn.classList.add('act'); }
 
 function timeInput(id) {
-  let hOpts = ''; for(let i=1; i<=12; i++) hOpts += `<option value="${i}">${i}</option>`;
-  let mOpts = ''; for(let i=0; i<60; i++) mOpts += `<option value="${i}">${i<10?'0'+i:i}</option>`;
-  return `<select id="${id}_h" style="opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;">${hOpts}</select> : 
-          <select id="${id}_m" style="opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;">${mOpts}</select> 
-          <select id="${id}_ap" style="opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;"><option value="0">AM</option><option value="1">PM</option></select>`;
+  let hOpts = ''; for(let i=1; i<=12; i++) hOpts += `<option value="${i}">${i}</option>`;
+  let mOpts = ''; for(let i=0; i<60; i++) mOpts += `<option value="${i}">${i<10?'0'+i:i}</option>`;
+  return `<select id="${id}_h" style="opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;">${hOpts}</select> : 
+          <select id="${id}_m" style="opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;">${mOpts}</select> 
+          <select id="${id}_ap" style="opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;"><option value="0">AM</option><option value="1">PM</option></select>`;
 }
 
 function genSettings() {
-  let html = { 'g':'', 'a':'', 'ma':'', 'ms':'', 'mx':'', 'sp':'' };
-  S_CONF.forEach(c => {
-    let cd = `<div class='cd' style='border-left-color:${c.c}'><div class='hd'><span style='color:${c.c}'>${c.lbl}</span>`;
-    cd += `<label class='sw'><input type='checkbox' id='${c.id}_en'><span></span></label></div>`;
-    if(c.type === 'bell') { cd += `<div class='rw'><span>TIME</span><div>${timeInput(c.id+'_s')}</div></div>`; } 
-    else { cd += `<div class='rw'><span>START</span><div>${timeInput(c.id+'_s')}</div></div><div class='rw'><span>STOP</span><div>${timeInput(c.id+'_e')}</div></div>`; }
-    cd += `</div>`; html[c.t] += cd;
-  });
-  const cont = document.getElementById('settings-container');
-  ['g','a','ma','ms','mx','sp'].forEach(t => {
-    let div = document.createElement('div'); div.className = `set-cont ${t==='g'?'act':''}`; div.id = `tc-${t}`; div.innerHTML = html[t]; cont.appendChild(div);
-  });
+  let html = { 'g':'', 'a':'', 'ma':'', 'ms':'', 'mx':'', 'sp':'' };
+  S_CONF.forEach(c => {
+    let cd = `<div class='cd' style='border-left-color:${c.c}'><div class='hd'><span style='color:${c.c}'>${c.lbl}</span>`;
+    cd += `<label class='sw'><input type='checkbox' id='${c.id}_en'><span></span></label></div>`;
+    if(c.type === 'bell') { cd += `<div class='rw'><span>TIME</span><div>${timeInput(c.id+'_s')}</div></div>`; } 
+    else { cd += `<div class='rw'><span>START</span><div>${timeInput(c.id+'_s')}</div></div><div class='rw'><span>STOP</span><div>${timeInput(c.id+'_e')}</div></div>`; }
+    cd += `</div>`; html[c.t] += cd;
+  });
+  const cont = document.getElementById('settings-container');
+  ['g','a','ma','ms','mx','sp'].forEach(t => {
+    let div = document.createElement('div'); div.className = `set-cont ${t==='g'?'act':''}`; div.id = `tc-${t}`; div.innerHTML = html[t]; cont.appendChild(div);
+  });
 }
 
 function setTimeDropdown(id, val24) {
-  let ap = val24 >= 12 ? 1 : 0;
-  let h12 = val24 % 12; if(h12 === 0) h12 = 12;
-  document.getElementById(`${id}_h`).value = h12;
-  document.getElementById(`${id}_ap`).value = ap;
+  let ap = val24 >= 12 ? 1 : 0;
+  let h12 = val24 % 12; if(h12 === 0) h12 = 12;
+  document.getElementById(`${id}_h`).value = h12;
+  document.getElementById(`${id}_ap`).value = ap;
 }
 
 function loadSettingsFromCloud() {
-  setRef.once("value").then(snap => {
-    if(!snap.exists()) return; const d = snap.val();
-    S_CONF.forEach(c => {
-      document.getElementById(`${c.id}_en`).checked = (d[c.v[c.v.length-1]] == 1);
-      if(d[c.v[0]]!==undefined) { setTimeDropdown(`${c.id}_s`, d[c.v[0]]); document.getElementById(`${c.id}_s_m`).value = d[c.v[1]]; }
-      if(c.type === 'slot' && d[c.v[2]]!==undefined) { setTimeDropdown(`${c.id}_e`, d[c.v[2]]); document.getElementById(`${c.id}_e_m`).value = d[c.v[3]]; }
-    });
-  });
+  setRef.once("value").then(snap => {
+    if(!snap.exists()) return; const d = snap.val();
+    S_CONF.forEach(c => {
+      document.getElementById(`${c.id}_en`).checked = (d[c.v[c.v.length-1]] == 1);
+      if(d[c.v[0]]!==undefined) { setTimeDropdown(`${c.id}_s`, d[c.v[0]]); document.getElementById(`${c.id}_s_m`).value = d[c.v[1]]; }
+      if(c.type === 'slot' && d[c.v[2]]!==undefined) { setTimeDropdown(`${c.id}_e`, d[c.v[2]]); document.getElementById(`${c.id}_e_m`).value = d[c.v[3]]; }
+    });
+  });
 }
 
 function get24Hour(id) {
-  let h12 = parseInt(document.getElementById(`${id}_h`).value);
-  let ap = parseInt(document.getElementById(`${id}_ap`).value);
-  if(ap === 1) return h12 === 12 ? 12 : h12 + 12;
-  else return h12 === 12 ? 0 : h12;
+  let h12 = parseInt(document.getElementById(`${id}_h`).value);
+  let ap = parseInt(document.getElementById(`${id}_ap`).value);
+  if(ap === 1) return h12 === 12 ? 12 : h12 + 12;
+  else return h12 === 12 ? 0 : h12;
 }
 
 function syncSettingsToCloud() {
-  if(!isConnected){ toast("❌ Off!"); return; }
-  let payload = {};
-  S_CONF.forEach(c => {
-    payload[c.v[c.v.length-1]] = document.getElementById(`${c.id}_en`).checked ? 1 : 0;
-    payload[c.v[0]] = get24Hour(`${c.id}_s`);
-    payload[c.v[1]] = parseInt(document.getElementById(`${c.id}_s_m`).value);
-    if(c.type === 'slot') {
-      payload[c.v[2]] = get24Hour(`${c.id}_e`);
-      payload[c.v[3]] = parseInt(document.getElementById(`${c.id}_e_m`).value);
-    }
-  });
-  toast("⏳ Uploading...");
-  setRef.set(payload).then(() => { cmd("sync_settings"); toast("✅ Syncing!"); switchView('dash'); });
+  if(!isConnected){ toast("❌ Off!"); return; }
+  let payload = {};
+  S_CONF.forEach(c => {
+    payload[c.v[c.v.length-1]] = document.getElementById(`${c.id}_en`).checked ? 1 : 0;
+    payload[c.v[0]] = get24Hour(`${c.id}_s`);
+    payload[c.v[1]] = parseInt(document.getElementById(`${c.id}_s_m`).value);
+    if(c.type === 'slot') {
+      payload[c.v[2]] = get24Hour(`${c.id}_e`);
+      payload[c.v[3]] = parseInt(document.getElementById(`${c.id}_e_m`).value);
+    }
+  });
+  toast("⏳ Uploading...");
+  setRef.set(payload).then(() => { cmd("sync_settings"); toast("✅ Syncing!"); switchView('dash'); });
 }
 
 function updateClock() {
-  const d = new Date();
-  let h = d.getHours(); const m = d.getMinutes(); const ampm = h >= 12 ? 'PM' : 'AM';
-  h = h % 12; h = h ? h : 12; 
-  const days = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
-  document.getElementById('clock').innerText = `${days[d.getDay()]} ${h}:${m < 10 ? '0'+m : m} ${ampm}`;
+  const d = new Date();
+  let h = d.getHours(); const m = d.getMinutes(); const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12; h = h ? h : 12; 
+  const days = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+  document.getElementById('clock').innerText = `${days[d.getDay()]} ${h}:${m < 10 ? '0'+m : m} ${ampm}`;
 }
 
 window.onload = () => {
-  const sel = document.getElementById("trackSel");
-  TRACKS.forEach((n,i) => { let o=document.createElement("option"); o.value=i+1; o.text=(i+1)+". "+n; sel.add(o); });
-  genSettings();
-  setInterval(updateClock, 1000); updateClock();
-  initFB();
+  const sel = document.getElementById("trackSel");
+  TRACKS.forEach((n,i) => { let o=document.createElement("option"); o.value=i+1; o.text=(i+1)+". "+n; sel.add(o); });
+  genSettings();
+  setInterval(updateClock, 1000); updateClock();
+  initFB();
 };
 </script>
 </body>
