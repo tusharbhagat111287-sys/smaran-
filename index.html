@@ -92,9 +92,7 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
 </div>
 
 <div class="c">
-
   <div id="view-dash">
-    
     <div class="card">
       <div class="stat-hdr">🔴🙏 SWAMINARAYAN SARVOPARI DHAM 🙏🔴</div>
       <div class="stat-row">
@@ -125,7 +123,7 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
         </div>
         <button class="cir-btn c-org inact-mode" id="btnShuf" onclick="toggleShuffle()">🔀</button>
         <button class="cir-btn c-org inact-mode" id="btnRep" onclick="toggleRepeat()">🔁</button>
-        <button class="cir-btn c-pur" onclick="cmd('toggle_mute')">🔇</button>
+        <button class="cir-btn c-pur inact-mode" id="btnMute" onclick="toggleMute()">🔇</button>
         <button class="cir-btn c-teal" id="devMiniSpk" onclick="cmd('toggle_minispk')">
           📢<span style="font-size:7px">M-SPK</span>
         </button>
@@ -171,14 +169,11 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
     </div>
     <div id="settings-container"></div>
     <button class="sync-btn" onclick="syncSettingsToCloud()">💾 SAVE & SYNC TO MODULE</button>
-    <div style="font-size:10px;margin-top:10px;color:#888">Module will take 5 seconds to sync after saving.</div>
   </div>
-
 </div>
 <div id="toast"></div>
 
 <script>
-// 🔴 FIREBASE CONFIGURATION 🔴
 const FB_CONFIG = {
   apiKey: "AIzaSyD7yn5qvHzhNBKc3BIITR5jd9sVwqCjhUQ",
   authDomain: "smaran-v1.firebaseapp.com",
@@ -243,6 +238,7 @@ const S_CONF = [
 
 let db, cmdRef, statusRef, setRef;
 let curTrack=1, isRepeat=false, isShuffle=false, curVol=19, isConnected=false;
+let isMute = false; // 🔴 Mute Variable 🔴
 
 function initFB() {
   firebase.initializeApp(FB_CONFIG);
@@ -263,23 +259,9 @@ function listenStatus() {
     if(d.msg) document.getElementById("statusMsg").innerText = d.msg;
     if(d.volume !== undefined) { curVol = d.volume; document.getElementById("volNum").innerText=d.volume; }
     if(d.f4track) { curTrack=d.f4track; updateTrackDisplay(); }
-    
-    // Modes
-    if(d.repeat !== undefined) { 
-      isRepeat=d.repeat; 
-      document.getElementById("btnRep").className = isRepeat ? "cir-btn c-org act-mode" : "cir-btn c-org inact-mode"; 
-    }
-    if(d.shuffle !== undefined) { 
-      isShuffle=d.shuffle; 
-      document.getElementById("btnShuf").className = isShuffle ? "cir-btn c-org act-mode" : "cir-btn c-org inact-mode"; 
-    }
-// Devices
-    setDevState("devAmp", d.ampAct); 
-    setDevState("devMini", d.maAct); 
-    setDevState("devMiniSpk", d.msAct, true); 
-    setDevState("devMixer", d.r4Act); 
-    setDevState("devSpk", d.spkAct);
-
+    if(d.repeat !== undefined) { isRepeat=d.repeat; document.getElementById("btnRep").className = isRepeat ? "cir-btn c-org act-mode" : "cir-btn c-org inact-mode"; }
+    if(d.shuffle !== undefined) { isShuffle=d.shuffle; document.getElementById("btnShuf").className = isShuffle ? "cir-btn c-org act-mode" : "cir-btn c-org inact-mode"; }
+    setDevState("devAmp", d.ampAct); setDevState("devMini", d.maAct); setDevState("devMiniSpk", d.msAct, true); setDevState("devMixer", d.r4Act); setDevState("devSpk", d.spkAct);
     setConnected(true);
   });
 }
@@ -298,42 +280,34 @@ function selectTrack(el) { let t=parseInt(el.value); if(!t)return; curTrack=t; u
 function updateTrackDisplay() { document.getElementById("trackName").innerText = TRACKS[curTrack-1]||"-"; }
 function toggleRepeat() { isRepeat=!isRepeat; cmd("repeat_toggle"); }
 function toggleShuffle() { isShuffle=!isShuffle; cmd("shuffle_toggle"); }
+// 🔴 MUTE TOGGLE FUNCTION 🔴
+function toggleMute() { 
+  isMute = !isMute; 
+  cmd("toggle_mute"); 
+  document.getElementById("btnMute").className = isMute ? "cir-btn c-pur act-mode" : "cir-btn c-pur inact-mode";
+}
 
-function setDevState(id, state, isCir=false) { 
-  let el=document.getElementById(id); if(!el)return; 
-  if(state) el.classList.add(isCir ? "act-mode" : "act"); 
-  else el.classList.remove(isCir ? "act-mode" : "act"); 
-}
-function setConnected(ok) { 
-  isConnected=ok; let b=document.getElementById("netBadge"); 
-  if(ok){ b.className="badge"; b.innerText="ONLINE"; }
-  else { b.className="badge offline"; b.innerText="OFFLINE"; } 
-}
+function setDevState(id, state, isCir=false) { let el=document.getElementById(id); if(!el)return; if(state) el.classList.add(isCir ? "act-mode" : "act"); else el.classList.remove(isCir ? "act-mode" : "act"); }
+function setConnected(ok) { isConnected=ok; let b=document.getElementById("netBadge"); if(ok){ b.className="badge"; b.innerText="ONLINE"; } else { b.className="badge offline"; b.innerText="OFFLINE"; } }
 function toast(msg) { let t=document.getElementById("toast"); t.innerText=msg; t.className="toast-show"; setTimeout(()=>t.className="",2000); }
+function switchView(v) { document.getElementById('view-dash').style.display = v==='dash'?'block':'none'; document.getElementById('view-sett').style.display = v==='sett'?'block':'none'; document.getElementById('tab-dash').className = `nt-btn ${v==='dash'?'act':''}`; document.getElementById('tab-sett').className = `nt-btn ${v==='sett'?'act':''}`; }
+function openSetTab(id, btn) { document.querySelectorAll('.set-cont').forEach(e => e.classList.remove('act')); document.querySelectorAll('.set-tb').forEach(e => e.classList.remove('act')); document.getElementById(`tc-${id}`).classList.add('act'); btn.classList.add('act'); }
 
-// UI View Switcher
-function switchView(v) {
-  document.getElementById('view-dash').style.display = v==='dash'?'block':'none';
-  document.getElementById('view-sett').style.display = v==='sett'?'block':'none';
-  document.getElementById('tab-dash').className = `nt-btn ${v==='dash'?'act':''}`;
-  document.getElementById('tab-sett').className = `nt-btn ${v==='sett'?'act':''}`;
+function timeInput(id) {
+  let hOpts = ''; for(let i=1; i<=12; i++) hOpts += `<option value="${i}">${i}</option>`;
+  let mOpts = ''; for(let i=0; i<60; i++) mOpts += `<option value="${i}">${i<10?'0'+i:i}</option>`;
+  return `<select id="${id}_h" style="opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;">${hOpts}</select> : 
+          <select id="${id}_m" style="opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;">${mOpts}</select> 
+          <select id="${id}_ap" style="opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;"><option value="0">AM</option><option value="1">PM</option></select>`;
 }
 
-function openSetTab(id, btn) {
-  document.querySelectorAll('.set-cont').forEach(e => e.classList.remove('act'));
-  document.querySelectorAll('.set-tb').forEach(e => e.classList.remove('act'));
-  document.getElementById(`tc-${id}`).classList.add('act');
-  btn.classList.add('act');
-}
-
-// Dynamic Settings Generation
 function genSettings() {
   let html = { 'g':'', 'a':'', 'ma':'', 'ms':'', 'mx':'', 'sp':'' };
   S_CONF.forEach(c => {
     let cd = `<div class='cd' style='border-left-color:${c.c}'><div class='hd'><span style='color:${c.c}'>${c.lbl}</span>`;
     cd += `<label class='sw'><input type='checkbox' id='${c.id}_en'><span></span></label></div>`;
-    if(c.type === 'bell') { cd += `<div class='rw'><span>TIME</span><input type='time' id='${c.id}_s'></div>`; } 
-    else { cd += `<div class='rw'><span>START</span><input type='time' id='${c.id}_s'></div><div class='rw'><span>STOP</span><input type='time' id='${c.id}_e'></div>`; }
+    if(c.type === 'bell') { cd += `<div class='rw'><span>TIME</span><div>${timeInput(c.id+'_s')}</div></div>`; } 
+    else { cd += `<div class='rw'><span>START</span><div>${timeInput(c.id+'_s')}</div></div><div class='rw'><span>STOP</span><div>${timeInput(c.id+'_e')}</div></div>`; }
     cd += `</div>`; html[c.t] += cd;
   });
   const cont = document.getElementById('settings-container');
@@ -342,15 +316,29 @@ function genSettings() {
   });
 }
 
+function setTimeDropdown(id, val24) {
+  let ap = val24 >= 12 ? 1 : 0;
+  let h12 = val24 % 12; if(h12 === 0) h12 = 12;
+  document.getElementById(`${id}_h`).value = h12;
+  document.getElementById(`${id}_ap`).value = ap;
+}
+
 function loadSettingsFromCloud() {
   setRef.once("value").then(snap => {
-    if(!snap.exists()) return; const d = snap.val(); const p = n => (n<10?'0':'')+n;
+    if(!snap.exists()) return; const d = snap.val();
     S_CONF.forEach(c => {
       document.getElementById(`${c.id}_en`).checked = (d[c.v[c.v.length-1]] == 1);
-      document.getElementById(`${c.id}_s`).value = `${p(d[c.v[0]]||0)}:${p(d[c.v[1]]||0)}`;
-      if(c.type === 'slot') document.getElementById(`${c.id}_e`).value = `${p(d[c.v[2]]||0)}:${p(d[c.v[3]]||0)}`;
+      if(d[c.v[0]]!==undefined) { setTimeDropdown(`${c.id}_s`, d[c.v[0]]); document.getElementById(`${c.id}_s_m`).value = d[c.v[1]]; }
+      if(c.type === 'slot' && d[c.v[2]]!==undefined) { setTimeDropdown(`${c.id}_e`, d[c.v[2]]); document.getElementById(`${c.id}_e_m`).value = d[c.v[3]]; }
     });
   });
+}
+
+function get24Hour(id) {
+  let h12 = parseInt(document.getElementById(`${id}_h`).value);
+  let ap = parseInt(document.getElementById(`${id}_ap`).value);
+  if(ap === 1) return h12 === 12 ? 12 : h12 + 12;
+  else return h12 === 12 ? 0 : h12;
 }
 
 function syncSettingsToCloud() {
@@ -358,11 +346,11 @@ function syncSettingsToCloud() {
   let payload = {};
   S_CONF.forEach(c => {
     payload[c.v[c.v.length-1]] = document.getElementById(`${c.id}_en`).checked ? 1 : 0;
-    let tv_s = document.getElementById(`${c.id}_s`).value;
-    if(tv_s) { let p = tv_s.split(':'); payload[c.v[0]] = parseInt(p[0]); payload[c.v[1]] = parseInt(p[1]); }
+    payload[c.v[0]] = get24Hour(`${c.id}_s`);
+    payload[c.v[1]] = parseInt(document.getElementById(`${c.id}_s_m`).value);
     if(c.type === 'slot') {
-      let tv_e = document.getElementById(`${c.id}_e`).value;
-      if(tv_e) { let p = tv_e.split(':'); payload[c.v[2]] = parseInt(p[0]); payload[c.v[3]] = parseInt(p[1]); }
+      payload[c.v[2]] = get24Hour(`${c.id}_e`);
+      payload[c.v[3]] = parseInt(document.getElementById(`${c.id}_e_m`).value);
     }
   });
   toast("⏳ Uploading...");
