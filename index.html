@@ -1,4 +1,4 @@
-index.html
+
 <!DOCTYPE html>
 <html lang="gu">
 <head>
@@ -250,7 +250,7 @@ const S_CONF = [
 
 let db, cmdRef, statusRef, setRef;
 let curTrack=1, isRepeat=false, isShuffle=false, curVol=19, isConnected=false;
-let isMute = false; // 🔴 Mute Variable 🔴
+let isMute = false;
 
 function initFB() {
   firebase.initializeApp(FB_CONFIG);
@@ -277,12 +277,12 @@ function listenStatus() {
     setConnected(true);
   });
 }
-
+// 🔴 અહીં મેં String ની જગ્યાએ Number કરી દીધું છે! 🔴
 function cmd(action, folder, track) {
   if(!isConnected){ toast("❌ Not connected"); return; }
   const p = { action: action, timestamp: Date.now() };
-  if(folder) p.folder = String(folder);
-  if(track) p.track = String(track);
+  if(folder) p.folder = Number(folder); // અહીંયા આંકડો (Number) જશે
+  if(track) p.track = Number(track);    // અહીંયા પણ આંકડો (Number) જશે
   cmdRef.set(p); toast("✓ Sent");
 }
 
@@ -293,7 +293,6 @@ function updateTrackDisplay() { document.getElementById("trackName").innerText =
 function toggleRepeat() { isRepeat=!isRepeat; cmd("repeat_toggle"); }
 function toggleShuffle() { isShuffle=!isShuffle; cmd("shuffle_toggle"); }
 
-// 🔴 MUTE TOGGLE FUNCTION 🔴
 function toggleMute() { 
   isMute = !isMute; 
   cmd("toggle_mute"); 
