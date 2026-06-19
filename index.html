@@ -9,10 +9,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="theme-color" content="#111111">
-<link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;SARVOPARI&quot;,&quot;short_name&quot;:&quot;SARVOPARI&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#111111&quot;,&quot;theme_color&quot;:&quot;#111111&quot;}">
+
+<link rel="icon" href="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png">
+<link rel="apple-touch-icon" href="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png">
+<link rel="manifest" href='data:application/manifest+json,{"name":"SARVOPARI","short_name":"SARVOPARI","display":"standalone","background_color":"#111111","theme_color":"#111111","icons":[{"src":"https://i.ibb.co/HpDS8yDF/apple-touch-icon.png","sizes":"192x192","type":"image/png"}]}'>
 
 <title>SARVOPARI DHAM - Remote</title>
-<link rel="icon" href="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png">
 
 <script>
   if(window.location.href.indexOf("index.html") > -1) { 
@@ -40,9 +42,12 @@ body{font-family:'Segoe UI',sans-serif;background:#1a1a1a;color:#fff;margin:0;pa
 .stat-hdr{color:#2196f3;font-weight:900;font-size:13px;margin-bottom:10px}
 .stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
 .time-text{font-size:22px;color:#fbc02d;font-weight:bold}
-.badge{font-size:10px;padding:3px 8px;border-radius:5px;font-weight:bold;background:#4caf50;color:#fff}
+.badge{font-size:10px;padding:3px 8px;border-radius:5px;font-weight:bold;background:#4caf50;color:#fff;text-align:center;}
 .badge.offline{background:#f44336}
 .status-msg{color:#69f0ae;font-weight:600;font-size:14px;margin-top:5px}
+
+/* બે બેજને એક લાઇનમાં ગોઠવવા માટે */
+.badge-col{display:flex; flex-direction:column; gap:5px; align-items:flex-end;}
 
 /* Quick Play Grid */
 .q-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}
@@ -59,8 +64,10 @@ body{font-family:'Segoe UI',sans-serif;background:#1a1a1a;color:#fff;margin:0;pa
 .cir-btn{width:55px;height:55px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:22px;color:#fff;border:none;cursor:pointer;position:relative}
 .cir-btn:active{transform:scale(0.95)}
 .c-pur{background:#9c27b0} .c-org{background:#ff9800} .c-teal{background:#0097a7}
-.act-mode{box-shadow:inset 0 0 10px #000; opacity:1 !important}
-.inact-mode{opacity:0.4}
+
+/* 🟢 બટન ઓન થાય ત્યારે અંદર શેડો લાગશે */
+.cir-btn.act {box-shadow: inset 0 0 15px rgba(0,0,0,0.8);}
+.tile-btn.act {box-shadow: inset 0 0 15px rgba(0,0,0,0.8);}
 
 /* Bottom Controls */
 .c-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
@@ -69,7 +76,6 @@ body{font-family:'Segoe UI',sans-serif;background:#1a1a1a;color:#fff;margin:0;pa
 .tile-btn .icon{font-size:20px;margin-bottom:2px}
 .t-red{background:#f44336} .t-blu{background:#2196f3} .t-org{background:#ff9800} .t-pur{background:#9c27b0} .t-teal{background:#00bcd4} .t-pnk{background:#e91e63}
 .vol-box{width:18.5%;background:#222;height:45px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;box-shadow:inset 0 0 5px #000}
-.tile-btn.act{box-shadow:inset 0 0 12px #000}
 
 select{opacity:0;position:absolute;width:100%;height:100%;left:0;top:0;cursor:pointer}
 #toast{visibility:hidden;background:#fff;color:#000;padding:10px 20px;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);border-radius:30px;z-index:99;font-weight:bold;font-size:13px}
@@ -109,7 +115,12 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
       <div class="stat-hdr">🔴🙏 SWAMINARAYAN SARVOPARI DHAM 🙏🔴</div>
       <div class="stat-row">
         <div id="clock" class="time-text">--:--</div>
-        <span id="netBadge" class="badge offline">OFFLINE</span>
+        
+        <div class="badge-col">
+          <span id="netBadge" class="badge offline">OFFLINE</span>
+          <span id="playModeBadge" class="badge" style="display:none;">AUTO</span>
+        </div>
+
       </div>
       <div id="statusMsg" class="status-msg">Wait...</div>
     </div>
@@ -133,9 +144,9 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
         <div class="cir-btn c-pur">
           📁<select id="trackSel" onchange="selectTrack(this)"><option value="">.</option></select>
         </div>
-        <button class="cir-btn c-org inact-mode" id="btnShuf" onclick="toggleShuffle()">🔀</button>
-        <button class="cir-btn c-org inact-mode" id="btnRep" onclick="toggleRepeat()">🔁</button>
-        <button class="cir-btn c-pur inact-mode" id="btnMute" onclick="toggleMute()">🔇</button>
+        <button class="cir-btn c-org" id="btnShuf" onclick="toggleShuffle()">🔀</button>
+        <button class="cir-btn c-org" id="btnRep" onclick="toggleRepeat()">🔁</button>
+        <button class="cir-btn c-pur" id="btnMute" onclick="toggleMute()">🔇</button>
         <button class="cir-btn c-teal" id="devMiniSpk" onclick="cmd('toggle_minispk')">
           📢<span style="font-size:7px">M-SPK</span>
         </button>
@@ -268,21 +279,42 @@ function listenStatus() {
   statusRef.on("value", snap => {
     if (!snap.exists()) return;
     const d = snap.val();
-    if(d.msg) document.getElementById("statusMsg").innerText = d.msg;
+    
+    if(d.time) document.getElementById("clock").innerText = d.time;
+    if(d.statusMsg) document.getElementById("statusMsg").innerText = d.statusMsg;
+    
+    if(d.playType) {
+        let pmBadge = document.getElementById("playModeBadge");
+        if(d.playType === "IDLE") {
+            pmBadge.style.display = "none";
+        } else {
+            pmBadge.style.display = "inline-block";
+            pmBadge.innerText = d.playType;
+            pmBadge.style.background = (d.playType === "MANUAL") ? "#f44336" : "#4caf50";
+        }
+    }
+    
     if(d.volume !== undefined) { curVol = d.volume; document.getElementById("volNum").innerText=d.volume; }
     if(d.f4track) { curTrack=d.f4track; updateTrackDisplay(); }
-    if(d.repeat !== undefined) { isRepeat=d.repeat; document.getElementById("btnRep").className = isRepeat ? "cir-btn c-org act-mode" : "cir-btn c-org inact-mode"; }
-    if(d.shuffle !== undefined) { isShuffle=d.shuffle; document.getElementById("btnShuf").className = isShuffle ? "cir-btn c-org act-mode" : "cir-btn c-org inact-mode"; }
-    setDevState("devAmp", d.ampAct); setDevState("devMini", d.maAct); setDevState("devMiniSpk", d.msAct, true); setDevState("devMixer", d.r4Act); setDevState("devSpk", d.spkAct);
+    
+    if(d.repeat !== undefined) { isRepeat=d.repeat; setDevState("btnRep", isRepeat); }
+    if(d.shuffle !== undefined) { isShuffle=d.shuffle; setDevState("btnShuf", isShuffle); }
+    
+    setDevState("devAmp", d.ampPower); 
+    setDevState("devMini", d.maPower); 
+    setDevState("devMiniSpk", d.msPower); 
+    setDevState("devMixer", d.r4Power); 
+    setDevState("devSpk", d.spkPower);
+    
     setConnected(true);
   });
 }
-// 🔴 અહીં મેં String ની જગ્યાએ Number કરી દીધું છે! 🔴
+
 function cmd(action, folder, track) {
   if(!isConnected){ toast("❌ Not connected"); return; }
   const p = { action: action, timestamp: Date.now() };
-  if(folder) p.folder = Number(folder); // અહીંયા આંકડો (Number) જશે
-  if(track) p.track = Number(track);    // અહીંયા પણ આંકડો (Number) જશે
+  if(folder) p.folder = Number(folder); 
+  if(track) p.track = Number(track);
   cmdRef.set(p); toast("✓ Sent");
 }
 
@@ -296,10 +328,16 @@ function toggleShuffle() { isShuffle=!isShuffle; cmd("shuffle_toggle"); }
 function toggleMute() { 
   isMute = !isMute; 
   cmd("toggle_mute"); 
-  document.getElementById("btnMute").className = isMute ? "cir-btn c-pur act-mode" : "cir-btn c-pur inact-mode";
+  setDevState("btnMute", isMute);
 }
 
-function setDevState(id, state, isCir=false) { let el=document.getElementById(id); if(!el)return; if(state) el.classList.add(isCir ? "act-mode" : "act"); else el.classList.remove(isCir ? "act-mode" : "act"); }
+function setDevState(id, state) { 
+    let el=document.getElementById(id); 
+    if(!el) return; 
+    if(state) el.classList.add("act"); 
+    else el.classList.remove("act"); 
+}
+
 function setConnected(ok) { isConnected=ok; let b=document.getElementById("netBadge"); if(ok){ b.className="badge"; b.innerText="ONLINE"; } else { b.className="badge offline"; b.innerText="OFFLINE"; } }
 function toast(msg) { let t=document.getElementById("toast"); t.innerText=msg; t.className="toast-show"; setTimeout(()=>t.className="",2000); }
 function switchView(v) { document.getElementById('view-dash').style.display = v==='dash'?'block':'none'; document.getElementById('view-sett').style.display = v==='sett'?'block':'none'; document.getElementById('tab-dash').className = `nt-btn ${v==='dash'?'act':''}`; document.getElementById('tab-sett').className = `nt-btn ${v==='sett'?'act':''}`; }
@@ -369,19 +407,10 @@ function syncSettingsToCloud() {
   setRef.set(payload).then(() => { cmd("sync_settings"); toast("✅ Syncing!"); switchView('dash'); });
 }
 
-function updateClock() {
-  const d = new Date();
-  let h = d.getHours(); const m = d.getMinutes(); const ampm = h >= 12 ? 'PM' : 'AM';
-  h = h % 12; h = h ? h : 12; 
-  const days = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
-  document.getElementById('clock').innerText = `${days[d.getDay()]} ${h}:${m < 10 ? '0'+m : m} ${ampm}`;
-}
-
 window.onload = () => {
   const sel = document.getElementById("trackSel");
   TRACKS.forEach((n,i) => { let o=document.createElement("option"); o.value=i+1; o.text=(i+1)+". "+n; sel.add(o); });
   genSettings();
-  setInterval(updateClock, 1000); updateClock();
   initFB();
 };
 </script>
