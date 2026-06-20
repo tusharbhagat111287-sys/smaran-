@@ -11,7 +11,7 @@
 <meta name="theme-color" content="#111111">
 <link rel="manifest" href='data:application/manifest+json,{"name":"SARVOPARI","short_name":"SARVOPARI","display":"standalone","background_color":"#111111","theme_color":"#111111","icons":[{"src":"https://i.ibb.co/HpDS8yDF/apple-touch-icon.png","sizes":"192x192","type":"image/png"}]}'>
 
-<title>SARVOPARI DHAM - Remote</title>
+<title>SARVOPARI DHAM NITYAM</title>
 <link rel="icon" href="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png">
 <link rel="apple-touch-icon" href="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png">
 
@@ -29,32 +29,24 @@
 body{font-family:'Segoe UI',sans-serif;background:#1a1a1a;color:#fff;margin:0;padding-bottom:20px;text-align:center;user-select:none;touch-action:manipulation}
 .c{padding:10px;max-width:600px;margin:auto}
 
-/* Top Navigation Tabs */
 .nav-tabs{background:#111;padding:12px;display:flex;justify-content:center;gap:15px;position:sticky;top:0;z-index:100;border-bottom:1px solid #333}
 .nt-btn{padding:8px 25px;border-radius:5px;font-weight:bold;font-size:14px;background:#333;color:#888;border:none;cursor:pointer}
 .nt-btn.act{background:#2196f3;color:#fff;box-shadow:0 0 10px rgba(33,150,243,0.5)}
 
-/* Cards */
 .card{background:#333;border-radius:15px;padding:15px;margin-bottom:15px;box-shadow:0 4px 6px rgba(0,0,0,0.3)}
-
-/* Status Card */
 .stat-hdr{color:#2196f3;font-weight:900;font-size:13px;margin-bottom:10px}
 .stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
 .time-text{font-size:22px;color:#fbc02d;font-weight:bold}
 .badge{font-size:10px;padding:3px 8px;border-radius:5px;font-weight:bold;background:#4caf50;color:#fff;text-align:center;}
 .badge.offline{background:#f44336}
 .status-msg{color:#69f0ae;font-weight:600;font-size:14px;margin-top:5px}
-
-/* નવો બેજ: બે બેજને એક લાઇનમાં ગોઠવવા માટે */
 .badge-col{display:flex; flex-direction:column; gap:5px; align-items:flex-end;}
 
-/* Quick Play Grid */
 .q-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}
 .q-btn{border:none;border-radius:10px;padding:15px 5px;color:#fff;font-weight:bold;font-size:13px;cursor:pointer;box-shadow:0 3px 6px rgba(0,0,0,0.3)}
 .q-btn:active{transform:scale(0.95)}
 .b-blu{background:#2196f3} .b-org{background:#ff9800} .b-yel{background:#fbc02d;color:#000} .b-grn{background:#4caf50} .b-pur{background:#9c27b0}
 
-/* Track Player */
 .t-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}
 .sq-btn{width:45px;height:45px;border-radius:8px;background:#2196f3;color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer}
 .sq-btn:active{background:#1976d2}
@@ -64,10 +56,10 @@ body{font-family:'Segoe UI',sans-serif;background:#1a1a1a;color:#fff;margin:0;pa
 .cir-btn:active{transform:scale(0.95)}
 .c-pur{background:#9c27b0} .c-org{background:#ff9800} .c-teal{background:#0097a7}
 
+/* 🟢 આ કોડથી બટન બ્લર (Shadow) થાય છે */
 .cir-btn.act {box-shadow: inset 0 0 15px rgba(0,0,0,0.8);}
 .tile-btn.act {box-shadow: inset 0 0 15px rgba(0,0,0,0.8);}
 
-/* Bottom Controls */
 .c-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
 .tile-btn{width:18.5%;padding:10px 0;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;font-weight:bold;color:#fff;border:none;cursor:pointer;box-shadow:0 3px 6px rgba(0,0,0,0.3)}
 .tile-btn:active{transform:scale(0.95)}
@@ -80,7 +72,6 @@ select{opacity:0;position:absolute;width:100%;height:100%;left:0;top:0;cursor:po
 .toast-show{visibility:visible!important;animation:fade 2s}
 @keyframes fade{0%{opacity:0}20%{opacity:1}80%{opacity:1}100%{opacity:0}}
 
-/* Settings Area */
 #view-sett{display:none}
 .set-tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:15px}
 .set-tb{background:#121212;border:1px solid #333;color:#888;padding:8px 10px;border-radius:20px;font-size:11px;font-weight:bold;flex:1;cursor:pointer}
@@ -134,26 +125,26 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
 
     <div class="card">
       <div class="t-row">
-        <button class="sq-btn" onclick="prevTrack()">⏮</button>
+        <button class="sq-btn" onclick="prevTrack()">&#9198;</button>
         <div class="t-name" id="trackName">-</div>
-        <button class="sq-btn" onclick="nextTrack()">⏭</button>
+        <button class="sq-btn" onclick="nextTrack()">&#9197;</button>
       </div>
       <div class="cir-row">
         <div class="cir-btn c-pur">
-          📂<select id="trackSel" onchange="selectTrack(this)"><option value="">.</option></select>
+          📁<select id="trackSel" onchange="selectTrack(this)"><option value="">.</option></select>
         </div>
         <button class="cir-btn c-org" id="btnShuf" onclick="toggleShuffle()">🔀</button>
         <button class="cir-btn c-org" id="btnRep" onclick="toggleRepeat()">🔁</button>
-        <button class="cir-btn c-pur" id="btnMute" onclick="toggleMute()">🔊</button>
+        <button class="cir-btn c-pur" id="btnMute" onclick="toggleMute()">🔇</button>
         <button class="cir-btn c-teal" id="devMiniSpk" onclick="cmd('toggle_minispk')">
-          📢<br><span style="font-size:7px">M-SPK</span>
+          📢<span style="font-size:7px">M-SPK</span>
         </button>
       </div>
     </div>
 
     <div class="card">
       <div class="c-row">
-        <button class="tile-btn t-red" onclick="cmd('restart')"><span class="icon">💫</span>RESTART</button>
+        <button class="tile-btn t-red" onclick="cmd('restart')"><span class="icon">💧</span>RESTART</button>
         <button class="tile-btn t-blu" onclick="cmd('voldown')"><span class="icon">➖</span>VOL -</button>
         <div class="vol-box" id="volNum">19</div>
         <button class="tile-btn t-blu" onclick="cmd('volup')"><span class="icon">➕</span>VOL +</button>
@@ -162,22 +153,21 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
       <div class="c-row" style="margin-bottom:0">
         <button class="tile-btn t-org" onclick="cmd('bell')"><span class="icon">🔔</span>BELL</button>
         <button class="tile-btn t-pur" id="devAmp" onclick="cmd('toggle_amp')">
-          <div style="font-size:7px;margin-bottom:4px">AUTO</div><span class="icon">🎚️</span>AMPLI
+          <span style="font-size:7px;margin-bottom:4px">AUTO</span><span class="icon">🎚️</span>AMPLI
         </button>
         <button class="tile-btn t-teal" id="devMini" onclick="cmd('toggle_mini')">
-          <div style="font-size:7px;margin-bottom:4px">AUTO</div><span class="icon">📻</span>MINI
+          <span style="font-size:7px;margin-bottom:4px">AUTO</span><span class="icon">📻</span>MINI
         </button>
         <button class="tile-btn t-pnk" id="devMixer" onclick="cmd('toggle_mixer')">
-          <div style="font-size:7px;margin-bottom:4px">AUTO</div><span class="icon">🎛️</span>MIXER
+          <span style="font-size:7px;margin-bottom:4px">AUTO</span><span class="icon">🎛️</span>MIXER
         </button>
         <button class="tile-btn t-org" id="devSpk" onclick="cmd('toggle_spk')">
-          <div style="font-size:7px;margin-bottom:4px">AUTO</div><span class="icon">📢</span>SPIKER
+          <span style="font-size:7px;margin-bottom:4px">AUTO</span><span class="icon">📢</span>SPIKER
         </button>
       </div>
     </div>
 
-    <div style="font-size:15px;color:#555">SWAMINARAYAN MANDIR VARIYAV SURAT (SMARAN V1)</div>
-  </div>
+    <div style="font-size:12px; color:#fff; font-weight:bold; text-shadow: 0 0 10px #9c27b0, 0 0 20px #9c27b0;">SMARAN V1 | Cloud Edition | JAY SWAMINARAYAN</div>
 
   <div id="view-sett">
     <div class="set-tabs">
@@ -205,7 +195,7 @@ const FB_CONFIG = {
   appId: "1:29055392334:web:ab4e784646ab1cbbe9011f"
 };
 
-const TRACKS = ["ORDA-SARADHAR","ORA AAVO-GURUJI","ORDA-KUNDAL","MHATMAY CHINTA","SUKH CHINTA MANI","MURTI CHINTA MANI","BLANCK","TERE DWAR apadyo","NVAL SNEHI nathji","Shriji daya karo","Aekalda kem rahevay","Prabhu tam vina","Tum mere swami","Kyare have dekhu","Dukhi divas ne rat","Mara nath mara nath","Aakhadiyo aklay","Dhun_Amrut swami","DHUN VED mandir","JAMO JAMO mara","CHESHTA","RAM & CHESHTA","New Track 23","New Track 24","New Track 25","New Track 26","New Track 27","New Track 28","New Track 29","New Track 30","New Track 31","New Track 32","New Track 33","New Track 34","New Track 35","New Track 36","New Track 37","New Track 38","New Track 39","New Track 40"];
+const TRACKS = ["ORDA-SARADHAR","ORA AAVO-GURUJI","ORDA-KUNDAL","MHATMAY CHINTA","SUKH CHINTA MANI","MURTI CHINTA MANI","BLANCK","TERE DWAR apadyo","NVAL SNEHI nathji","Shriji daya karo","Aekalda kem rahevay","Prabhu tam vina","Tum mere swami","Kyare have dekhu","Dukhi divas ne rat","Mara nath mara nath","Aakhadiyo aklay","Dhun_Amrut swami","DHUN VED mandir","JAMO JAMO mara","CHESHTA","RAM & CHESHTA","Track 23","Track 24","Track 25","Track 26","Track 27","Track 28","Track 29","Track 30","Track 31","Track 32","Track 33","Track 34","Track 35","Track 36","Track 37","Track 38","Track 39","Track 40"];
 
 const S_CONF = [
   { t:'g', id:'bm', type:'bell', lbl:'Morning Bell', c:'#d32f2f', v:['bAH','bAM','enBM'] },
@@ -278,8 +268,10 @@ function listenStatus() {
     if (!snap.exists()) return;
     const d = snap.val();
     
+    // 🟢 સમય અપડેટ
     if(d.time) document.getElementById("clock").innerText = d.time;
     
+    // 🟢 ટ્રેકનું નામ, કાઉન્ટર અને AUTO/MANUAL બેજ
     if(d.statusMsg) {
         let txt = d.statusMsg;
         let pmBadge = document.getElementById("playModeBadge");
@@ -306,10 +298,13 @@ function listenStatus() {
             document.getElementById("trackName").innerText = TRACKS[curTrack-1] || "-";
         }
     }
-    
-if(d.volume !== undefined) { curVol = d.volume; document.getElementById("volNum").innerText=d.volume; }
+
+// 🟢PART_2_વોલ્યુમ અને ટ્રેક નંબર
+
+    if(d.volume !== undefined) { curVol = d.volume; document.getElementById("volNum").innerText=d.volume; }
     if(d.f4track) { curTrack=d.f4track; }
     
+    // 🟢 બટન બ્લર (Shadow / Active state) કરવાનું લોજીક
     if(d.isRepeat !== undefined) { isRepeat = (d.isRepeat === true || d.isRepeat === "true"); setDevState("btnRep", isRepeat); }
     if(d.isShuffle !== undefined) { isShuffle = (d.isShuffle === true || d.isShuffle === "true"); setDevState("btnShuf", isShuffle); }
     
@@ -343,6 +338,7 @@ function toggleMute() {
   setDevState("btnMute", isMute);
 }
 
+// 🟢 બટનને ચાલુ કે બંધ દર્શાવતું ફંક્શન
 function setDevState(id, state) { 
     let el=document.getElementById(id); 
     if(!el) return; 
