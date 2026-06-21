@@ -10,7 +10,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
-/* બધી ડિઝાઇન અગાઉ મુજબ */
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:'Segoe UI',sans-serif;background:#1a1a1a;color:#fff;margin:0;padding-bottom:20px;text-align:center;user-select:none;touch-action:manipulation}
 .c{padding:10px;max-width:600px;margin:auto}
@@ -66,6 +65,7 @@ input[type="time"]{background:#333;color:#fff;border:1px solid #555;padding:6px;
 input:checked+span{background:#4caf50}
 input:checked+span:before{transform:translateX(16px);background:#fff}
 .sync-btn{background:#4caf50;color:#fff;border:none;padding:15px;width:100%;border-radius:15px;font-weight:bold;font-size:15px;cursor:pointer;margin-top:10px}
+.sync-btn:disabled{background:#555;cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -162,7 +162,7 @@ function genSettings() {
 }
 function timeIn(id) {
   return `<select id='${id}_h' style='opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;'><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select> : 
-          <select id='${id}_m' style='opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;'>${Array.from({length:60},(_,i)=>`<option>${i<10?'0'+i:i}</option>`).join('')}</select>
+          <select id='${id}_m' style='opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;'>${Array.from({length:60},(_,i)=>`<option value='${i<10?'0'+i:i}'>${i<10?'0'+i:i}</option>`).join('')}</select>
           <select id='${id}_ap' style='opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;'><option value='0'>AM</option><option value='1'>PM</option></select>`;
 }
 function initFB() {
@@ -189,8 +189,7 @@ function listenStatus() {
         document.getElementById("statusMsg").innerText = txt;
         document.getElementById("trackName").innerText = (d.playing) ? txt : TRACKS[curTrack-1];
     }
-    
-if(d.volume !== undefined) document.getElementById("volNum").innerText=d.volume;
+    if(d.volume !== undefined) document.getElementById("volNum").innerText=d.volume;
     if(d.f4track) curTrack=d.f4track;
     setDevState("btnRep", d.isRepeat); setDevState("btnShuf", d.isShuffle);
     setDevState("devAmp", d.ampPower); setDevState("devMini", d.maPower); setDevState("devMiniSpk", d.msPower); setDevState("devMixer", d.r4Power); setDevState("devSpk", d.spkPower);
@@ -202,6 +201,7 @@ function setDevState(id, s) { let e=document.getElementById(id); if(e) e.classLi
 function toast(m) { let t=document.getElementById("toast"); t.innerText=m; t.className="toast-show"; setTimeout(()=>t.className="",2000); }
 function switchView(v) { document.getElementById('view-dash').style.display = v==='dash'?'block':'none'; document.getElementById('view-sett').style.display = v==='sett'?'block':'none'; document.getElementById('tab-dash').classList.toggle('act',v==='dash'); document.getElementById('tab-sett').classList.toggle('act',v==='sett'); }
 function openSetTab(id, b) { document.querySelectorAll('.set-cont').forEach(e=>e.classList.remove('act')); document.querySelectorAll('.set-tb').forEach(e=>e.classList.remove('act')); document.getElementById('tc-'+id).classList.add('act'); b.classList.add('act'); }
+
 function loadSettingsFromCloud() {
   setRef.once("value").then(snap => {
     if(!snap.exists()) return; const d=snap.val();
@@ -209,22 +209,53 @@ function loadSettingsFromCloud() {
       let en = document.getElementById(c.id+'_en'); if(en) en.checked = (d[c.v[c.v.length-1]] == 1);
       if(d[c.v[0]]!==undefined) { 
         let h12 = d[c.v[0]]%12; if(h12==0) h12=12; 
-        document.getElementById(c.id+'_s_h').value=h12; document.getElementById(c.id+'_s_m').value=d[c.v[1]]; document.getElementById(c.id+'_s_ap').value=(d[c.v[0]]>=12?1:0);
+        document.getElementById(c.id+'_s_h').value=h12; 
+        let mVal = parseInt(d[c.v[1]]) || 0;
+        document.getElementById(c.id+'_s_m').value= mVal < 10 ? '0'+mVal : mVal; 
+        document.getElementById(c.id+'_s_ap').value=(d[c.v[0]]>=12?1:0);
       }
       if(c.type==='slot' && d[c.v[2]]!==undefined) { 
         let h12 = d[c.v[2]]%12; if(h12==0) h12=12;
-        document.getElementById(c.id+'_e_h').value=h12; document.getElementById(c.id+'_e_m').value=d[c.v[3]]; document.getElementById(c.id+'_e_ap').value=(d[c.v[2]]>=12?1:0);
+        document.getElementById(c.id+'_e_h').value=h12; 
+        let mValE = parseInt(d[c.v[3]]) || 0;
+        document.getElementById(c.id+'_e_m').value= mValE < 10 ? '0'+mValE : mValE; 
+        document.getElementById(c.id+'_e_ap').value=(d[c.v[2]]>=12?1:0);
       }
     });
   });
 }
+
 function syncSettingsToCloud() {
-  let p={}; S_CONF.forEach(c => {
-    p[c.v[c.v.length-1]] = document.getElementById(c.id+'_en').checked?1:0;
-    p[c.v[0]] = get24(c.id+'_s'); p[c.v[1]] = parseInt(document.getElementById(c.id+'_s_m').value);
-    if(c.type==='slot'){ p[c.v[2]] = get24(c.id+'_e'); p[c.v[3]] = parseInt(document.getElementById(c.id+'_e_m').value); }
+  const btn = document.querySelector('.sync-btn');
+  const oldText = btn.innerText;
+  btn.innerText = "⏳ SAVING & SYNCING...";
+  btn.disabled = true;
+
+  let p={}; 
+  try {
+    S_CONF.forEach(c => {
+      let el = document.getElementById(c.id+'_en');
+      p[c.v[c.v.length-1]] = el && el.checked ? 1 : 0;
+      p[c.v[0]] = get24(c.id+'_s'); 
+      p[c.v[1]] = parseInt(document.getElementById(c.id+'_s_m').value) || 0;
+      if(c.type==='slot'){ 
+        p[c.v[2]] = get24(c.id+'_e'); 
+        p[c.v[3]] = parseInt(document.getElementById(c.id+'_e_m').value) || 0; 
+      }
+    });
+  } catch(e) {
+    btn.innerText = oldText; btn.disabled = false; return;
+  }
+
+  setRef.set(p).then(() => { 
+    cmd("sync_settings"); 
+    toast("💾 Settings Saved!"); 
+    setTimeout(() => {
+      btn.innerText = oldText; btn.disabled = false; switchView('dash');
+    }, 1200);
+  }).catch(() => {
+    btn.innerText = oldText; btn.disabled = false;
   });
-  setRef.set(p).then(() => { cmd("sync"); toast("Synced!"); switchView('dash'); });
 }
 function get24(id) { let h=parseInt(document.getElementById(id+'_h').value); let ap=parseInt(document.getElementById(id+'_ap').value); return ap==1?(h==12?12:h+12):(h==12?0:h); }
 window.onload=()=>{ genSettings(); initFB(); };
