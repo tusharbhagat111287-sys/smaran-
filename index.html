@@ -36,15 +36,14 @@ body{font-family:'Segoe UI',sans-serif;background:#1a1a1a;color:#fff;margin:0;pa
 .cir-btn{width:55px;height:55px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:22px;color:#fff;border:none;cursor:pointer;position:relative}
 .cir-btn:active{transform:scale(0.95)}
 .c-pur{background:#9c27b0} .c-org{background:#ff9800} .c-teal{background:#0097a7}
-.cir-btn.act {box-shadow: inset 0 0 15px rgba(0,0,0,0.8);}
-.tile-btn.act {box-shadow: inset 0 0 15px rgba(0,0,0,0.8);}
+.cir-btn.act {box-shadow: inset 0 0 15px rgba(0,0,0,0.8); background: #555;}
+.tile-btn.act {box-shadow: inset 0 0 15px rgba(0,0,0,0.8); background: #555 !important;}
 .c-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
 .tile-btn{width:18.5%;padding:10px 0;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;font-weight:bold;color:#fff;border:none;cursor:pointer;box-shadow:0 3px 6px rgba(0,0,0,0.3)}
 .tile-btn:active{transform:scale(0.95)}
 .tile-btn .icon{font-size:20px;margin-bottom:2px}
 .t-red{background:#f44336} .t-blu{background:#2196f3} .t-org{background:#ff9800} .t-pur{background:#9c27b0} .t-teal{background:#00bcd4} .t-pnk{background:#e91e63}
 .vol-box{width:18.5%;background:#222;height:45px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;box-shadow:inset 0 0 5px #000}
-select{opacity:0;position:absolute;width:100%;height:100%;left:0;top:0;cursor:pointer}
 #toast{visibility:hidden;background:#fff;color:#000;padding:10px 20px;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);border-radius:30px;z-index:99;font-weight:bold;font-size:13px}
 .toast-show{visibility:visible!important;animation:fade 2s}
 @keyframes fade{0%{opacity:0}20%{opacity:1}80%{opacity:1}100%{opacity:0}}
@@ -57,7 +56,6 @@ select{opacity:0;position:absolute;width:100%;height:100%;left:0;top:0;cursor:po
 .cd{background:#121212;padding:12px;margin-bottom:12px;border-radius:12px;text-align:left;border:1px solid #333;border-left:4px solid #ff9800}
 .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:bold;font-size:13px;color:#ff9800}
 .rw{display:flex;justify-content:space-between;align-items:center;margin-top:6px;background:#222;padding:8px;border-radius:6px;font-size:12px;}
-input[type="time"]{background:#333;color:#fff;border:1px solid #555;padding:6px;border-radius:6px;font-size:14px;outline:none}
 .sw{position:relative;display:inline-block;width:36px;height:20px}
 .sw input{opacity:0;width:0;height:0}
 .sw span{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#555;transition:.3s;border-radius:20px}
@@ -65,7 +63,6 @@ input[type="time"]{background:#333;color:#fff;border:1px solid #555;padding:6px;
 input:checked+span{background:#4caf50}
 input:checked+span:before{transform:translateX(16px);background:#fff}
 .sync-btn{background:#4caf50;color:#fff;border:none;padding:15px;width:100%;border-radius:15px;font-weight:bold;font-size:15px;cursor:pointer;margin-top:10px}
-.sync-btn:disabled{background:#555;cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -85,7 +82,7 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
     <div class="card">
       <div class="t-row"><button class="sq-btn" onclick="prevTrack()">⏮</button><div class="t-name" id="trackName">-</div><button class="sq-btn" onclick="nextTrack()">⏭</button></div>
       <div class="cir-row">
-        <div class="cir-btn c-pur">📂<select id="trackSel" onchange="selectTrack(this)"><option value="">.</option></select></div>
+        <div class="cir-btn c-pur">📂<select id="trackSel" onchange="selectTrack(this)" style="opacity:0;position:absolute;width:100%;height:100%;"><option value="" disabled selected>.</option></select></div>
         <button class="cir-btn c-org" id="btnShuf" onclick="toggleShuffle()">🔀</button><button class="cir-btn c-org" id="btnRep" onclick="toggleRepeat()">🔁</button>
         <button class="cir-btn c-pur" id="btnMute" onclick="toggleMute()">🔊</button><button class="cir-btn c-teal" id="devMiniSpk" onclick="cmd('toggle_minispk')">📢<span style="font-size:7px">M-SPK</span></button>
       </div>
@@ -94,19 +91,18 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
       <div class="c-row">
         <button class="tile-btn t-red" onclick="cmd('restart')"><span class="icon">💫</span>RESTART</button>
         <button class="tile-btn t-blu" onclick="cmd('voldown')"><span class="icon">➖</span>VOL -</button>
-        <div class="vol-box" id="volNum">19</div>
+        <div class="vol-box" id="volNum">--</div>
         <button class="tile-btn t-blu" onclick="cmd('volup')"><span class="icon">➕</span>VOL +</button>
         <button class="tile-btn t-red" onclick="cmd('stop')"><span class="icon">⏹</span>STOP</button>
       </div>
       <div class="c-row" style="margin-bottom:0">
         <button class="tile-btn t-org" onclick="cmd('bell')"><span class="icon">🔔</span>BELL</button>
-        <button class="tile-btn t-pur" id="devAmp" onclick="cmd('toggle_amp')"><div style="font-size:7px;margin-bottom:4px">AUTO</div><span class="icon">🎚️</span>AMPLI</button>
-        <button class="tile-btn t-teal" id="devMini" onclick="cmd('toggle_mini')"><div style="font-size:7px;margin-bottom:4px">AUTO</div><span class="icon">📻</span>MINI</button>
-        <button class="tile-btn t-pnk" id="devMixer" onclick="cmd('toggle_mixer')"><div style="font-size:7px;margin-bottom:4px">AUTO</div><span class="icon">🎛️</span>MIXER</button>
-        <button class="tile-btn t-org" id="devSpk" onclick="cmd('toggle_spk')"><div style="font-size:7px;margin-bottom:4px">AUTO</div><span class="icon">📢</span>SPIKER</button>
+        <button class="tile-btn t-pur" id="devAmp" onclick="cmd('toggle_amp')"><span class="icon">🎚️</span>AMPLI</button>
+        <button class="tile-btn t-teal" id="devMini" onclick="cmd('toggle_mini')"><span class="icon">📻</span>MINI</button>
+        <button class="tile-btn t-pnk" id="devMixer" onclick="cmd('toggle_mixer')"><span class="icon">🎛️</span>MIXER</button>
+        <button class="tile-btn t-org" id="devSpk" onclick="cmd('toggle_spk')"><span class="icon">📢</span>SPIKER</button>
       </div>
     </div>
-    <div style="font-size:12px; color:#fff; font-weight:bold; text-shadow: 0 0 10px #9c27b0, 0 0 20px #9c27b0;">SMARAN V1 | Cloud Edition | JAY SWAMINARAYAN</div>
   </div>
   <div id="view-sett">
     <div class="set-tabs"><button class="set-tb act" onclick="openSetTab('g', this)">MAIN</button><button class="set-tb" onclick="openSetTab('a', this)">AMPLI</button><button class='set-tb' onclick="openSetTab('ma', this)">M-AMP</button><button class='set-tb' onclick="openSetTab('ms', this)">M-SPK</button><button class='set-tb' onclick="openSetTab('mx', this)">MIXER</button><button class='set-tb' onclick="openSetTab('sp', this)">SPIKER</button></div>
@@ -144,7 +140,8 @@ const S_CONF = [
   { t:'sp', id:'spks6', type:'slot', lbl:'SPK6: Mon-Sat Ex 2', c:'#ff6f00', v:['spkS6H','spkS6M','spkE6H','spkE6M','enSpkS6'] }, { t:'sp', id:'spks4', type:'slot', lbl:'SPK4: Tue', c:'#7b1fa2', v:['spkS4H','spkS4M','spkE4H','spkE4M','enSpkS4'] },
   { t:'sp', id:'spks3', type:'slot', lbl:'SPK3: Sun Eve', c:'#1976d2', v:['spkS3H','spkS3M','spkE3H','spkE3M','enSpkS3'] }, { t:'sp', id:'ss1', type:'slot', lbl:'SPK7: Sat Eve 1', c:'#00bcd4', v:['ss1H','ss1M','se1H','se1M','enSs1'] }, { t:'sp', id:'ss2', type:'slot', lbl:'SPK8: Sat Eve 2', c:'#00bcd4', v:['ss2H','ss2M','se2H','se2M','enSs2'] }
 ];
-let db, cmdRef, statusRef, setRef;
+
+let db, cmdRef, statusRef, setRef, onlineTimer;
 let curTrack=1, isConnected=false;
 
 function genSettings() {
@@ -160,11 +157,24 @@ function genSettings() {
     let div=document.createElement('div'); div.className=`set-cont ${t==='g'?'act':''}`; div.id='tc-'+t; div.innerHTML=html[t]; cont.appendChild(div); 
   });
 }
+
 function timeIn(id) {
   return `<select id='${id}_h' style='opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;'><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select> : 
           <select id='${id}_m' style='opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;'>${Array.from({length:60},(_,i)=>`<option value='${i<10?'0'+i:i}'>${i<10?'0'+i:i}</option>`).join('')}</select>
           <select id='${id}_ap' style='opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;'><option value='0'>AM</option><option value='1'>PM</option></select>`;
 }
+
+function loadTrackList() {
+  const sel = document.getElementById("trackSel");
+  TRACKS.forEach((t, i) => {
+    let opt = document.createElement("option");
+    opt.value = i+1; opt.text = (i+1)+". "+t;
+    sel.appendChild(opt);
+  });
+}
+
+function selectTrack(sel) { if(sel.value) { cmd('play', 4, sel.value); sel.selectedIndex = 0; } }
+
 function initFB() {
   firebase.initializeApp(FB_CONFIG);
   db = firebase.database();
@@ -173,8 +183,9 @@ function initFB() {
   setRef = db.ref("/smaran_v1/settings");
   firebase.auth().signInAnonymously().then(() => {
     isConnected=true; listenStatus(); loadSettingsFromCloud();
-  }).catch(() => { isConnected=false; document.getElementById('statusMsg').innerText="Auth Fail"; });
+  });
 }
+
 function listenStatus() {
   statusRef.on("value", snap => {
     if (!snap.exists()) return;
@@ -193,14 +204,25 @@ function listenStatus() {
     if(d.f4track) curTrack=d.f4track;
     setDevState("btnRep", d.isRepeat); setDevState("btnShuf", d.isShuffle);
     setDevState("devAmp", d.ampPower); setDevState("devMini", d.maPower); setDevState("devMiniSpk", d.msPower); setDevState("devMixer", d.r4Power); setDevState("devSpk", d.spkPower);
+    setDevState("btnMute", d.isMute); // જો મ્યુટ સ્ટેટસ આવતું હોય
+    
     document.getElementById("netBadge").className="badge"; document.getElementById("netBadge").innerText="ONLINE";
+    clearTimeout(onlineTimer);
+    onlineTimer = setTimeout(() => { document.getElementById("netBadge").className="badge offline"; document.getElementById("netBadge").innerText="OFFLINE"; }, 3500); 
   });
 }
+
 function cmd(a,f,t) { if(!isConnected) return; cmdRef.set({action:a, folder:Number(f)||0, track:Number(t)||0, timestamp:Date.now()}); toast("Sent: "+a); }
 function setDevState(id, s) { let e=document.getElementById(id); if(e) e.classList.toggle("act", s); }
 function toast(m) { let t=document.getElementById("toast"); t.innerText=m; t.className="toast-show"; setTimeout(()=>t.className="",2000); }
 function switchView(v) { document.getElementById('view-dash').style.display = v==='dash'?'block':'none'; document.getElementById('view-sett').style.display = v==='sett'?'block':'none'; document.getElementById('tab-dash').classList.toggle('act',v==='dash'); document.getElementById('tab-sett').classList.toggle('act',v==='sett'); }
 function openSetTab(id, b) { document.querySelectorAll('.set-cont').forEach(e=>e.classList.remove('act')); document.querySelectorAll('.set-tb').forEach(e=>e.classList.remove('act')); document.getElementById('tc-'+id).classList.add('act'); b.classList.add('act'); }
+
+function toggleShuffle() { cmd('shuffle_toggle'); }
+function toggleRepeat() { cmd('repeat_toggle'); }
+function toggleMute() { cmd('toggle_mute'); }
+function nextTrack() { cmd('f4_next'); }
+function prevTrack() { cmd('f4_prev'); }
 
 function loadSettingsFromCloud() {
   setRef.once("value").then(snap => {
@@ -210,15 +232,13 @@ function loadSettingsFromCloud() {
       if(d[c.v[0]]!==undefined) { 
         let h12 = d[c.v[0]]%12; if(h12==0) h12=12; 
         document.getElementById(c.id+'_s_h').value=h12; 
-        let mVal = parseInt(d[c.v[1]]) || 0;
-        document.getElementById(c.id+'_s_m').value= mVal < 10 ? '0'+mVal : mVal; 
+        document.getElementById(c.id+'_s_m').value=parseInt(d[c.v[1]])<10?'0'+d[c.v[1]]:d[c.v[1]]; 
         document.getElementById(c.id+'_s_ap').value=(d[c.v[0]]>=12?1:0);
       }
       if(c.type==='slot' && d[c.v[2]]!==undefined) { 
         let h12 = d[c.v[2]]%12; if(h12==0) h12=12;
         document.getElementById(c.id+'_e_h').value=h12; 
-        let mValE = parseInt(d[c.v[3]]) || 0;
-        document.getElementById(c.id+'_e_m').value= mValE < 10 ? '0'+mValE : mValE; 
+        document.getElementById(c.id+'_e_m').value=parseInt(d[c.v[3]])<10?'0'+d[c.v[3]]:d[c.v[3]]; 
         document.getElementById(c.id+'_e_ap').value=(d[c.v[2]]>=12?1:0);
       }
     });
@@ -226,39 +246,18 @@ function loadSettingsFromCloud() {
 }
 
 function syncSettingsToCloud() {
-  const btn = document.querySelector('.sync-btn');
-  const oldText = btn.innerText;
-  btn.innerText = "⏳ SAVING & SYNCING...";
-  btn.disabled = true;
-
+  const btn = document.querySelector('.sync-btn'); btn.innerText = "⏳ SAVING..."; btn.disabled = true;
   let p={}; 
-  try {
-    S_CONF.forEach(c => {
-      let el = document.getElementById(c.id+'_en');
-      p[c.v[c.v.length-1]] = el && el.checked ? 1 : 0;
-      p[c.v[0]] = get24(c.id+'_s'); 
-      p[c.v[1]] = parseInt(document.getElementById(c.id+'_s_m').value) || 0;
-      if(c.type==='slot'){ 
-        p[c.v[2]] = get24(c.id+'_e'); 
-        p[c.v[3]] = parseInt(document.getElementById(c.id+'_e_m').value) || 0; 
-      }
-    });
-  } catch(e) {
-    btn.innerText = oldText; btn.disabled = false; return;
-  }
-
-  setRef.set(p).then(() => { 
-    cmd("sync_settings"); 
-    toast("💾 Settings Saved!"); 
-    setTimeout(() => {
-      btn.innerText = oldText; btn.disabled = false; switchView('dash');
-    }, 1200);
-  }).catch(() => {
-    btn.innerText = oldText; btn.disabled = false;
+  S_CONF.forEach(c => {
+    let el = document.getElementById(c.id+'_en');
+    p[c.v[c.v.length-1]] = el && el.checked ? 1 : 0;
+    p[c.v[0]] = get24(c.id+'_s'); p[c.v[1]] = parseInt(document.getElementById(c.id+'_s_m').value) || 0;
+    if(c.type==='slot'){ p[c.v[2]] = get24(c.id+'_e'); p[c.v[3]] = parseInt(document.getElementById(c.id+'_e_m').value) || 0; }
   });
+  setRef.set(p).then(() => { cmd("sync_settings"); toast("💾 Saved!"); setTimeout(()=>{ btn.innerText = "💾 SAVE & SYNC TO MODULE"; btn.disabled = false; switchView('dash'); }, 1200); });
 }
 function get24(id) { let h=parseInt(document.getElementById(id+'_h').value); let ap=parseInt(document.getElementById(id+'_ap').value); return ap==1?(h==12?12:h+12):(h==12?0:h); }
-window.onload=()=>{ genSettings(); initFB(); };
+window.onload=()=>{ genSettings(); loadTrackList(); initFB(); };
 </script>
 </body>
-</html>
+</html
