@@ -154,16 +154,11 @@ const S_CONF = [
   { t:'sp', id:'spks3', type:'slot', lbl:'SPK3: Sun Eve', c:'#1976d2', v:['spkS3H','spkS3M','spkE3H','spkE3M','enSpkS3'] }, { t:'sp', id:'ss1', type:'slot', lbl:'SPK7: Sat Eve 1', c:'#00bcd4', v:['ss1H','ss1M','se1H','se1M','enSs1'] }, { t:'sp', id:'ss2', type:'slot', lbl:'SPK8: Sat Eve 2', c:'#00bcd4', v:['ss2H','ss2M','se2H','se2M','enSs2'] },
   
   // 🟢 10 NEW LOCK SLOTS ADDED HERE
-  { t:'lk', id:'bl1', type:'slot', lbl:'L1: Everyday', c:'#d32f2f', v:['bl1SH','bl1SM','bl1EH','bl1EM','enBl1'] },
-  { t:'lk', id:'bl2', type:'slot', lbl:'L2: Everyday', c:'#d32f2f', v:['bl2SH','bl2SM','bl2EH','bl2EM','enBl2'] },
-  { t:'lk', id:'bl3', type:'slot', lbl:'L3: Everyday', c:'#d32f2f', v:['bl3SH','bl3SM','bl3EH','bl3EM','enBl3'] },
-  { t:'lk', id:'bl4', type:'slot', lbl:'L4: Everyday', c:'#d32f2f', v:['bl4SH','bl4SM','bl4EH','bl4EM','enBl4'] },
-  { t:'lk', id:'bl5', type:'slot', lbl:'L5: Everyday', c:'#d32f2f', v:['bl5SH','bl5SM','bl5EH','bl5EM','enBl5'] },
-  { t:'lk', id:'bl6', type:'slot', lbl:'L6: Everyday', c:'#d32f2f', v:['bl6SH','bl6SM','bl6EH','bl6EM','enBl6'] },
-  { t:'lk', id:'bl7', type:'slot', lbl:'L7: Mon-Sat', c:'#ff9800', v:['bl7SH','bl7SM','bl7EH','bl7EM','enBl7'] },
-  { t:'lk', id:'bl8', type:'slot', lbl:'L8: Mon-Sat', c:'#ff9800', v:['bl8SH','bl8SM','bl8EH','bl8EM','enBl8'] },
-  { t:'lk', id:'bl9', type:'slot', lbl:'L9: Sunday', c:'#2196f3', v:['bl9SH','bl9SM','bl9EH','bl9EM','enBl9'] },
-  { t:'lk', id:'bl10', type:'slot', lbl:'L10: Sunday', c:'#2196f3', v:['bl10SH','bl10SM','bl10EH','bl10EM','enBl10'] }
+  { t:'lk', id:'bl1', type:'slot', lbl:'L1: Everyday', c:'#d32f2f', v:['bl1SH','bl1SM','bl1EH','bl1EM','enBl1'] }, { t:'lk', id:'bl2', type:'slot', lbl:'L2: Everyday', c:'#d32f2f', v:['bl2SH','bl2SM','bl2EH','bl2EM','enBl2'] },
+  { t:'lk', id:'bl3', type:'slot', lbl:'L3: Everyday', c:'#d32f2f', v:['bl3SH','bl3SM','bl3EH','bl3EM','enBl3'] }  { t:'lk', id:'bl4', type:'slot', lbl:'L4: Everyday', c:'#d32f2f', v:['bl4SH','bl4SM','bl4EH','bl4EM','enBl4'] },
+  { t:'lk', id:'bl5', type:'slot', lbl:'L5: Everyday', c:'#d32f2f', v:['bl5SH','bl5SM','bl5EH','bl5EM','enBl5'] }, { t:'lk', id:'bl6', type:'slot', lbl:'L6: Everyday', c:'#d32f2f', v:['bl6SH','bl6SM','bl6EH','bl6EM','enBl6'] },
+  { t:'lk', id:'bl7', type:'slot', lbl:'L7: Mon-Sat', c:'#ff9800', v:['bl7SH','bl7SM','bl7EH','bl7EM','enBl7'] },  { t:'lk', id:'bl8', type:'slot', lbl:'L8: Mon-Sat', c:'#ff9800', v:['bl8SH','bl8SM','bl8EH','bl8EM','enBl8'] },
+  { t:'lk', id:'bl9', type:'slot', lbl:'L9: Sunday', c:'#2196f3', v:['bl9SH','bl9SM','bl9EH','bl9EM','enBl9'] },  { t:'lk', id:'bl10', type:'slot', lbl:'L10: Sunday', c:'#2196f3', v:['bl10SH','bl10SM','bl10EH','bl10EM','enBl10'] }
 ];
 
 let db, cmdRef, statusRef, setRef, onlineTimer;
@@ -238,7 +233,31 @@ function listenStatus() {
   });
 }
 
-function cmd(a,f,t) { if(!isConnected) return; cmdRef.set({action:a, folder:Number(f)||0, track:Number(t)||0, timestamp:Date.now()}); toast("Sent: "+a); }
+let isSending = false; // આ લાઈન ફંક્શનની બહાર જ રહેવી જોઈએ
+
+function cmd(a,f,t) { 
+  if(!isConnected || isSending) return; 
+  
+  isSending = true; 
+  
+  // UI ઈફેક્ટ: બટન તરત જ એક્ટિવ દેખાશે (0.0 સેકન્ડમાં)
+  if(a === 'toggle_amp') document.getElementById('devAmp').classList.toggle('act');
+  if(a === 'toggle_mini') document.getElementById('devMini').classList.toggle('act');
+  if(a === 'toggle_minispk') document.getElementById('devMiniSpk').classList.toggle('act');
+  if(a === 'toggle_mixer') document.getElementById('devMixer').classList.toggle('act');
+  if(a === 'toggle_spk') document.getElementById('devSpk').classList.toggle('act');
+  if(a === 'repeat_toggle') document.getElementById('btnRep').classList.toggle('act');
+  if(a === 'shuffle_toggle') document.getElementById('btnShuf').classList.toggle('act');
+  if(a === 'toggle_mute') document.getElementById('btnMute').classList.toggle('act');
+  
+  // ફાયરબેઝમાં કમાન્ડ મોકલો
+  cmdRef.set({action:a, folder:Number(f)||0, track:Number(t)||0, timestamp:Date.now()}); 
+  toast("Sent: "+a); 
+  
+  // 0.5 સેકન્ડ (500ms) સુધી નવો કમાન્ડ જશે નહીં, જેથી સિસ્ટમ સુરક્ષિત રહે
+  setTimeout(() => { isSending = false; }, 500); 
+}
+
 function setDevState(id, s) { let e=document.getElementById(id); if(e) e.classList.toggle("act", s); }
 function toast(m) { let t=document.getElementById("toast"); t.innerText=m; t.className="toast-show"; setTimeout(()=>t.className="",2000); }
 function switchView(v) { document.getElementById('view-dash').style.display = v==='dash'?'block':'none'; document.getElementById('view-sett').style.display = v==='sett'?'block':'none'; document.getElementById('tab-dash').classList.toggle('act',v==='dash'); document.getElementById('tab-sett').classList.toggle('act',v==='sett'); }
