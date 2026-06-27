@@ -102,6 +102,9 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
         <button class="tile-btn t-pnk" id="devMixer" onclick="cmd('toggle_mixer')"><span class="icon">🎛️</span>MIXER</button>
         <button class="tile-btn t-org" id="devSpk" onclick="cmd('toggle_spk')"><span class="icon">📢</span>SPIKER</button>
       </div>
+<div style="margin-top:25px; margin-bottom:25px; font-size:15px; color:#fff; font-weight:bold; text-shadow: 0 0 10px #9c27b0, 0 0 20px #9c27b0; text-align:center; width:100%;">
+   SARVOPARI CLOOUD EDITION SMARAN V1
+</div>
     </div>
   </div>
   <div id="view-sett">
@@ -304,8 +307,5 @@ function syncSettingsToCloud() {
 function get24(id) { let h=parseInt(document.getElementById(id+'_h').value); let ap=parseInt(document.getElementById(id+'_ap').value); return ap==1?(h==12?12:h+12):(h==12?0:h); }
 window.onload=()=>{ genSettings(); loadTrackList(); initFB(); };
 </script>
-<div style="margin-top:25px; margin-bottom:25px; font-size:15px; color:#fff; font-weight:bold; text-shadow: 0 0 10px #9c27b0, 0 0 20px #9c27b0; text-align:center; width:100%;">
-   SARVOPARI CLOOUD EDITION SMARAN V1
-</div>
 </body>
 </html>
