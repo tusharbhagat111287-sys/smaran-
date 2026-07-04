@@ -1,0 +1,23 @@
+
+{
+  "name": "SARVOPARI DHAM NITYAM",
+  "short_name": "SARVOPARI DHAM",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#1a1a1a",
+  "description": "Sarvopari Dham Global Remote Control",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/HpDS8yDF/apple-touch-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.ibb.co/HpDS8yDF/apple-touch-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
