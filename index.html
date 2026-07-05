@@ -214,3 +214,121 @@ function timeIn(id) {
           <select id='${id}_ap' style='opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;'><option value='0'>AM</option><option value='1'>PM</option></select>`;
 }
 
+function loadTrackList() {
+  const sel = document.getElementById("trackSel");
+  TRACKS.forEach((t, i) => {
+    let opt = document.createElement("option");
+    opt.value = i+1; opt.text = (i+1)+". "+t;
+    sel.appendChild(opt);
+  });
+}
+
+function selectTrack(sel) { if(sel.value) { cmd('play', 4, sel.value); sel.selectedIndex = 0; } }
+
+function initFB() {
+  firebase.initializeApp(FB_CONFIG);
+  db = firebase.database();
+  cmdRef = db.ref("/smaran_v1/command");
+  statusRef = db.ref("/smaran_v1/status");
+  setRef = db.ref("/smaran_v1/settings");
+  firebase.auth().signInAnonymously().then(() => {
+    isConnected=true; listenStatus(); loadSettingsFromCloud();
+  });
+}
+
+function listenStatus() {
+  statusRef.on("value", snap => {
+    if (!snap.exists()) return;
+    const d = snap.val();
+    if(d.time) document.getElementById("clock").innerText = d.time;
+    if(d.statusMsg) {
+        let txt = d.statusMsg;
+        let pm = document.getElementById("playModeBadge");
+        if(txt.includes("MANUAL | ")){ pm.style.display="inline-block"; pm.innerText="MANUAL"; pm.style.background="#f44336"; txt=txt.replace("MANUAL | ",""); }
+        else if(txt.includes("AUTO | ")){ pm.style.display="inline-block"; pm.innerText="AUTO"; pm.style.background="#4caf50"; txt=txt.replace("AUTO | ",""); }
+        else { pm.style.display="none"; }
+        document.getElementById("statusMsg").innerText = txt;
+        document.getElementById("trackName").innerText = (d.playing) ? txt : TRACKS[curTrack-1];
+    }
+    if(d.volume !== undefined) document.getElementById("volNum").innerText=d.volume;
+    if(d.f4track) curTrack=d.f4track;
+    setDevState("btnRep", d.isRepeat); setDevState("btnShuf", d.isShuffle);
+    setDevState("devAmp", d.ampPower); setDevState("devMini", d.maPower); setDevState("devMiniSpk", d.msPower); setDevState("devMixer", d.r4Power); setDevState("devSpk", d.spkPower);
+    setDevState("btnMute", d.isMute); 
+    
+    document.getElementById("netBadge").className="badge"; document.getElementById("netBadge").innerText="ONLINE";
+    clearTimeout(onlineTimer);
+    onlineTimer = setTimeout(() => { document.getElementById("netBadge").className="badge offline"; document.getElementById("netBadge").innerText="OFFLINE"; }, 3500); 
+  });
+}
+
+let isSending = false;
+
+function cmd(a,f,t) { 
+  if(!isConnected || isSending) return; 
+  
+  isSending = true; 
+  
+  if(a === 'toggle_amp') document.getElementById('devAmp').classList.toggle('act');
+  if(a === 'toggle_mini') document.getElementById('devMini').classList.toggle('act');
+  if(a === 'toggle_minispk') document.getElementById('devMiniSpk').classList.toggle('act');
+  if(a === 'toggle_mixer') document.getElementById('devMixer').classList.toggle('act');
+  if(a === 'toggle_spk') document.getElementById('devSpk').classList.toggle('act');
+  if(a === 'repeat_toggle') document.getElementById('btnRep').classList.toggle('act');
+  if(a === 'shuffle_toggle') document.getElementById('btnShuf').classList.toggle('act');
+  if(a === 'toggle_mute') document.getElementById('btnMute').classList.toggle('act');
+  
+  cmdRef.set({action:a, folder:Number(f)||0, track:Number(t)||0, timestamp:Date.now()}); 
+  toast("Sent: "+a); 
+  
+  setTimeout(() => { isSending = false; }, 500); 
+}
+
+function setDevState(id, s) { let e=document.getElementById(id); if(e) e.classList.toggle("act", s); }
+function toast(m) { let t=document.getElementById("toast"); t.innerText=m; t.className="toast-show"; setTimeout(()=>t.className="",2000); }
+function switchView(v) { document.getElementById('view-dash').style.display = v==='dash'?'block':'none'; document.getElementById('view-sett').style.display = v==='sett'?'block':'none'; document.getElementById('tab-dash').classList.toggle('act',v==='dash'); document.getElementById('tab-sett').classList.toggle('act',v==='sett'); }
+function openSetTab(id, b) { document.querySelectorAll('.set-cont').forEach(e=>e.classList.remove('act')); document.querySelectorAll('.set-tb').forEach(e=>e.classList.remove('act')); document.getElementById('tc-'+id).classList.add('act'); b.classList.add('act'); }
+
+function toggleShuffle() { cmd('shuffle_toggle'); }
+function toggleRepeat() { cmd('repeat_toggle'); }
+function toggleMute() { cmd('toggle_mute'); }
+function nextTrack() { cmd('f4_next'); }
+function prevTrack() { cmd('f4_prev'); }
+
+function loadSettingsFromCloud() {
+  setRef.once("value").then(snap => {
+    if(!snap.exists()) return; const d=snap.val();
+    S_CONF.forEach(c => {
+      let en = document.getElementById(c.id+'_en'); if(en) en.checked = (d[c.v[c.v.length-1]] == 1);
+      if(d[c.v[0]]!==undefined) { 
+        let h12 = d[c.v[0]]%12; if(h12==0) h12=12; 
+        document.getElementById(c.id+'_s_h').value=h12; 
+        document.getElementById(c.id+'_s_m').value=parseInt(d[c.v[1]])<10?'0'+d[c.v[1]]:d[c.v[1]]; 
+        document.getElementById(c.id+'_s_ap').value=(d[c.v[0]]>=12?1:0);
+      }
+      if(c.type==='slot' && d[c.v[2]]!==undefined) { 
+        let h12 = d[c.v[2]]%12; if(h12==0) h12=12;
+        document.getElementById(c.id+'_e_h').value=h12; 
+        document.getElementById(c.id+'_e_m').value=parseInt(d[c.v[3]])<10?'0'+d[c.v[3]]:d[c.v[3]]; 
+        document.getElementById(c.id+'_e_ap').value=(d[c.v[2]]>=12?1:0);
+      }
+    });
+  });
+}
+
+function syncSettingsToCloud() {
+  const btn = document.querySelector('.sync-btn'); btn.innerText = "⏳ SAVING..."; btn.disabled = true;
+  let p={}; 
+  S_CONF.forEach(c => {
+    let el = document.getElementById(c.id+'_en');
+    p[c.v[c.v.length-1]] = el && el.checked ? 1 : 0;
+    p[c.v[0]] = get24(c.id+'_s'); p[c.v[1]] = parseInt(document.getElementById(c.id+'_s_m').value) || 0;
+    if(c.type==='slot'){ p[c.v[2]] = get24(c.id+'_e'); p[c.v[3]] = parseInt(document.getElementById(c.id+'_e_m').value) || 0; }
+  });
+  setRef.set(p).then(() => { cmd("sync_settings"); toast("💾 Saved!"); setTimeout(()=>{ btn.innerText = "💾 SAVE & SYNC TO MODULE"; btn.disabled = false; switchView('dash'); }, 1200); });
+}
+function get24(id) { let h=parseInt(document.getElementById(id+'_h').value); let ap=parseInt(document.getElementById(id+'_ap').value); return ap==1?(h==12?12:h+12):(h==12?0:h); }
+window.onload=()=>{ genSettings(); loadTrackList(); initFB(); };
+</script>
+</body>
+</html>
