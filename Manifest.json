@@ -1,12 +1,12 @@
 
 {
-  "name": "SARVOPARI DHAM NITYAM",
-  "short_name": "SARVOPARI DHAM",
+  "name": "SARVOPARI DHAM SMARAN",
+  "short_name": "SMARAN V1",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#1a1a1a",
   "theme_color": "#1a1a1a",
-  "description": "Sarvopari Dham Global Remote Control",
+  "description": "Sarvopari Dham Smaran V1 Remote",
   "orientation": "portrait",
   "icons": [
     {
