@@ -1,7 +1,7 @@
 
 {
-  "name": "Sarvopari Smaran",
-  "short_name": "Smaran",
+  "name": "SARVOPARI DHAM NITYAM",
+  "short_name": "SMARAN V1",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#1a1a1a",
@@ -10,11 +10,6 @@
     {
       "src": "https://i.ibb.co/HpDS8yDF/apple-touch-icon.png",
       "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "https://i.ibb.co/HpDS8yDF/apple-touch-icon.png",
-      "sizes": "512x512",
       "type": "image/png"
     }
   ]
