@@ -5,12 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
 <title>SARVOPARI DHAM NITYAM</title>
-
-<!-- 🔴 મેનિફેસ્ટ અને આઇકનની સાચી લિંક અહીં સેટ કરી છે 🔴 -->
-<link rel="manifest" href="manifest.json">
 <link rel="icon" href="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png">
-<link rel="apple-touch-icon" href="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png">
-
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -22,10 +17,9 @@ body{font-family:'Segoe UI',sans-serif;background:#1a1a1a;color:#fff;margin:0;pa
 .nt-btn{padding:8px 25px;border-radius:5px;font-weight:bold;font-size:14px;background:#333;color:#888;border:none;cursor:pointer}
 .nt-btn.act{background:#2196f3;color:#fff;box-shadow:0 0 10px rgba(33,150,243,0.5)}
 .card{background:#333;border-radius:15px;padding:15px;margin-bottom:15px;box-shadow:0 4px 6px rgba(0,0,0,0.3)}
-.stat-hdr{color:#FFFFFF; font-weight:900; font-size:19px; margin-bottom:12px; text-shadow: 0 0 8px #9c27b0, 0 0 15px #9c27b0; line-height:1.4; word-break:keep-all; padding:0 5px;}
-.stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px; margin-top:15px;}
-.time-text{font-size:26px; color:#fbc02d; font-weight:bold; padding-top:6px; padding-bottom:2px; white-space:nowrap;}
-.center-murti {width: 60px; height: 60px; border-radius: 50%; border: 2px solid #FFD700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.8); object-fit: cover; margin: 0 5px;}
+.stat-hdr{color:#2196f3;font-weight:900;font-size:13px;margin-bottom:10px}
+.stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.time-text{font-size:22px;color:#fbc02d;font-weight:bold}
 .badge{font-size:10px;padding:3px 8px;border-radius:5px;font-weight:bold;background:#4caf50;color:#fff;text-align:center;}
 .badge.offline{background:#f44336}
 .status-msg{color:#69f0ae;font-weight:600;font-size:14px;margin-top:5px}
@@ -76,38 +70,23 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
 <div class="c">
   <div id="view-dash">
     <div class="card">
-      <div class="stat-hdr">🔴🙏 SARVOPARI DHAM 🙏🔴</div>
-<div class="stat-row">
-       <div id="clock" class="time-text">--:--</div>
-        <img src="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png" class="center-murti" alt="Bhagwan Darshan">
-        <div class="badge-col">
-          <span id="netBadge" class="badge offline">WAIT</span>
-          <span id="playModeBadge" class="badge" style="display:none;">AUTO</span>
-        </div>
-      </div>
-      <div id="statusMsg" class="status-msg">WAITING...</div>
+      <div class="stat-hdr">🔴🙏 SWAMINARAYAN SARVOPARI DHAM 🙏🔴</div>
+      <div class="stat-row"><div id="clock" class="time-text">--:--</div><div class="badge-col"><span id="netBadge" class="badge offline">OFFLINE</span><span id="playModeBadge" class="badge" style="display:none;">AUTO</span></div></div>
+      <div id="statusMsg" class="status-msg">Wait...</div>
     </div>
-    
     <div class="q-grid">
-      <button class="q-btn b-blu" onclick="cmd('play_mangla')">Mangla</button>
-      <button class="q-btn b-org" onclick="cmd('play',1,9)">Arti &amp; Jay</button>
-      <button class="q-btn b-yel" onclick="cmd('play_arti')">today's Arti</button>
-      <button class="q-btn b-grn" onclick="cmd('play_godi')">today's Godi</button>
-      <button class="q-btn b-pur" onclick="cmd('play_dhun1')">Dhun Morning</button>
-      <button class="q-btn b-pur" onclick="cmd('play_dhun2')">Dhun Evening</button>
+      <button class="q-btn b-blu" onclick="cmd('play_mangla')">Mangla</button><button class="q-btn b-org" onclick="cmd('play',1,9)">Arti &amp; Jay</button>
+      <button class="q-btn b-yel" onclick="cmd('play_arti')">today's Arti</button><button class="q-btn b-grn" onclick="cmd('play_godi')">today's Godi</button>
+      <button class="q-btn b-pur" onclick="cmd('play_dhun1')">Dhun Morning</button><button class="q-btn b-pur" onclick="cmd('play_dhun2')">Dhun Evening</button>
     </div>
-    
     <div class="card">
       <div class="t-row"><button class="sq-btn" onclick="prevTrack()">⏮</button><div class="t-name" id="trackName">-</div><button class="sq-btn" onclick="nextTrack()">⏭</button></div>
       <div class="cir-row">
         <div class="cir-btn c-pur">📂<select id="trackSel" onchange="selectTrack(this)" style="opacity:0;position:absolute;width:100%;height:100%;"><option value="" disabled selected>.</option></select></div>
-        <button class="cir-btn c-org" id="btnShuf" onclick="toggleShuffle()">🔀</button>
-        <button class="cir-btn c-org" id="btnRep" onclick="toggleRepeat()">🔁</button>
-        <button class="cir-btn c-pur" id="btnMute" onclick="toggleMute()">🔊</button>
-        <button class="cir-btn c-teal" id="devMiniSpk" onclick="cmd('toggle_minispk')">📢<div style="font-size:7px;margin-top:2px">M-SPK</div></button>
+        <button class="cir-btn c-org" id="btnShuf" onclick="toggleShuffle()">🔀</button><button class="cir-btn c-org" id="btnRep" onclick="toggleRepeat()">🔁</button>
+        <button class="cir-btn c-pur" id="btnMute" onclick="toggleMute()">🔊</button><button class="cir-btn c-teal" id="devMiniSpk" onclick="cmd('toggle_minispk')">📢<span style="font-size:7px">M-SPK</span></button>
       </div>
     </div>
-    
     <div class="card">
       <div class="c-row">
         <button class="tile-btn t-red" onclick="cmd('restart')"><span class="icon">💫</span>RESTART</button>
@@ -125,9 +104,10 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
       </div>
     </div>
     
-    <div style="margin-top: 25px; margin-bottom: 15px; font-size: 14px; color: #FFFFFF; font-weight: bold; text-shadow: 0 0 8px #9c27b0, 0 0 15px #9c27b0; text-align: center; width: 100%; line-height: 1.6;">
+    <div style="margin-top: 25px; margin-bottom: 15px; font-size: 12px; color: #fff; font-weight: bold; text-shadow: 0 0 8px #9c27b0; text-align: center; width: 100%; max-width: 100%; box-sizing: border-box; padding: 0 15px; line-height: 1.6; white-space: normal;">
       SARVOPARI CLOUD EDITION SMARAN V1
     </div>
+
   </div>
   <div id="view-sett">
     <div class="set-tabs">
@@ -153,25 +133,31 @@ const S_CONF = [
   { t:'g', id:'gd', type:'slot', lbl:'Auto Godi', c:'#388e3c', v:['gPH','gPM','gPEH','gPEM','enGD'] }, { t:'g', id:'sb', type:'bell', lbl:'Sunday Bell', c:'#ff6f00', v:['sunBH','sunBM','enSunB'] },
   { t:'g', id:'sg', type:'bell', lbl:'Sunday Godi', c:'#388e3c', v:['sunGH','sunGM','enSunG'] }, { t:'g', id:'md', type:'slot', lbl:'Morning Dhun', c:'#fbc02d', v:['mDhSH','mDhSM','mDhEH','mDhEM','enMDh'] },
   { t:'g', id:'ed', type:'slot', lbl:'Evening Dhun', c:'#7b1fa2', v:['eDhSH','eDhSM','eDhEH','eDhEM','enEDh'] }, { t:'g', id:'ds', type:'slot', lbl:'Sun Dhun', c:'#1976d2', v:['dhSH','dhSM','dhEH','dhEM','enDS'] },
+  
   { t:'a', id:'a1', type:'slot', lbl:'A1: Morning 1', c:'#388e3c', v:['a1SH','a1SM','a1EH','a1EM','enA1'] }, { t:'a', id:'a2', type:'slot', lbl:'A2: Morning 2', c:'#388e3c', v:['a2SH','a2SM','a2EH','a2EM','enA2'] },
   { t:'a', id:'a3', type:'slot', lbl:'A3: Mon-Sat 4-6:15pm', c:'#ff6f00', v:['a3SH','a3SM','a3EH','a3EM','enA3'] }, { t:'a', id:'a4', type:'slot', lbl:'A4: Mon-Sat 6:18-7:45pm', c:'#ff6f00', v:['a4SH','a4SM','a4EH','a4EM','enA4'] },
   { t:'a', id:'a7', type:'slot', lbl:'A7: Mon-Sat 9-10:45pm', c:'#ff6f00', v:['a7SH','a7SM','a7EH','a7EM','enA7'] }, { t:'a', id:'a8', type:'slot', lbl:'A8: Mon-Sat Extra', c:'#FF4081', v:['a8SH','a8SM','a8EH','a8EM','enA8'] },
   { t:'a', id:'a6', type:'slot', lbl:'A6: Tue 9-11:15pm', c:'#7b1fa2', v:['a6SH','a6SM','a6EH','a6EM','enA6'] }, { t:'a', id:'a5', type:'slot', lbl:'A5: Sun 4-9:15pm', c:'#1976d2', v:['a5SH','a5SM','a5EH','a5EM','enA5'] },
   { t:'a', id:'as1', type:'slot', lbl:'AS1: Sat Eve 1', c:'#ff9800', v:['as1H','as1M','ae1H','ae1M','enAs1'] }, { t:'a', id:'as2', type:'slot', lbl:'AS2: Sat Eve 2', c:'#ff9800', v:['as2H','as2M','ae2H','ae2M','enAs2'] },
+  
   { t:'ma', id:'mas1', type:'slot', lbl:'MA1: Morning 1', c:'#0097a7', v:['maS1H','maS1M','maE1H','maE1M','enMaS1'] }, { t:'ma', id:'mas6', type:'slot', lbl:'MA6: Morning 2', c:'#0097a7', v:['maS6H','maS6M','maE6H','maE6M','enMaS6'] },
   { t:'ma', id:'mas2', type:'slot', lbl:'MA2: Mon-Sat', c:'#0097a7', v:['maS2H','maS2M','maE2H','maE2M','enMaS2'] }, { t:'ma', id:'mas3', type:'slot', lbl:'MA3: Mon-Sat', c:'#0097a7', v:['maS3H','maS3M','maE3H','maE3M','enMaS3'] },
   { t:'ma', id:'masun', type:'slot', lbl:'MA4: Sun 1', c:'#fbc02d', v:['maSunH','maSunM','maESunH','maESunM','enMaSun'] }, { t:'ma', id:'masun2', type:'slot', lbl:'MA5: Sun 2', c:'#fbc02d', v:['maSun2H','maSun2M','maESun2H','maESun2M','enMaSun2'] },
+  
   { t:'ms', id:'mss1', type:'slot', lbl:'MS1: Morning 1', c:'#cddc39', v:['msS1H','msS1M','msE1H','msE1M','enMsS1'] }, { t:'ms', id:'mss6', type:'slot', lbl:'MS6: Morning 2', c:'#cddc39', v:['msS6H','msS6M','msE6H','msE6M','enMsS6'] },
   { t:'ms', id:'mss2', type:'slot', lbl:'MS2: Mon-Sat', c:'#cddc39', v:['msS2H','msS2M','msE2H','msE2M','enMsS2'] }, { t:'ms', id:'mss3', type:'slot', lbl:'MS3: Mon-Sat', c:'#cddc39', v:['msS3H','msS3M','msE3H','msE3M','enMsS3'] },
   { t:'ms', id:'mssun', type:'slot', lbl:'MS4: Sun 1', c:'#fbc02d', v:['msSunH','msSunM','msESunH','msESunM','enMsSun'] }, { t:'ms', id:'mssun2', type:'slot', lbl:'MS5: Sun 2', c:'#fbc02d', v:['msSun2H','msSun2M','msESun2H','msESun2M','enMsSun2'] },
+  
   { t:'mx', id:'r4s1', type:'slot', lbl:'M1: Morning 1', c:'#d32f2f', v:['r4S1H','r4S1M','r4E1H','r4E1M','enR4S1'] }, { t:'mx', id:'r4s5', type:'slot', lbl:'M8: Morning 2', c:'#d32f2f', v:['r4S5H','r4S5M','r4E5H','r4E5M','enR4S5'] },
   { t:'mx', id:'r4s2', type:'slot', lbl:'M2: Mon-Sat Night', c:'#FF4081', v:['r4S2H','r4S2M','r4E2H','r4E2M','enR4S2'] }, { t:'mx', id:'a9', type:'slot', lbl:'M5: Mon-Sat Extra', c:'#ff6f00', v:['a9SH','a9SM','a9EH','a9EM','enA9'] },
   { t:'mx', id:'r4s4', type:'slot', lbl:'M4: Tue 9-11:30pm', c:'#7b1fa2', v:['r4S4H','r4S4M','r4E4H','r4E4M','enR4S4'] }, { t:'mx', id:'r4s3', type:'slot', lbl:'M3: Sun 5:30-8:45pm', c:'#1976d2', v:['r4S3H','r4S3M','r4E3H','r4E3M','enR4S3'] },
   { t:'mx', id:'mxs1', type:'slot', lbl:'M6: Sat Eve 1', c:'#e91e63', v:['mxs1H','mxs1M','mxe1H','mxe1M','enMxs1'] }, { t:'mx', id:'mxs2', type:'slot', lbl:'M7: Sat Eve 2', c:'#e91e63', v:['mxs2H','mxs2M','mxe2H','mxe2M','enMxs2'] },
+  
   { t:'sp', id:'spks1', type:'slot', lbl:'SPK1: Morn 1', c:'#00796b', v:['spkS1H','spkS1M','spkE1H','spkE1M','enSpkS1'] }, { t:'sp', id:'spks7', type:'slot', lbl:'SPK9: Morn 2', c:'#00796b', v:['spkS7H','spkS7M','spkE7H','spkE7M','enSpkS7'] },
   { t:'sp', id:'spks2', type:'slot', lbl:'SPK2: Mon-Sat Nt', c:'#00796b', v:['spkS2H','spkS2M','spkE2H','spkE2M','enSpkS2'] }, { t:'sp', id:'spks5', type:'slot', lbl:'SPK5: Mon-Sat Ex 1', c:'#e91e63', v:['spkS5H','spkS5M','spkE5H','spkE5M','enSpkS5'] },
   { t:'sp', id:'spks6', type:'slot', lbl:'SPK6: Mon-Sat Ex 2', c:'#ff6f00', v:['spkS6H','spkS6M','spkE6H','spkE6M','enSpkS6'] }, { t:'sp', id:'spks4', type:'slot', lbl:'SPK4: Tue', c:'#7b1fa2', v:['spkS4H','spkS4M','spkE4H','spkE4M','enSpkS4'] },
   { t:'sp', id:'spks3', type:'slot', lbl:'SPK3: Sun Eve', c:'#1976d2', v:['spkS3H','spkS3M','spkE3H','spkE3M','enSpkS3'] }, { t:'sp', id:'ss1', type:'slot', lbl:'SPK7: Sat Eve 1', c:'#00bcd4', v:['ss1H','ss1M','se1H','se1M','enSs1'] }, { t:'sp', id:'ss2', type:'slot', lbl:'SPK8: Sat Eve 2', c:'#00bcd4', v:['ss2H','ss2M','se2H','se2M','enSs2'] },
+  
   { t:'lk', id:'bl1', type:'slot', lbl:'L1: Everyday', c:'#d32f2f', v:['bl1SH','bl1SM','bl1EH','bl1EM','enBl1'] },
   { t:'lk', id:'bl2', type:'slot', lbl:'L2: Everyday', c:'#d32f2f', v:['bl2SH','bl2SM','bl2EH','bl2EM','enBl2'] },
   { t:'lk', id:'bl3', type:'slot', lbl:'L3: Everyday', c:'#d32f2f', v:['bl3SH','bl3SM','bl3EH','bl3EM','enBl3'] },
@@ -184,7 +170,7 @@ const S_CONF = [
   { t:'lk', id:'bl10', type:'slot', lbl:'L10: Sunday', c:'#2196f3', v:['bl10SH','bl10SM','bl10EH','bl10EM','enBl10'] }
 ];
 
-let db, cmdRef, statusRef, setRef;
+let db, cmdRef, statusRef, setRef, onlineTimer;
 let curTrack=1, isConnected=false;
 
 function genSettings() {
@@ -228,23 +214,11 @@ function initFB() {
     isConnected=true; listenStatus(); loadSettingsFromCloud();
   });
 }
-
-function updateLocalClock() {
-  const now = new Date();
-  const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-  let h12 = now.getHours() % 12 || 12; 
-  let ampm = now.getHours() >= 12 ? " PM" : " AM";
-  let m = now.getMinutes().toString().padStart(2, '0'); 
-  let s = now.getSeconds().toString().padStart(2, '0');
-  document.getElementById("clock").innerText = `${days[now.getDay()]} ${h12}:${m}:${s}${ampm}`;
-}
-setInterval(updateLocalClock, 1000);
-
 function listenStatus() {
   statusRef.on("value", snap => {
     if (!snap.exists()) return;
     const d = snap.val();
-    
+    if(d.time) document.getElementById("clock").innerText = d.time;
     if(d.statusMsg) {
         let txt = d.statusMsg;
         let pm = document.getElementById("playModeBadge");
@@ -260,20 +234,15 @@ function listenStatus() {
     setDevState("devAmp", d.ampPower); setDevState("devMini", d.maPower); setDevState("devMiniSpk", d.msPower); setDevState("devMixer", d.r4Power); setDevState("devSpk", d.spkPower);
     setDevState("btnMute", d.isMute); 
     
-    if(d.wifiOK || d.online) {
-      document.getElementById("netBadge").className="badge"; 
-      document.getElementById("netBadge").innerText="ONLINE";
-    } else {
-      document.getElementById("netBadge").className="badge offline"; 
-      document.getElementById("netBadge").innerText="OFFLINE";
-    }
+    document.getElementById("netBadge").className="badge"; document.getElementById("netBadge").innerText="ONLINE";
+    clearTimeout(onlineTimer);
+    onlineTimer = setTimeout(() => { document.getElementById("netBadge").className="badge offline"; document.getElementById("netBadge").innerText="OFFLINE"; }, 3500); 
   });
 }
-
 let isSending = false;
-
 function cmd(a,f,t) { 
   if(!isConnected || isSending) return; 
+  
   isSending = true; 
   
   if(a === 'toggle_amp') document.getElementById('devAmp').classList.toggle('act');
@@ -287,20 +256,18 @@ function cmd(a,f,t) {
   
   cmdRef.set({action:a, folder:Number(f)||0, track:Number(t)||0, timestamp:Date.now()}); 
   toast("Sent: "+a); 
+  
   setTimeout(() => { isSending = false; }, 500); 
 }
-
 function setDevState(id, s) { let e=document.getElementById(id); if(e) e.classList.toggle("act", s); }
 function toast(m) { let t=document.getElementById("toast"); t.innerText=m; t.className="toast-show"; setTimeout(()=>t.className="",2000); }
 function switchView(v) { document.getElementById('view-dash').style.display = v==='dash'?'block':'none'; document.getElementById('view-sett').style.display = v==='sett'?'block':'none'; document.getElementById('tab-dash').classList.toggle('act',v==='dash'); document.getElementById('tab-sett').classList.toggle('act',v==='sett'); }
 function openSetTab(id, b) { document.querySelectorAll('.set-cont').forEach(e=>e.classList.remove('act')); document.querySelectorAll('.set-tb').forEach(e=>e.classList.remove('act')); document.getElementById('tc-'+id).classList.add('act'); b.classList.add('act'); }
-
 function toggleShuffle() { cmd('shuffle_toggle'); }
 function toggleRepeat() { cmd('repeat_toggle'); }
 function toggleMute() { cmd('toggle_mute'); }
 function nextTrack() { cmd('f4_next'); }
 function prevTrack() { cmd('f4_prev'); }
-
 function loadSettingsFromCloud() {
   setRef.once("value").then(snap => {
     if(!snap.exists()) return; const d=snap.val();
@@ -321,7 +288,6 @@ function loadSettingsFromCloud() {
     });
   });
 }
-
 function syncSettingsToCloud() {
   const btn = document.querySelector('.sync-btn'); btn.innerText = "⏳ SAVING..."; btn.disabled = true;
   let p={}; 
@@ -334,19 +300,7 @@ function syncSettingsToCloud() {
   setRef.set(p).then(() => { cmd("sync_settings"); toast("💾 Saved!"); setTimeout(()=>{ btn.innerText = "💾 SAVE & SYNC TO MODULE"; btn.disabled = false; switchView('dash'); }, 1200); });
 }
 function get24(id) { let h=parseInt(document.getElementById(id+'_h').value); let ap=parseInt(document.getElementById(id+'_ap').value); return ap==1?(h==12?12:h+12):(h==12?0:h); }
-window.onload=()=>{ genSettings(); loadTrackList(); initFB(); updateLocalClock(); };
-</script>
-
-<!-- 🔴 Service Worker (PWA એપ ઇન્સ્ટોલ માટે ફરજિયાત) 🔴 -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('Service Worker Registered!'))
-        .catch(err => console.log('Service Worker Error!', err));
-    });
-  }
+window.onload=()=>{ genSettings(); loadTrackList(); initFB(); };
 </script>
 </body>
 </html>
-
