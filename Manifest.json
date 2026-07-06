@@ -1,13 +1,11 @@
 
 {
-  "name": "SARVOPARI DHAM SMARAN",
-  "short_name": "SMARAN V1",
-  "start_url": "./index.html",
+  "name": "Sarvopari Smaran",
+  "short_name": "Smaran",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#1a1a1a",
   "theme_color": "#1a1a1a",
-  "description": "Sarvopari Dham Smaran V1 Remote",
-  "orientation": "portrait",
   "icons": [
     {
       "src": "https://i.ibb.co/HpDS8yDF/apple-touch-icon.png",
