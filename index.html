@@ -17,9 +17,18 @@ body{font-family:'Segoe UI',sans-serif;background:#1a1a1a;color:#fff;margin:0;pa
 .nt-btn{padding:8px 25px;border-radius:5px;font-weight:bold;font-size:14px;background:#333;color:#888;border:none;cursor:pointer}
 .nt-btn.act{background:#2196f3;color:#fff;box-shadow:0 0 10px rgba(33,150,243,0.5)}
 .card{background:#333;border-radius:15px;padding:15px;margin-bottom:15px;box-shadow:0 4px 6px rgba(0,0,0,0.3)}
-.stat-hdr{color:#2196f3;font-weight:900;font-size:13px;margin-bottom:10px}
-.stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
-.time-text{font-size:22px;color:#fbc02d;font-weight:bold}
+
+/* 🔴 ટાઈટલને મોટું, સફેદ અને શેડો વાળું કર્યું 🔴 */
+.stat-hdr{color:#FFFFFF; font-weight:900; font-size:19px; margin-bottom:12px; text-shadow: 0 0 8px #9c27b0, 0 0 15px #9c27b0; line-height:1.4; word-break:keep-all; padding:0 5px;}
+
+.stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px; margin-top:15px;}
+
+/* 🔴 ઘડિયાળ મોટી કરી 🔴 */
+.time-text{font-size:28px; color:#fbc02d; font-weight:bold; padding-top:6px; padding-bottom:2px;}
+
+/* 🔴 ભગવાનની મૂર્તિ માટેનો CSS 🔴 */
+.center-murti {width: 55px; height: 55px; border-radius: 50%; border: 2px solid #FFD700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.8); object-fit: cover; margin: 0 5px;}
+
 .badge{font-size:10px;padding:3px 8px;border-radius:5px;font-weight:bold;background:#4caf50;color:#fff;text-align:center;}
 .badge.offline{background:#f44336}
 .status-msg{color:#69f0ae;font-weight:600;font-size:14px;margin-top:5px}
@@ -70,8 +79,19 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
 <div class="c">
   <div id="view-dash">
     <div class="card">
-      <div class="stat-hdr">🔴🙏 SWAMINARAYAN SARVOPARI DHAM 🙏🔴</div>
-      <div class="stat-row"><div id="clock" class="time-text">--:--</div><div class="badge-col"><span id="netBadge" class="badge offline">OFFLINE</span><span id="playModeBadge" class="badge" style="display:none;">AUTO</span></div></div>
+      <!-- 🔴 ટાઈટલને ટૂંકું અને એક લાઈનમાં કર્યું 🔴 -->
+      <div class="stat-hdr">🔴🙏 SARVOPARI DHAM 🙏🔴</div>
+      
+      <div class="stat-row">
+        <div id="clock" class="time-text">--:--</div>
+        <!-- 🔴 તમારી નવી આપેલી લિંકવાળી ભગવાનની મૂર્તિ 🔴 -->
+        <img src="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png" class="center-murti" alt="Bhagwan Darshan">
+        <div class="badge-col">
+          <span id="netBadge" class="badge offline">OFFLINE</span>
+          <span id="playModeBadge" class="badge" style="display:none;">AUTO</span>
+        </div>
+      </div>
+      
       <div id="statusMsg" class="status-msg">Wait...</div>
     </div>
     <div class="q-grid">
@@ -104,7 +124,8 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
       </div>
     </div>
     
-    <div style="margin-top: 25px; margin-bottom: 15px; font-size: 12px; color: #fff; font-weight: bold; text-shadow: 0 0 8px #9c27b0; text-align: center; width: 100%; max-width: 100%; box-sizing: border-box; padding: 0 15px; line-height: 1.6; white-space: normal;">
+    <!-- 🔴 સ્મરણ v1 ને સફેદ કલર અને શેડો આપ્યો 🔴 -->
+    <div style="margin-top: 25px; margin-bottom: 15px; font-size: 14px; color: #FFFFFF; font-weight: bold; text-shadow: 0 0 8px #9c27b0, 0 0 15px #9c27b0; text-align: center; width: 100%; max-width: 100%; box-sizing: border-box; padding: 0 15px; line-height: 1.6; white-space: normal;">
       SARVOPARI CLOUD EDITION SMARAN V1
     </div>
 
@@ -214,6 +235,7 @@ function initFB() {
     isConnected=true; listenStatus(); loadSettingsFromCloud();
   });
 }
+
 function listenStatus() {
   statusRef.on("value", snap => {
     if (!snap.exists()) return;
@@ -239,7 +261,9 @@ function listenStatus() {
     onlineTimer = setTimeout(() => { document.getElementById("netBadge").className="badge offline"; document.getElementById("netBadge").innerText="OFFLINE"; }, 3500); 
   });
 }
+
 let isSending = false;
+
 function cmd(a,f,t) { 
   if(!isConnected || isSending) return; 
   
@@ -259,15 +283,18 @@ function cmd(a,f,t) {
   
   setTimeout(() => { isSending = false; }, 500); 
 }
+
 function setDevState(id, s) { let e=document.getElementById(id); if(e) e.classList.toggle("act", s); }
 function toast(m) { let t=document.getElementById("toast"); t.innerText=m; t.className="toast-show"; setTimeout(()=>t.className="",2000); }
 function switchView(v) { document.getElementById('view-dash').style.display = v==='dash'?'block':'none'; document.getElementById('view-sett').style.display = v==='sett'?'block':'none'; document.getElementById('tab-dash').classList.toggle('act',v==='dash'); document.getElementById('tab-sett').classList.toggle('act',v==='sett'); }
 function openSetTab(id, b) { document.querySelectorAll('.set-cont').forEach(e=>e.classList.remove('act')); document.querySelectorAll('.set-tb').forEach(e=>e.classList.remove('act')); document.getElementById('tc-'+id).classList.add('act'); b.classList.add('act'); }
+
 function toggleShuffle() { cmd('shuffle_toggle'); }
 function toggleRepeat() { cmd('repeat_toggle'); }
 function toggleMute() { cmd('toggle_mute'); }
 function nextTrack() { cmd('f4_next'); }
 function prevTrack() { cmd('f4_prev'); }
+
 function loadSettingsFromCloud() {
   setRef.once("value").then(snap => {
     if(!snap.exists()) return; const d=snap.val();
@@ -288,6 +315,7 @@ function loadSettingsFromCloud() {
     });
   });
 }
+
 function syncSettingsToCloud() {
   const btn = document.querySelector('.sync-btn'); btn.innerText = "⏳ SAVING..."; btn.disabled = true;
   let p={}; 
