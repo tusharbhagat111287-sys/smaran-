@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
 <title>SARVOPARI DHAM NITYAM</title>
 
+<!-- 🔴 મેનિફેસ્ટ અને આઇકનની સાચી લિંક અહીં સેટ કરી છે 🔴 -->
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png">
 <link rel="apple-touch-icon" href="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png">
@@ -205,6 +206,7 @@ function timeIn(id) {
           <select id='${id}_m' style='opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;'>${Array.from({length:60},(_,i)=>`<option value='${i<10?'0'+i:i}'>${i<10?'0'+i:i}</option>`).join('')}</select>
           <select id='${id}_ap' style='opacity:1;position:relative;width:auto;padding:4px;border-radius:4px;background:#333;color:#fff;border:1px solid #555;'><option value='0'>AM</option><option value='1'>PM</option></select>`;
 }
+
 function loadTrackList() {
   const sel = document.getElementById("trackSel");
   TRACKS.forEach((t, i) => {
@@ -213,7 +215,9 @@ function loadTrackList() {
     sel.appendChild(opt);
   });
 }
+
 function selectTrack(sel) { if(sel.value) { cmd('play', 4, sel.value); sel.selectedIndex = 0; } }
+
 function initFB() {
   firebase.initializeApp(FB_CONFIG);
   db = firebase.database();
@@ -224,6 +228,7 @@ function initFB() {
     isConnected=true; listenStatus(); loadSettingsFromCloud();
   });
 }
+
 function updateLocalClock() {
   const now = new Date();
   const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -234,6 +239,7 @@ function updateLocalClock() {
   document.getElementById("clock").innerText = `${days[now.getDay()]} ${h12}:${m}:${s}${ampm}`;
 }
 setInterval(updateLocalClock, 1000);
+
 function listenStatus() {
   statusRef.on("value", snap => {
     if (!snap.exists()) return;
@@ -263,7 +269,9 @@ function listenStatus() {
     }
   });
 }
+
 let isSending = false;
+
 function cmd(a,f,t) { 
   if(!isConnected || isSending) return; 
   isSending = true; 
@@ -281,15 +289,18 @@ function cmd(a,f,t) {
   toast("Sent: "+a); 
   setTimeout(() => { isSending = false; }, 500); 
 }
+
 function setDevState(id, s) { let e=document.getElementById(id); if(e) e.classList.toggle("act", s); }
 function toast(m) { let t=document.getElementById("toast"); t.innerText=m; t.className="toast-show"; setTimeout(()=>t.className="",2000); }
 function switchView(v) { document.getElementById('view-dash').style.display = v==='dash'?'block':'none'; document.getElementById('view-sett').style.display = v==='sett'?'block':'none'; document.getElementById('tab-dash').classList.toggle('act',v==='dash'); document.getElementById('tab-sett').classList.toggle('act',v==='sett'); }
 function openSetTab(id, b) { document.querySelectorAll('.set-cont').forEach(e=>e.classList.remove('act')); document.querySelectorAll('.set-tb').forEach(e=>e.classList.remove('act')); document.getElementById('tc-'+id).classList.add('act'); b.classList.add('act'); }
+
 function toggleShuffle() { cmd('shuffle_toggle'); }
 function toggleRepeat() { cmd('repeat_toggle'); }
 function toggleMute() { cmd('toggle_mute'); }
 function nextTrack() { cmd('f4_next'); }
 function prevTrack() { cmd('f4_prev'); }
+
 function loadSettingsFromCloud() {
   setRef.once("value").then(snap => {
     if(!snap.exists()) return; const d=snap.val();
@@ -310,6 +321,7 @@ function loadSettingsFromCloud() {
     });
   });
 }
+
 function syncSettingsToCloud() {
   const btn = document.querySelector('.sync-btn'); btn.innerText = "⏳ SAVING..."; btn.disabled = true;
   let p={}; 
@@ -324,6 +336,8 @@ function syncSettingsToCloud() {
 function get24(id) { let h=parseInt(document.getElementById(id+'_h').value); let ap=parseInt(document.getElementById(id+'_ap').value); return ap==1?(h==12?12:h+12):(h==12?0:h); }
 window.onload=()=>{ genSettings(); loadTrackList(); initFB(); updateLocalClock(); };
 </script>
+
+<!-- 🔴 Service Worker (PWA એપ ઇન્સ્ટોલ માટે ફરજિયાત) 🔴 -->
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -335,3 +349,4 @@ window.onload=()=>{ genSettings(); loadTrackList(); initFB(); updateLocalClock()
 </script>
 </body>
 </html>
+
