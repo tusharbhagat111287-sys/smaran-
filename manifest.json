@@ -1,0 +1,21 @@
+
+{
+  "name": "SARVOPARI DHAM",
+  "short_name": "SMARAN V1",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#1a1a1a",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/HpDS8yDF/apple-touch-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.ibb.co/HpDS8yDF/apple-touch-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
