@@ -13,60 +13,62 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:'Segoe UI',sans-serif;background:#1e1e1e;color:#e0e0e0;margin:0;padding-bottom:20px;text-align:center;user-select:none;touch-action:manipulation}
-.c{padding:12px;max-width:600px;margin:auto}
+body{font-family:'Segoe UI',sans-serif;background:#1e1e1e;color:#e0e0e0;margin:0;padding-bottom:10px;text-align:center;user-select:none;touch-action:manipulation}
+.c{padding:5px;max-width:600px;margin:auto}
 
-/* Navigation 3D */
-.nav-tabs{background:linear-gradient(145deg,#1b1b1b,#202020);padding:15px;display:flex;justify-content:center;gap:15px;position:sticky;top:0;z-index:100;box-shadow:0 4px 10px rgba(0,0,0,0.5)}
-.nt-btn{padding:10px 25px;border-radius:10px;font-weight:bold;font-size:14px;background:#222;color:#888;border:none;cursor:pointer;box-shadow:4px 4px 8px #131313,-4px -4px 8px #292929;transition:all 0.3s}
+/* 3D Navigation Bar - Compact */
+.nav-tabs{background:linear-gradient(145deg,#1b1b1b,#202020);padding:10px;display:flex;justify-content:center;gap:15px;position:sticky;top:0;z-index:100;box-shadow:0 4px 10px rgba(0,0,0,0.5)}
+.nt-btn{padding:8px 25px;border-radius:10px;font-weight:bold;font-size:13px;background:#222;color:#888;border:none;cursor:pointer;box-shadow:4px 4px 8px #131313,-4px -4px 8px #292929;transition:all 0.3s}
 .nt-btn.act{color:#00e5ff;box-shadow:inset 4px 4px 8px #131313,inset -4px -4px 8px #292929;background:#151515}
 
-/* Cards & Header */
-.card{background:linear-gradient(145deg,#202020,#1b1b1b);border-radius:20px;padding:18px;margin-bottom:20px;box-shadow:8px 8px 16px #131313,-8px -8px 16px #292929;border:1px solid #2a2a2a}
-.stat-hdr{color:#fff; font-weight:900; font-size:19px; margin-bottom:15px; text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f; letter-spacing:1px; padding:0 5px;}
-.stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px; margin-top:10px;}
-.time-text{font-size:28px; color:#00e5ff; font-weight:bold; text-shadow:0 0 10px rgba(0,229,255,0.6); white-space:nowrap;}
-.center-murti {width: 75px; height: 75px; border-radius: 50%; border: 3px solid #FFD700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.8), inset 0 0 10px rgba(255, 215, 0, 0.5); object-fit: cover; margin: 0 10px;}
-.badge{font-size:10px;padding:4px 10px;border-radius:6px;font-weight:bold;background:linear-gradient(145deg,#4caf50,#388e3c);color:#fff;text-align:center;box-shadow:2px 2px 5px #131313}
+/* 3D Cards - Compact Spacing */
+.card{background:linear-gradient(145deg,#202020,#1b1b1b);border-radius:15px;padding:12px;margin-bottom:10px;box-shadow:6px 6px 12px #131313,-6px -6px 12px #292929;border:1px solid #2a2a2a}
+.stat-hdr{color:#fff;font-weight:900;font-size:18px;margin-bottom:8px;text-shadow:0 0 10px #ff007f,0 0 20px #ff007f;letter-spacing:1px}
+.stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;margin-top:5px;}
+.time-text{font-size:24px;color:#00e5ff;font-weight:bold;text-shadow:0 0 10px rgba(0,229,255,0.6);white-space:nowrap;}
+.center-murti{width:65px;height:75px;border-radius:50%;border:3px solid #FFD700;box-shadow:0 0 12px rgba(255,215,0,0.8),inset 0 0 8px rgba(255,215,0,0.5);object-fit:cover;margin:0 5px;}
+.badge{font-size:10px;padding:3px 8px;border-radius:5px;font-weight:bold;background:linear-gradient(145deg,#4caf50,#388e3c);color:#fff;text-align:center;box-shadow:2px 2px 4px #131313}
 .badge.offline{background:linear-gradient(145deg,#f44336,#d32f2f)}
-.status-msg{color:#00e676;font-weight:700;font-size:15px;margin-top:8px;letter-spacing:1px;text-transform:uppercase}
-.badge-col{display:flex; flex-direction:column; gap:6px; align-items:flex-end;}
+.status-msg{color:#00e676;font-weight:700;font-size:14px;margin-top:5px;letter-spacing:0.5px;text-transform:uppercase}
+.badge-col{display:flex;flex-direction:column;gap:4px;align-items:flex-end;}
 
-/* 6 Main Grid Buttons */
-.q-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:20px}
-.q-btn{border:none;border-radius:12px;padding:15px 5px;color:#fff;font-weight:700;font-size:13px;cursor:pointer;background:linear-gradient(145deg,#242424,#1e1e1e);box-shadow:5px 5px 10px #131313,-5px -5px 10px #292929;transition:all 0.2s}
-.q-btn:active{box-shadow:inset 6px 6px 12px #0a0a0a,inset -6px -6px 12px #252525;background:#151515;color:#00e5ff}
-.b-blu{border-bottom:6px solid #1976d2;} .b-org{border-bottom:6px solid #f57c00;} .b-yel{border-bottom:6px solid #fbc02d;color:#fbc02d;} .b-grn{border-bottom:6px solid #388e3c;} .b-pur{border-bottom:6px solid #7b1fa2;}
-.q-btn.act{box-shadow:inset 6px 6px 12px #0a0a0a,inset -6px -6px 12px #252525;background:#151515;color:#00e676;border-bottom:6px solid #00e676;text-shadow:0 0 10px #00e676;}
+/* 6 Main Grid Buttons with 6px Bottom Borders */
+.q-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.q-btn{border:none;border-radius:12px;padding:12px 5px;color:#fff;font-weight:700;width:100%;cursor:pointer;font-size:13px;background:linear-gradient(145deg,#242424,#1e1e1e);box-shadow:4px 4px 8px #131313,-4px -4px 8px #292929;transition:all 0.2s;touch-action:manipulation}
+.q-btn:active{box-shadow:inset 5px 5px 10px #0a0a0a,inset -5px -5px 10px #252525;background:#151515;color:#00e5ff}
+.b-blu{border-bottom:6px solid #1976d2}.b-org{border-bottom:6px solid #f57c00}.b-yel{border-bottom:6px solid #fbc02d;color:#fbc02d}.b-grn{border-bottom:6px solid #388e3c}.b-pur{border-bottom:6px solid #7b1fa2}
+.q-grid button.act{box-shadow:inset 6px 6px 12px #0a0a0a,inset -6px -6px 12px #252525;background:#151515;color:#00e676;border-bottom:6px solid #00e676;text-shadow:0 0 10px #00e676;}
 
-/* Track Controls */
-.t-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.sq-btn{width:50px;height:50px;border-radius:12px;background:linear-gradient(145deg,#242424,#1e1e1e);box-shadow:4px 4px 8px #131313,-4px -4px 8px #292929;color:#00e5ff;border:none;border-bottom:6px solid #00e5ff;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.sq-btn:active{box-shadow:inset 6px 6px 12px #0a0a0a,inset -6px -6px 12px #252525;background:#151515;border-bottom:6px solid #00e5ff;}
-.t-name{flex:1;background:#151515;height:50px;margin:0 15px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;color:#00e676;font-weight:bold;box-shadow:inset 4px 4px 8px #0d0d0d,inset -4px -4px 8px #1d1d1d;overflow:hidden;white-space:nowrap}
+/* Player Rows & Sunken Track Box */
+.t-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sq-btn{width:45px;height:45px;border-radius:12px;background:linear-gradient(145deg,#242424,#1e1e1e);box-shadow:4px 4px 8px #131313,-4px -4px 8px #292929;color:#00e5ff;border:none;border-bottom:6px solid #00e5ff;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.sq-btn:active{box-shadow:inset 5px 5px 10px #0a0a0a,inset -5px -5px 10px #252525;background:#151515;border-bottom:6px solid #00e5ff;}
+.t-name{flex:1;background:#151515;height:45px;margin:0 10px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#00e676;font-weight:bold;box-shadow:inset 4px 4px 8px #0d0d0d,inset -4px -4px 8px #1d1d1d;overflow:hidden;white-space:nowrap}
 
-/* Circle Buttons */
+/* Circle Buttons with 6px Bottom Borders */
 .cir-row{display:flex;justify-content:space-around;align-items:center}
-.cir-btn{width:60px;height:60px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:24px;color:#fff;border:none;cursor:pointer;position:relative;background:linear-gradient(145deg,#242424,#1e1e1e);box-shadow:5px 5px 10px #131313,-5px -5px 10px #292929;transition:all 0.2s}
-.c-pur{color:#9c27b0;border-bottom:6px solid #9c27b0;background:none;} .c-org{color:#ff9800;border-bottom:6px solid #ff9800;background:none;} .c-teal{color:#00bcd4;border-bottom:6px solid #00bcd4;background:none;}
-.cir-btn.act{box-shadow:inset 6px 6px 12px #0a0a0a,inset -6px -6px 12px #252525;background:#151515;color:#00e676;border-bottom:6px solid #00e676;text-shadow:0 0 10px #00e676;}
+.cir-btn{width:54px;height:55px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:22px;color:#fff;border:none;cursor:pointer;position:relative;background:linear-gradient(145deg,#242424,#1e1e1e);box-shadow:4px 4px 8px #131313,-4px -4px 8px #292929;transition:all 0.2s}
+.c-pur{color:#9c27b0;border-bottom:6px solid #9c27b0;background:none} .c-org{color:#ff9800;border-bottom:6px solid #ff9800;background:none} .c-teal{color:#00bcd4;border-bottom:6px solid #00bcd4;background:none}
+.cir-btn.act{box-shadow:inset 5px 5px 10px #0a0a0a,inset -5px -5px 10px #252525;background:#151515;color:#00e676;border-bottom:6px solid #00e676;text-shadow:0 0 10px #00e676;}
 
-/* Tile Buttons */
-.c-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.tile-btn{width:18.5%;padding:12px 0;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;font-weight:bold;color:#888;border:none;cursor:pointer;background:linear-gradient(145deg,#242424,#1e1e1e);box-shadow:4px 4px 8px #131313,-4px -4px 8px #292929;transition:all 0.2s}
-.tile-btn .icon{font-size:22px;margin-bottom:4px}
-.t-red{color:#f44336;border-bottom:6px solid #f44336;background:none;} .t-blu{color:#2196f3;border-bottom:6px solid #2196f3;background:none;} .t-org{color:#ff9800;border-bottom:6px solid #ff9800;background:none;} .t-pur{color:#9c27b0;border-bottom:6px solid #9c27b0;background:none;} .t-teal{color:#00bcd4;border-bottom:6px solid #00bcd4;background:none;} .t-pnk{color:#e91e63;border-bottom:6px solid #e91e63;background:none;}
-.tile-btn:active, .tile-btn.act{box-shadow:inset 6px 6px 12px #0a0a0a,inset -6px -6px 12px #252525 !important;background:#151515 !important;color:#00e676;border-bottom:6px solid #00e676;text-shadow:0 0 10px #00e676;}
+/* Bottom Tiles with 6px Bottom Borders */
+.c-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.tile-btn{width:18.5%;padding:10px 0;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;font-weight:bold;color:#888;border:none;cursor:pointer;background:linear-gradient(145deg,#242424,#1e1e1e);box-shadow:4px 4px 8px #131313,-4px -4px 8px #292929;transition:all 0.2s}
+.tile-btn .icon{font-size:18px;margin-bottom:2px}
+.t-red{color:#f44336;border-bottom:6px solid #f44336;background:none} .t-blu{color:#2196f3;border-bottom:6px solid #2196f3;background:none} .t-org{color:#ff9800;border-bottom:6px solid #ff9800;background:none} .t-pur{color:#9c27b0;border-bottom:6px solid #9c27b0;background:none} .t-teal{color:#00bcd4;border-bottom:6px solid #00bcd4;background:none} .t-pnk{color:#e91e63;border-bottom:6px solid #e91e63;background:none}
+.tile-btn:active, .tile-btn.act{box-shadow:inset 5px 5px 10px #0a0a0a,inset -5px -5px 10px #252525 !important;background:#151515 !important;color:#00e676;border-bottom:6px solid #00e676;text-shadow:0 0 10px #00e676;}
 
-.vol-box{width:18.5%;padding:10px 0;height:auto;background:#151515;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:#fbc02d;box-shadow:inset 4px 4px 8px #0d0d0d,inset -4px -4px 8px #1d1d1d}
+/* Sunken Volume Number Display */
+.vol-box{width:18.5%;height:42px;background:#151515;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fbc02d;box-shadow:inset 4px 4px 8px #0d0d0d,inset -4px -4px 8px #1d1d1d}
 
+/* Toast & Settings View */
 #toast{visibility:hidden;background:linear-gradient(145deg,#fff,#e6e6e6);color:#000;padding:12px 25px;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);border-radius:30px;z-index:99;font-weight:bold;font-size:13px;box-shadow:0 10px 20px rgba(0,0,0,0.5)}
 .toast-show{visibility:visible!important;animation:fade 2s}
 @keyframes fade{0%{opacity:0}20%{opacity:1}80%{opacity:1}100%{opacity:0}}
 
-/* Settings CSS */
 #view-sett{display:none}
 .set-tabs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:15px}
 .set-tb{background:#121212;border:1px solid #333;color:#888;padding:8px;border-radius:20px;font-size:11px;font-weight:bold;flex:1;cursor:pointer}
@@ -82,6 +84,7 @@ body{font-family:'Segoe UI',sans-serif;background:#1e1e1e;color:#e0e0e0;margin:0
 .sw span:before{position:absolute;content:'';height:16px;width:16px;left:2px;bottom:2px;background:#ccc;transition:.3s;border-radius:50%}
 input:checked+span{background:#4caf50}
 input:checked+span:before{transform:translateX(16px);background:#fff}
+select.f-sel{opacity:0;position:absolute;width:100%;height:100%;left:0;top:0}
 .sync-btn{background:#4caf50;color:#fff;border:none;padding:15px;width:100%;border-radius:15px;font-weight:bold;font-size:15px;cursor:pointer;margin-top:10px}
 </style>
 </head>
@@ -114,11 +117,11 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
     <div class="card">
       <div class="t-row"><button class="sq-btn" onclick="prevTrack()">⏮</button><div class="t-name" id="trackName">-</div><button class="sq-btn" onclick="nextTrack()">⏭</button></div>
       <div class="cir-row">
-        <div id="bDir" class="cir-btn c-pur">📂<select id="trackSel" onchange="selectTrack(this)" style="opacity:0;position:absolute;width:100%;height:100%;"><option value="" disabled selected>.</option></select></div>
+        <div id="bDir" class="cir-btn c-pur">📂<select class="f-sel" id="trackSel" onchange="selectTrack(this)"><option value="" disabled selected>.</option></select></div>
         <button class="cir-btn c-org" id="btnShuf" onclick="toggleShuffle()">🔀</button>
         <button class="cir-btn c-org" id="btnRep" onclick="toggleRepeat()">🔁</button>
         <button class="cir-btn c-pur" id="btnMute" onclick="toggleMute()">🔊</button>
-        <button class="cir-btn c-teal" id="devMiniSpk" onclick="cmd('toggle_minispk')">📢<div style="font-size:8px;margin-top:2px">M-SPK</div></button>
+        <button class="cir-btn c-teal" id="devMiniSpk" onclick="cmd('toggle_minispk')">📢<div style="font-size:7px;margin-top:2px">M-SPK</div></button>
       </div>
     </div>
     
@@ -139,7 +142,7 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
       </div>
     </div>
     
-    <div style="margin-top: 25px; margin-bottom: 15px; font-size: 13px; color: #888; font-weight: bold; letter-spacing: 1px; text-align: center; width: 100%; line-height: 1.6;">
+    <div style="margin-top:25px;font-size:13px;color:#888;font-weight:bold;letter-spacing:1px;">
       SARVOPARI CLOUD EDITION SMARAN V2
     </div>
   </div>
@@ -269,7 +272,7 @@ function listenStatus() {
         document.getElementById("statusMsg").innerText = txt;
         document.getElementById("trackName").innerText = (d.playing) ? txt : TRACKS[curTrack-1];
         
-        // 🟢 નવું ગ્લોઇંગ (Glow) લોજિક 🟢
+        // 🟢 નિયોન ગ્રીન એક્ટિવ ગ્લો લોજિક 🟢
         let p = d.playing || false;
         let iM = txt.includes('Mangla');
         let iA = txt.includes('ARTI');
@@ -377,4 +380,3 @@ window.onload=()=>{ genSettings(); loadTrackList(); initFB(); updateLocalClock()
 </script>
 </body>
 </html>
-
