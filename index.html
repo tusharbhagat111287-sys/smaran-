@@ -148,7 +148,6 @@ select.f-sel{opacity:0;position:absolute;width:100%;height:100%;left:0;top:0}
   </div>
 
   <div id="view-sett">
-    <div id="set-title" style="font-size:16px; font-weight:bold; margin-bottom:15px; color:#ff9800; text-align:center;">⚙️ REGULAR MODE SETTINGS</div>
     <div class="set-tabs">
       <button class="set-tb act" onclick="openSetTab('g', this)">MAIN</button>
       <button class="set-tb" onclick="openSetTab('a', this)">AMPLI</button>
@@ -268,7 +267,18 @@ function listenStatus() {
         if(txt.includes("MANUAL | ")){ pm.style.display="inline-block"; pm.innerText="MANUAL"; pm.style.background="#f44336"; txt=txt.replace("MANUAL | ",""); }
         else if(txt.includes("AUTO | ")){ pm.style.display="inline-block"; pm.innerText="AUTO"; pm.style.background="#4caf50"; txt=txt.replace("AUTO | ",""); }
         else { pm.style.display="none"; }
-        document.getElementById("statusMsg").innerText = txt;
+        
+        // 🟢 WARNING BELL માટે ડેન્જર લાલ કલર અને ગ્લો 🟢
+        let msgBox = document.getElementById("statusMsg");
+        if(txt.includes("WARNING")) {
+            msgBox.style.color = "#ff1744"; 
+            msgBox.style.textShadow = "0 0 15px #ff1744"; 
+        } else {
+            msgBox.style.color = "#00e676"; 
+            msgBox.style.textShadow = "none";
+        }
+        msgBox.innerText = txt;
+        
         document.getElementById("trackName").innerText = (d.playing) ? txt : TRACKS[curTrack-1];
         
         let p = d.playing || false;
@@ -292,16 +302,12 @@ function listenStatus() {
     setDevState("devAmp", d.ampPower); setDevState("devMini", d.maPower); setDevState("devMiniSpk", d.msPower); setDevState("devMixer", d.r4Power); setDevState("devSpk", d.spkPower);
     setDevState("btnMute", d.isMute); 
     
-    // 🟢 ફિક્સ: લાઈવ ઉત્સવ મોડ હેન્ડલિંગ 🟢
     if(d.utsavMode !== undefined) {
       let ub = document.getElementById('bUtsav');
-      let tit = document.getElementById('set-title');
       if(d.utsavMode == 1 || d.utsavMode === true) {
         if(ub) ub.classList.add('act');
-        if(tit) { tit.innerText = '🎉 UTSAV MODE SETTINGS'; tit.style.color = '#9c27b0'; }
       } else {
         if(ub) ub.classList.remove('act');
-        if(tit) { tit.innerText = '⚙️ REGULAR MODE SETTINGS'; tit.style.color = '#ff9800'; }
       }
     }
     
@@ -330,7 +336,7 @@ function cmd(a,f,t) {
   if(a === 'shuffle_toggle') document.getElementById('btnShuf').classList.toggle('act');
   if(a === 'toggle_mute') document.getElementById('btnMute').classList.toggle('act');
   
-  // 🟢 ફિક્સ: રીલોડ કાઢી નાખ્યું, માત્ર ક્લાસ બદલાશે 🟢
+  // ફિક્સ: રિફ્રેશ વગર માત્ર મોડ સ્વિચ કરશે
   if(a === 'toggle_utsav') {
     let ub = document.getElementById('bUtsav');
     if(ub) ub.classList.toggle('act');
@@ -353,7 +359,7 @@ function toggleMute() { cmd('toggle_mute'); }
 function nextTrack() { cmd('f4_next'); }
 function prevTrack() { cmd('f4_prev'); }
 
-// 🟢 ફિક્સ: ઑફલાઇન સિંક માટે .on વાપર્યું જેથી લાઈવ ડેટા આવી જાય 🟢
+// ઑફલાઇન સિંક માટે .on વાપર્યું જેથી લાઈવ ડેટા આવી જાય
 function loadSettingsFromCloud() {
   setRef.on("value", snap => {
     if(!snap.exists()) return; const d=snap.val();
@@ -379,7 +385,7 @@ function syncSettingsToCloud() {
   const btn = document.querySelector('.sync-btn'); btn.innerText = "⏳ SAVING..."; btn.disabled = true;
   let p={}; 
   
-  // 🟢 ફિક્સ: ઓનલાઈનથી કયો મોડ ચાલે છે તે મોકલો 🟢
+  // ઓનલાઈનથી કયો મોડ ચાલે છે તે ESP32 ને મોકલો
   let utsavBtn = document.getElementById('bUtsav');
   p["utsavMode"] = (utsavBtn && utsavBtn.classList.contains('act')) ? 1 : 0;
 
@@ -390,14 +396,13 @@ function syncSettingsToCloud() {
     if(c.type==='slot'){ p[c.v[2]] = get24(c.id+'_e'); p[c.v[3]] = parseInt(document.getElementById(c.id+'_e_m').value) || 0; }
   });
   
-  // 🟢 ફિક્સ: ડેસ્કબોર્ડ પર જતું બંધ કર્યું 🟢
+  // ફિક્સ: ડેસ્કબોર્ડ પર પાછું જતું અટકાવ્યું અને સિંક કમાન્ડ મોકલ્યો
   setRef.update(p).then(() => { 
     cmd("sync_settings"); 
     toast("💾 Saved! Synced to Module."); 
-    setTimeout(()=>{ btn.innerText = "💾 SAVE & SYNC TO MODULE"; btn.disabled = false; }, 1500); 
+    setTimeout(()=>{ btn.innerText = "💾 SAVE & SYNC TO MODULE"; btn.disabled = false; }, 1200); 
   });
 }
-
 function get24(id) { let h=parseInt(document.getElementById(id+'_h').value); let ap=parseInt(document.getElementById(id+'_ap').value); return ap==1?(h==12?12:h+12):(h==12?0:h); }
 window.onload=()=>{ genSettings(); loadTrackList(); initFB(); updateLocalClock(); };
 </script>
@@ -411,3 +416,4 @@ window.onload=()=>{ genSettings(); loadTrackList(); initFB(); updateLocalClock()
 </script>
 </body>
 </html>
+
