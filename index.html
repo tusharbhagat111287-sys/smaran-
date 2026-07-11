@@ -359,8 +359,9 @@ function toggleMute() { cmd('toggle_mute'); }
 function nextTrack() { cmd('f4_next'); }
 function prevTrack() { cmd('f4_prev'); }
 
+// 🟢 ફિક્સ: હવે ઑફલાઇન સેવ થાય તો ઓનલાઈનમાં તરત જ લાઈવ રિફ્રેશ થઈ જશે! 🟢
 function loadSettingsFromCloud() {
-  setRef.once("value").then(snap => {
+  setRef.on("value", snap => {
     if(!snap.exists()) return; const d=snap.val();
     S_CONF.forEach(c => {
       let en = document.getElementById(c.id+'_en'); if(en) en.checked = (d[c.v[c.v.length-1]] == 1);
