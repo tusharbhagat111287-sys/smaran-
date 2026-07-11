@@ -390,7 +390,13 @@ function syncSettingsToCloud() {
     p[c.v[0]] = get24(c.id+'_s'); p[c.v[1]] = parseInt(document.getElementById(c.id+'_s_m').value) || 0;
     if(c.type==='slot'){ p[c.v[2]] = get24(c.id+'_e'); p[c.v[3]] = parseInt(document.getElementById(c.id+'_e_m').value) || 0; }
   });
-  setRef.update(p).then(() => { cmd("sync_settings"); toast("💾 Saved!"); setTimeout(()=>{ btn.innerText = "💾 SAVE & SYNC TO MODULE"; btn.disabled = false; switchView('dash'); }, 1200); });
+  
+  // 🟢 ફિક્સ: ડેસ્કબોર્ડ પર પાછું જતું અટકાવ્યું અને સિંક કમાન્ડ મોકલ્યો 🟢
+  setRef.update(p).then(() => { 
+    cmd("sync_settings"); 
+    toast("💾 Saved! Synced to Module."); 
+    setTimeout(()=>{ btn.innerText = "💾 SAVE & SYNC TO MODULE"; btn.disabled = false; }, 1500); 
+  });
 }
 function get24(id) { let h=parseInt(document.getElementById(id+'_h').value); let ap=parseInt(document.getElementById(id+'_ap').value); return ap==1?(h==12?12:h+12):(h==12?0:h); }
 window.onload=()=>{ genSettings(); loadTrackList(); initFB(); updateLocalClock(); };
