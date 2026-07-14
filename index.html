@@ -35,40 +35,40 @@ body{font-family:'Segoe UI',sans-serif;background:#1e1e1e;color:#e0e0e0;margin:0
 .status-msg{color:#00e676;font-weight:700;font-size:14px;margin-top:5px;letter-spacing:0.5px;text-transform:uppercase}
 .badge-col{display:flex;flex-direction:column;gap:4px;align-items:flex-end;}
 
-/* 6 Main Grid Buttons with 6px Bottom Borders */
+/* 6 Main Grid Buttons */
 .q-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .q-btn{border:none;border-radius:12px;padding:12px 5px;color:#fff;font-weight:700;width:100%;cursor:pointer;font-size:13px;background:linear-gradient(145deg,#242424,#1e1e1e);box-shadow:4px 4px 8px #131313,-4px -4px 8px #292929;transition:all 0.2s;touch-action:manipulation}
 .q-btn:active{box-shadow:inset 5px 5px 10px #0a0a0a,inset -5px -5px 10px #252525;background:#151515;color:#00e5ff}
 .b-blu{border-bottom:6px solid #1976d2}.b-org{border-bottom:6px solid #f57c00}.b-yel{border-bottom:6px solid #fbc02d;color:#fbc02d}.b-grn{border-bottom:6px solid #388e3c}.b-pur{border-bottom:6px solid #7b1fa2}
 .q-grid button.act{box-shadow:inset 6px 6px 12px #0a0a0a,inset -6px -6px 12px #252525;background:#151515;color:#00e676;border-bottom:6px solid #00e676;text-shadow:0 0 10px #00e676;}
 
-/* Player Rows & Sunken Track Box */
+/* Player Rows */
 .t-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .sq-btn{width:45px;height:45px;border-radius:12px;background:linear-gradient(145deg,#242424,#1e1e1e);box-shadow:4px 4px 8px #131313,-4px -4px 8px #292929;color:#00e5ff;border:none;border-bottom:6px solid #00e5ff;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .sq-btn:active{box-shadow:inset 5px 5px 10px #0a0a0a,inset -5px -5px 10px #252525;background:#151515;border-bottom:6px solid #00e5ff;}
 .t-name{flex:1;background:#151515;height:45px;margin:0 10px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#00e676;font-weight:bold;box-shadow:inset 4px 4px 8px #0d0d0d,inset -4px -4px 8px #1d1d1d;overflow:hidden;white-space:nowrap}
 
-/* Circle Buttons with 6px Bottom Borders */
+/* Circle Buttons */
 .cir-row{display:flex;justify-content:space-around;align-items:center}
 .cir-btn{width:54px;height:55px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:22px;color:#fff;border:none;cursor:pointer;position:relative;background:linear-gradient(145deg,#242424,#1e1e1e);box-shadow:4px 4px 8px #131313,-4px -4px 8px #292929;transition:all 0.2s}
 .c-pur{color:#9c27b0;border-bottom:6px solid #9c27b0;background:none} .c-org{color:#ff9800;border-bottom:6px solid #ff9800;background:none} .c-teal{color:#00bcd4;border-bottom:6px solid #00bcd4;background:none}
 .cir-btn.act{box-shadow:inset 5px 5px 10px #0a0a0a,inset -5px -5px 10px #252525;background:#151515;color:#00e676;border-bottom:6px solid #00e676;text-shadow:0 0 10px #00e676;}
 
-/* Bottom Tiles with 6px Bottom Borders */
+/* Bottom Tiles */
 .c-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .tile-btn{width:18.5%;padding:10px 0;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;font-weight:bold;color:#888;border:none;cursor:pointer;background:linear-gradient(145deg,#242424,#1e1e1e);box-shadow:4px 4px 8px #131313,-4px -4px 8px #292929;transition:all 0.2s}
 .tile-btn .icon{font-size:18px;margin-bottom:2px}
 .t-red{color:#f44336;border-bottom:6px solid #f44336;background:none} .t-blu{color:#2196f3;border-bottom:6px solid #2196f3;background:none} .t-org{color:#ff9800;border-bottom:6px solid #ff9800;background:none} .t-pur{color:#9c27b0;border-bottom:6px solid #9c27b0;background:none} .t-teal{color:#00bcd4;border-bottom:6px solid #00bcd4;background:none} .t-pnk{color:#e91e63;border-bottom:6px solid #e91e63;background:none}
 .tile-btn:active, .tile-btn.act{box-shadow:inset 5px 5px 10px #0a0a0a,inset -5px -5px 10px #252525 !important;background:#151515 !important;color:#00e676;border-bottom:6px solid #00e676;text-shadow:0 0 10px #00e676;}
 
-/* Sunken Volume Number Display */
 .vol-box{width:18.5%;height:42px;background:#151515;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fbc02d;box-shadow:inset 4px 4px 8px #0d0d0d,inset -4px -4px 8px #1d1d1d}
 
-/* Toast & Settings View */
+/* Toast */
 #toast{visibility:hidden;background:linear-gradient(145deg,#fff,#e6e6e6);color:#000;padding:12px 25px;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);border-radius:30px;z-index:99;font-weight:bold;font-size:13px;box-shadow:0 10px 20px rgba(0,0,0,0.5)}
 .toast-show{visibility:visible!important;animation:fade 2s}
 @keyframes fade{0%{opacity:0}20%{opacity:1}80%{opacity:1}100%{opacity:0}}
 
+/* Settings View */
 #view-sett{display:none}
 .set-tabs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:15px}
 .set-tb{background:#121212;border:1px solid #333;color:#888;padding:8px;border-radius:20px;font-size:11px;font-weight:bold;flex:1;cursor:pointer}
@@ -141,13 +141,14 @@ select.f-sel{opacity:0;position:absolute;width:100%;height:100%;left:0;top:0}
         <button class="tile-btn t-org" id="devSpk" onclick="cmd('toggle_spk')"><span class="icon">📢</span>SPIKER</button>
       </div>
     </div>
-    
     <div style="margin-top:25px;font-size:13px;color:#888;font-weight:bold;letter-spacing:1px;">
       SARVOPARI CLOUD EDITION SMARAN V2
     </div>
   </div>
 
   <div id="view-sett">
+    <div id="set-title" style="font-size:16px; font-weight:bold; margin-bottom:15px; transition: all 0.3s; color:#ff9800;">⚙️ REGULAR MODE SETTINGS</div>
+    
     <div class="set-tabs">
       <button class="set-tb act" onclick="openSetTab('g', this)">MAIN</button>
       <button class="set-tb" onclick="openSetTab('a', this)">AMPLI</button>
@@ -162,7 +163,6 @@ select.f-sel{opacity:0;position:absolute;width:100%;height:100%;left:0;top:0}
   </div>
 </div>
 <div id="toast"></div>
-
 <script>
 const FB_CONFIG = { apiKey: "AIzaSyD7yn5qvHzhNBKc3BIITR5jd9sVwqCjhUQ", authDomain: "smaran-v1.firebaseapp.com", databaseURL: "https://smaran-v1-default-rtdb.firebaseio.com", projectId: "smaran-v1", storageBucket: "smaran-v1.firebasestorage.app", messagingSenderId: "29055392334", appId: "1:29055392334:web:ab4e784646ab1cbbe9011f" };
 const TRACKS = ["ORDA-SARADHAR","ORA AAVO-GURUJI","ORDA-KUNDAL","MHATMAY CHINTA","SUKH CHINTA MANI","MURTI CHINTA MANI","BLANCK","TERE DWAR apadyo","NVAL SNEHI nathji","Shriji daya karo","Aekalda kem rahevay","Prabhu tam vina","Tum mere swami","Kyare have dekhu","Dukhi divas ne rat","Mara nath mara nath","Aakhadiyo aklay","Dhun_Amrut swami","DHUN VED mandir","JAMO JAMO mara","CHESHTA","RAM & CHESHTA","Track 23","Track 24","Track 25","Track 26","Track 27","Track 28","Track 29","Track 30","Track 31","Track 32","Track 33","Track 34","Track 35","Track 36","Track 37","Track 38","Track 39","Track 40"];
@@ -268,7 +268,6 @@ function listenStatus() {
         else if(txt.includes("AUTO | ")){ pm.style.display="inline-block"; pm.innerText="AUTO"; pm.style.background="#4caf50"; txt=txt.replace("AUTO | ",""); }
         else { pm.style.display="none"; }
         
-        // 🟢 WARNING BELL માટે ડેન્જર લાલ કલર અને ગ્લો 🟢
         let msgBox = document.getElementById("statusMsg");
         if(txt.includes("WARNING")) {
             msgBox.style.color = "#ff1744"; 
@@ -302,12 +301,16 @@ function listenStatus() {
     setDevState("devAmp", d.ampPower); setDevState("devMini", d.maPower); setDevState("devMiniSpk", d.msPower); setDevState("devMixer", d.r4Power); setDevState("devSpk", d.spkPower);
     setDevState("btnMute", d.isMute); 
     
+    // 🟢 અહી ટાઇટલનો કલર અને લખાણ બદલવાનો કોડ ઉમેર્યો છે 🟢
     if(d.utsavMode !== undefined) {
       let ub = document.getElementById('bUtsav');
+      let tit = document.getElementById('set-title'); 
       if(d.utsavMode == 1 || d.utsavMode === true) {
         if(ub) ub.classList.add('act');
+        if(tit) { tit.innerText = '🎉 UTSAV MODE SETTINGS'; tit.style.color = '#9c27b0'; }
       } else {
         if(ub) ub.classList.remove('act');
+        if(tit) { tit.innerText = '⚙️ REGULAR MODE SETTINGS'; tit.style.color = '#ff9800'; }
       }
     }
     
@@ -336,7 +339,6 @@ function cmd(a,f,t) {
   if(a === 'shuffle_toggle') document.getElementById('btnShuf').classList.toggle('act');
   if(a === 'toggle_mute') document.getElementById('btnMute').classList.toggle('act');
   
-  // ફિક્સ: રિફ્રેશ વગર માત્ર મોડ સ્વિચ કરશે
   if(a === 'toggle_utsav') {
     let ub = document.getElementById('bUtsav');
     if(ub) ub.classList.toggle('act');
@@ -359,7 +361,6 @@ function toggleMute() { cmd('toggle_mute'); }
 function nextTrack() { cmd('f4_next'); }
 function prevTrack() { cmd('f4_prev'); }
 
-// ઑફલાઇન સિંક માટે .on વાપર્યું જેથી લાઈવ ડેટા આવી જાય
 function loadSettingsFromCloud() {
   setRef.on("value", snap => {
     if(!snap.exists()) return; const d=snap.val();
@@ -385,7 +386,6 @@ function syncSettingsToCloud() {
   const btn = document.querySelector('.sync-btn'); btn.innerText = "⏳ SAVING..."; btn.disabled = true;
   let p={}; 
   
-  // ઓનલાઈનથી કયો મોડ ચાલે છે તે ESP32 ને મોકલો
   let utsavBtn = document.getElementById('bUtsav');
   p["utsavMode"] = (utsavBtn && utsavBtn.classList.contains('act')) ? 1 : 0;
 
@@ -396,7 +396,6 @@ function syncSettingsToCloud() {
     if(c.type==='slot'){ p[c.v[2]] = get24(c.id+'_e'); p[c.v[3]] = parseInt(document.getElementById(c.id+'_e_m').value) || 0; }
   });
   
-  // ફિક્સ: ડેસ્કબોર્ડ પર પાછું જતું અટકાવ્યું અને સિંક કમાન્ડ મોકલ્યો
   setRef.update(p).then(() => { 
     cmd("sync_settings"); 
     toast("💾 Saved! Synced to Module."); 
