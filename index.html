@@ -196,6 +196,9 @@ const S_CONF = [
 let db, cmdRef, statusRef, setRef;
 let curTrack=1, isConnected=false;
 
+// 🟢 નવો વેરીએબલ: છેલ્લે ક્યારે ડેટા આવ્યો તે યાદ રાખવા
+let lastStatusTime = 0; 
+
 function genSettings() {
   let html = {'g':'', 'a':'', 'ma':'', 'ms':'', 'mx':'', 'sp':'', 'lk':''};
   S_CONF.forEach(c => {
@@ -246,6 +249,12 @@ function updateLocalClock() {
   let m = now.getMinutes().toString().padStart(2, '0'); 
   let s = now.getSeconds().toString().padStart(2, '0');
   document.getElementById("clock").innerText = `${days[now.getDay()]} ${h12}:${m}:${s}${ampm}`;
+
+  // 🟢 ફિક્સ: જો 10 સેકન્ડ (10000ms) સુધી નવો ડેટા ન આવે, તો સીધું લાલ OFFLINE કરી દેશે 🟢
+  if (lastStatusTime > 0 && (Date.now() - lastStatusTime > 10000)) {
+    document.getElementById("netBadge").className = "badge offline";
+    document.getElementById("netBadge").innerText = "OFFLINE";
+  }
 }
 setInterval(updateLocalClock, 1000);
 
@@ -253,6 +262,9 @@ function listenStatus() {
   statusRef.on("value", snap => {
     if (!snap.exists()) return;
     const d = snap.val();
+    
+    // 🟢 બોર્ડનો ડેટા આવ્યો એટલે તરત જ સમય નોંધી લેશે 🟢
+    lastStatusTime = Date.now(); 
     
     if(d.statusMsg) {
         let txt = d.statusMsg;
@@ -294,13 +306,21 @@ function listenStatus() {
     setDevState("devAmp", d.ampPower); setDevState("devMini", d.maPower); setDevState("devMiniSpk", d.msPower); setDevState("devMixer", d.r4Power); setDevState("devSpk", d.spkPower);
     setDevState("btnMute", d.isMute); 
     
-    if(d.wifiOK || d.online) {
-      document.getElementById("netBadge").className="badge"; 
-      document.getElementById("netBadge").innerText="ONLINE";
-    } else {
-      document.getElementById("netBadge").className="badge offline"; 
-      document.getElementById("netBadge").innerText="OFFLINE";
+    if(d.utsavMode !== undefined) {
+      let ub = document.getElementById('bUtsav');
+      let tit = document.getElementById('set-title'); 
+      if(d.utsavMode == 1 || d.utsavMode === true) {
+        if(ub) ub.classList.add('act');
+        if(tit) { tit.innerText = '🎉 UTSAV MODE SETTINGS'; tit.style.color = '#9c27b0'; }
+      } else {
+        if(ub) ub.classList.remove('act');
+        if(tit) { tit.innerText = '⚙️ REGULAR MODE SETTINGS'; tit.style.color = '#ff9800'; }
+      }
     }
+    
+    // 🟢 નવો ડેટા આવ્યો છે, એટલે બોર્ડ ૧૦૦% ONLINE જ છે (લીલું બોક્સ બતાવશે) 🟢
+    document.getElementById("netBadge").className="badge"; 
+    document.getElementById("netBadge").innerText="ONLINE";
   });
 }
 
@@ -320,7 +340,6 @@ function cmd(a,f,t) {
   if(a === 'toggle_mute') document.getElementById('btnMute').classList.toggle('act');
   
   if(a === 'toggle_utsav') {
-    // 🟢 ફિક્સ: બટન જાતે નહિ બદલાય, બોર્ડ સિગ્નલ આપશે ત્યારે જ બદલાશે 🟢
     toast("SWITCHING MODE... PLEASE WAIT");
   } else {
     toast("Sent: "+a); 
@@ -345,7 +364,6 @@ function loadSettingsFromCloud() {
   setRef.on("value", snap => {
     if(!snap.exists()) return; const d=snap.val();
     
-    // 🟢 ફિક્સ (સૌથી અગત્યનું): સેટિંગ્સના ડેટા પરથી જ નક્કી થશે કે અત્યારે કયો મોડ ચાલુ છે! 🟢
     let ub = document.getElementById('bUtsav');
     let tit = document.getElementById('set-title'); 
     if(d.utsavMode !== undefined) {
