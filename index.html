@@ -251,7 +251,7 @@ function updateLocalClock() {
   document.getElementById("clock").innerText = `${days[now.getDay()]} ${h12}:${m}:${s}${ampm}`;
 
   // 🟢 ફિક્સ: જો 10 સેકન્ડ (10000ms) સુધી નવો ડેટા ન આવે, તો સીધું લાલ OFFLINE કરી દેશે 🟢
-  if (lastStatusTime > 0 && (Date.now() - lastStatusTime > 10000)) {
+  if (lastStatusTime > 0 && (Date.now() - lastStatusTime > 5000)) {
     document.getElementById("netBadge").className = "badge offline";
     document.getElementById("netBadge").innerText = "OFFLINE";
   }
