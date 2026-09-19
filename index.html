@@ -300,7 +300,7 @@ function startLocalPoll() {
   }, 1000);
 }
 
-// ════════════════════════════════════════
+// ════════════════════════════════════════function syncSettingsToCloud() {
 // UNIFIED UI UPDATE (Firebase + Local)
 // ════════════════════════════════════════
 function updateUI(d) {
@@ -384,7 +384,7 @@ function cmd(a, f, t) {
   }
 }
 
-// Settings sync to cloud
+// Settings sync to cloud (સુધારેલો બ્લોક)
 function syncSettingsToCloud() {
   const btn = document.querySelector('.sync-btn');
   btn.innerText = "⏳ SAVING..."; btn.disabled = true;
@@ -402,14 +402,28 @@ function syncSettingsToCloud() {
   // Firebase sync
   if (fbConnected && setRef) {
     setRef.update(p).then(() => {
-      // Local ESP32 save via POST
-      fetch(`http://${localIP}/save_settings`, {method:'POST', body:new URLSearchParams(Object.entries(p).reduce((a,b)=>(a[b[0]]=b[1],a),{})), signal:AbortSignal.timeout(3000)}).catch(()=>{});
+      // 🟢 1. ESP32 ને સેટિંગ્સ ડાઉનલોડ કરવાનો કમાન્ડ મોકલો
+      cmd("sync_settings");
+      
+      // 🟢 2. ઓફલાઈન સેવ કરવા માટે JSON ફોર્મેટ વાપરો
+      fetch(`http://${localIP}/save_settings`, {
+        method: 'POST', 
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(p), 
+        signal: AbortSignal.timeout(3000)
+      }).catch(()=>{});
+      
       toast("💾 Saved! Synced to Module.");
       setTimeout(()=>{btn.innerText="💾 SAVE & SYNC TO MODULE"; btn.disabled=false;}, 300);
     });
   } else {
-    // Offline: direct ESP32 save
-    fetch(`http://${localIP}/save_settings`, {method:'POST', body:new URLSearchParams(Object.entries(p).reduce((a,b)=>(a[b[0]]=b[1],a),{})), signal:AbortSignal.timeout(3000)})
+    // Offline: direct ESP32 save (JSON ફોર્મેટમાં)
+    fetch(`http://${localIP}/save_settings`, {
+      method: 'POST', 
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(p), 
+      signal: AbortSignal.timeout(3000)
+    })
     .then(()=>{toast("💾 Local Save Done!");})
     .catch(()=>{toast("❌ Save Failed - Check Connection");})
     .finally(()=>{btn.innerText="💾 SAVE & SYNC TO MODULE"; btn.disabled=false;});
