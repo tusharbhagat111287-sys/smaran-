@@ -310,23 +310,32 @@ function updateUI(d) {
     if (txt.includes("MANUAL | ")) { pm.style.display="inline-block"; pm.innerText="MANUAL"; pm.style.background="#f44336"; txt=txt.replace("MANUAL | ",""); }
     else if (txt.includes("AUTO | ")) { pm.style.display="inline-block"; pm.innerText="AUTO"; pm.style.background="#4caf50"; txt=txt.replace("AUTO | ",""); }
     else { pm.style.display="none"; }
+    
     const msgBox = document.getElementById("statusMsg");
     msgBox.style.color = txt.includes("WARNING") ? "#ff1744" : "#00e676";
     msgBox.style.textShadow = txt.includes("WARNING") ? "0 0 15px #ff1744" : "none";
     msgBox.innerText = txt;
     document.getElementById("trackName").innerText = d.playing ? txt : TRACKS[curTrack-1];
+    
     const p = d.playing || false;
-    setDevState("bMan",   p && txt.includes('Mangla'));
-    setDevState("bArt",   p && txt.includes('F1T9'));
-    setDevState("bTodA",  p && txt.includes('ARTI') && !txt.includes('F1T9'));
-    setDevState("bTodG",  p && txt.includes('GODI'));
-    setDevState("bD1",    p && txt.includes('F3T1'));
-    setDevState("bD2",    p && txt.includes('F3T2'));
-    setDevState("bDir",   p && !txt.includes('Mangla') && !txt.includes('ARTI') && !txt.includes('GODI') && !txt.includes('F3T'));
+    
+    // 🟢 ફિક્સ 1: ટેમ્પરરી મેસેજ (Volume, AMP વગેરે) આવે ત્યારે ગીતના બટનનો કલર નહિ ઉડે
+    const isTempMsg = txt.includes("Volume:") || txt.includes("AMP:") || txt.includes("MINI:") || txt.includes("MIXER:") || txt.includes("SPK:") || txt.includes("M-SPK:") || txt.includes("SYNCED") || txt.includes("BELL");
+    
+    if (!isTempMsg) {
+        setDevState("bMan",   p && txt.includes('Mangla'));
+        setDevState("bArt",   p && txt.includes('F1T9'));
+        setDevState("bTodA",  p && txt.includes('ARTI') && !txt.includes('F1T9'));
+        setDevState("bTodG",  p && txt.includes('GODI'));
+        setDevState("bD1",    p && txt.includes('F3T1'));
+        setDevState("bD2",    p && txt.includes('F3T2'));
+        setDevState("bDir",   p && !txt.includes('Mangla') && !txt.includes('ARTI') && !txt.includes('GODI') && !txt.includes('F3T'));
+    }
     setDevState("btnStop",!p);
   }
   if (d.volume !== undefined) document.getElementById("volNum").innerText = d.volume;
   if (d.f4track) { curTrack = d.f4track; document.getElementById("trackName").innerText = TRACKS[curTrack-1]; }
+  
   setDevState("btnRep",    d.isRepeat);
   setDevState("btnShuf",   d.isShuffle);
   setDevState("devAmp",    d.ampPower);
@@ -335,6 +344,7 @@ function updateUI(d) {
   setDevState("devMixer",  d.r4Power);
   setDevState("devSpk",    d.spkPower);
   setDevState("btnMute",   d.isMute);
+  
   if (d.utsavMode !== undefined) {
     const ub = document.getElementById('bUtsav');
     const tit = document.getElementById('set-title');
@@ -357,6 +367,10 @@ function cmd(a, f, t) {
   isSending = true;
   setTimeout(() => { isSending = false; }, 60);
 
+  // 🟢 ફિક્સ 2: રિમોટમાં ફાસ્ટ રિસ્પોન્સ (બટન દબાવતા જ 0 સેકન્ડમાં વોલ્યુમ અપડેટ થઈ જશે)
+  if(a==='vol_u') { let v = parseInt(document.getElementById("volNum").innerText); if(!isNaN(v) && v < 30) document.getElementById("volNum").innerText = v + 1; }
+  if(a==='vol_d') { let v = parseInt(document.getElementById("volNum").innerText); if(!isNaN(v) && v > 0) document.getElementById("volNum").innerText = v - 1; }
+
   // UI preview
   if(a==='toggle_amp')     document.getElementById('devAmp').classList.toggle('act');
   if(a==='toggle_mini')    document.getElementById('devMini').classList.toggle('act');
@@ -375,7 +389,6 @@ function cmd(a, f, t) {
   }
 
   // ── Local ESP32 send (Local/Offline) ──
-  // ESP32 accepts: /control?action=...&folder=...&track=...
   if (localConnected || !fbConnected) {
     let url = `http://${localIP}/control?action=${a}&t=${Date.now()}`;
     if (f) url += `&folder=${f}`;
