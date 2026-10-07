@@ -276,43 +276,7 @@ let localIP = LOCAL_IP;
 let pendingSeq=null,pendingAt=0,lastSeq=-1;
 const TG={toggle_amp:['devAmp','AMP: '],toggle_mini:['devMini','MINI: '],toggle_minispk:['devMiniSpk','M-SPK: '],toggle_mixer:['devMixer','MIXER: '],toggle_mix2:['devMix2','MIX2: '],toggle_spk:['devSpk','SPK: '],repeat_toggle:['btnRep','REPEAT '],shuffle_start:['btnShuf','SHUFFLE '],toggle_mute:['btnMute','MUTE ']};
 const FIXED={stop:'STOPPED',warning_bell:'BELL RINGING',play_mangla:'Play: Mangla',play:'PLAYING',play_arti:'Play: Today Arti',play_godi:'Play: Today Godi',play_dhun1:'Play: Dhun M',play_dhun2:'Play: Dhun E',f4_n:'NEXT TRACK',f4_p:'PREV TRACK',toggle_utsav:'SWITCHING MODE...',restart_esp:'RESTARTING...'};
-
-// 🟢 0.0s ડિલે સોલ્યુશન - ક્લિક કરતા જ બટન ગ્રીન થશે અને નામ બદલાશે 🟢
-function showPending(a, f, t){
-  pendingSeq=lastSeq; pendingAt=Date.now();
-  const m=document.getElementById('statusMsg'); m.style.color='#00e676'; m.style.textShadow='none';
-  m.innerText=predictMsg(a);
-
-  // તરત જ બટન અને ટ્રેક અપડેટ કરવા માટેનું લોજિક
-  let isPlay = a.startsWith('play') || a === 'f4_n' || a === 'f4_p';
-  let isStop = (a === 'stop');
-
-  if (isPlay || isStop) {
-    setDevState("btnStop", isStop);
-    setDevState("bMan", a === 'play_mangla');
-    setDevState("bArt", a === 'play' && f == 1 && t == 9);
-    setDevState("bTodA", a === 'play_arti');
-    setDevState("bTodG", a === 'play_godi');
-    setDevState("bD1", a === 'play_dhun1');
-    setDevState("bD2", a === 'play_dhun2');
-    setDevState("bDir", (a === 'play' && f == 4) || a === 'f4_n' || a === 'f4_p');
-
-    let tnBox = document.getElementById("trackName");
-    if (isStop) {
-       tnBox.innerText = TRACKS[curTrack-1];
-    } else {
-       let tn = "PLAYING...";
-       if (a === 'play_mangla') tn = "Mangla";
-       else if (a === 'play' && f == 1 && t == 9) tn = "Arti & Jay";
-       else if (a === 'play_arti') tn = "Today Arti";
-       else if (a === 'play_godi') tn = "Today Godi";
-       else if (a === 'play_dhun1') tn = "Dhun M";
-       else if (a === 'play_dhun2') tn = "Dhun E";
-       else if (a === 'play' && f == 4) tn = TRACKS[t-1] || ("Track " + t);
-       tnBox.innerText = tn;
-    }
-  }
-}
+// 🟢 બટન દબાવતા જ પરિણામ (ON/OFF, Volume 19/18) તરત દેખાય, બટનનું નામ નહિ. ESP32 નો જવાબ આવે એટલે સાચો મેસેજ લાગુ 🟢
 function predictMsg(a){
   if (TG[a]) { const on=document.getElementById(TG[a][0]).classList.contains('act'); return TG[a][1]+(on?'ON':'OFF'); }
   if (a==='vol_u'||a==='vol_d') {
@@ -320,6 +284,11 @@ function predictMsg(a){
     v=Math.max(0,Math.min(30,v+(a==='vol_u'?1:-1))); vb.innerText=v; return 'Volume: '+v;
   }
   return FIXED[a]||a.toUpperCase();
+}
+function showPending(a){
+  pendingSeq=lastSeq; pendingAt=Date.now();
+  const m=document.getElementById('statusMsg'); m.style.color='#00e676'; m.style.textShadow='none';
+  m.innerText=predictMsg(a);
 }
 function gate(d){
   if (d.seq!==undefined) {
@@ -454,7 +423,6 @@ function cmd(a, f, t) {
   if (isSending) return;
   isSending = true;
   setTimeout(() => { isSending = false; }, 60);
-
   if(a==='toggle_amp')     document.getElementById('devAmp').classList.toggle('act');
   if(a==='toggle_mini')    document.getElementById('devMini').classList.toggle('act');
   if(a==='toggle_minispk') document.getElementById('devMiniSpk').classList.toggle('act');
@@ -464,15 +432,14 @@ function cmd(a, f, t) {
   if(a==='repeat_toggle')  document.getElementById('btnRep').classList.toggle('act');
   if(a==='shuffle_start')  document.getElementById('btnShuf').classList.toggle('act');
   if(a==='toggle_mute')    document.getElementById('btnMute').classList.toggle('act');
-  
-  // 🟢 અહીં ફેરફાર કર્યો છે: ફંક્શનમાં f અને t પણ મોકલ્યા છે 🟢
-  showPending(a, f, t);
-
+  showPending(a);
+  // 🟢 FIX: કમાન્ડ હવે ફક્ત એક જ રસ્તે જાય છે (પહેલાં Firebase + Local બંનેથી જતો એટલે ડબલ એક્ઝિક્યુટ થઈ શકતો) 🟢
   const viaFB = () => {
     if (fbConnected && cmdRef) cmdRef.set({action:a, folder:Number(f)||0, track:Number(t)||0, timestamp:Date.now()});
     else { pendingSeq=null; toast("❌ કનેક્શન નથી"); }
   };
   if (localConnected || !fbConnected) {
+    // ESP32 /control f= અને t= માંગે છે (પહેલાં folder=/track= જતું હતું એટલે ગીત સિલેક્ટ ખોટું થતું)
     let url = `http://${localIP}/control?action=${a}&_t=${Date.now()}`;
     if (f) url += `&f=${f}`;
     if (t) url += `&t=${t}`;
@@ -640,4 +607,3 @@ window.onload = () => {
 </script>
 </body>
 </html>
-
