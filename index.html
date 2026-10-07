@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
 <title>SARVOPARI DHAM NITYAM</title>
-<link rel="manifest" href="manifest.json?v=4">
+<link rel="manifest" href="manifest.json?v=5">
 <link rel="icon" href="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png">
 <link rel="apple-touch-icon" href="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -152,7 +152,7 @@ select.f-sel{opacity:0;position:absolute;width:100%;height:100%;left:0;top:0}
       </div>
     </div>
     <div style="margin-top:25px;font-size:13px;color:#888;font-weight:bold;letter-spacing:1px">
-      SARVOPARI CLOUD EDITION SMARAN V2 · ESP32-S3
+      SARVOPARI CLOUD EDITION SMARAN V2 · ESP32-S3 · UI v5
     </div>
   </div>
 
@@ -272,7 +272,27 @@ let curTrack = 1;
 let isSending = false;
 let lastStatusTime = 0;
 let localPollTimer = null;
-let localIP = LOCAL_IP;     
+let localIP = LOCAL_IP;
+let pendingSeq=null,pendingAt=0,lastSeq=-1;
+const CMD_TXT={play_mangla:'MANGLA',play:'PLAY',play_arti:"TODAY ARTI",play_godi:"TODAY GODI",play_dhun1:'DHUN MORNING',play_dhun2:'DHUN EVENING',stop:'STOP',vol_u:'VOLUME +',vol_d:'VOLUME -',warning_bell:'BELL',toggle_amp:'AMPLI',toggle_mini:'MINI',toggle_minispk:'M-SPK',toggle_mixer:'MIXER',toggle_mix2:'MIX-2',toggle_spk:'SPIKER',toggle_mute:'MUTE',repeat_toggle:'REPEAT',shuffle_start:'SHUFFLE',f4_n:'NEXT TRACK',f4_p:'PREV TRACK',toggle_utsav:'UTSAV',restart_esp:'RESTART'};
+// 🟢 બટન દબાવતા જ તરત ⏳ મેસેજ; ESP32 કમાન્ડ પૂરો કરે એટલે સાચો મેસેજ. ૪ સેકન્ડમાં જવાબ ન આવે તો ચેતવણી 🟢
+function showPending(a){
+  pendingSeq=lastSeq; pendingAt=Date.now();
+  const m=document.getElementById('statusMsg'); m.style.color='#ffc107'; m.style.textShadow='none';
+  m.innerText='⏳ '+(CMD_TXT[a]||a.toUpperCase())+' ...';
+}
+function gate(d){
+  if (d.seq!==undefined) {
+    if (pendingSeq!==null) {
+      if (d.seq!==pendingSeq) pendingSeq=null;
+      else if (Date.now()-pendingAt>4000) { pendingSeq=null; toast("⚠ કમાન્ડ પહોંચ્યો નહીં - ફરી દબાવો"); }
+      else return false;
+    }
+    lastSeq=d.seq;
+  } else if (pendingSeq!==null) { if (Date.now()-pendingAt>700) pendingSeq=null; else return false; }
+  return true;
+}
+     
 
 function setMode(mode) {
   const lbl = document.getElementById('modeLabel');
@@ -340,6 +360,7 @@ function startLocalPoll() {
 }
 
 function updateUI(d) {
+  if (!gate(d)) return;
   if (d.statusMsg !== undefined) {
     let txt = d.statusMsg;
     const pm = document.getElementById("playModeBadge");
@@ -352,13 +373,16 @@ function updateUI(d) {
     msgBox.innerText = txt;
     document.getElementById("trackName").innerText = d.playing ? txt : TRACKS[curTrack-1];
     const p = d.playing || false;
-    setDevState("bMan",   p && txt.includes('Mangla'));
-    setDevState("bArt",   p && txt.includes('F1T9'));
-    setDevState("bTodA",  p && txt.includes('ARTI') && !txt.includes('F1T9'));
-    setDevState("bTodG",  p && txt.includes('GODI'));
-    setDevState("bD1",    p && txt.includes('F3T1'));
-    setDevState("bD2",    p && txt.includes('F3T2'));
-    setDevState("bDir",   p && !txt.includes('Mangla') && !txt.includes('ARTI') && !txt.includes('GODI') && !txt.includes('F3T'));
+    // 🟢 FIX: પહેલાં તાત્કાલિક મેસેજ ("Volume: 20", "MIXER: ON") જોઈને બટન નક્કી થતા એટલે ફોલ્ડર 📂 ગ્રીન થઈ જતું.
+    // હવે ESP32 નું સાચું ગીત-નામ (trackName) અને ફોલ્ડર નંબર (fld) વપરાય છે 🟢
+    const tn = (d.trackName !== undefined) ? d.trackName : txt;
+    setDevState("bMan",   p && tn.includes('Mangla'));
+    setDevState("bArt",   p && tn.includes('F1T9'));
+    setDevState("bTodA",  p && tn.includes('ARTI') && !tn.includes('F1T9'));
+    setDevState("bTodG",  p && tn.includes('GODI'));
+    setDevState("bD1",    p && tn.includes('F3T1'));
+    setDevState("bD2",    p && tn.includes('F3T2'));
+    setDevState("bDir",   p && (d.fld !== undefined ? d.fld == 4 : (!tn.includes('Mangla') && !tn.includes('ARTI') && !tn.includes('GODI') && !tn.includes('F3T'))));
     setDevState("btnStop",!p);
   }
   if (d.volume !== undefined) document.getElementById("volNum").innerText = d.volume;
@@ -385,10 +409,11 @@ function updateUI(d) {
   }
 }
 function cmd(a, f, t) {
+  // 🟢 sync_settings ESP32 માં કમાન્ડ નંબર વધારતો નથી, એટલે તેને ⏳ રાહ જોયા વગર સીધો Firebase થી મોકલો 🟢
+  if (a==='sync_settings') { if (fbConnected && cmdRef) cmdRef.set({action:a, folder:0, track:0, timestamp:Date.now()}); return; }
   if (isSending) return;
   isSending = true;
   setTimeout(() => { isSending = false; }, 60);
-
   if(a==='toggle_amp')     document.getElementById('devAmp').classList.toggle('act');
   if(a==='toggle_mini')    document.getElementById('devMini').classList.toggle('act');
   if(a==='toggle_minispk') document.getElementById('devMiniSpk').classList.toggle('act');
@@ -398,21 +423,24 @@ function cmd(a, f, t) {
   if(a==='repeat_toggle')  document.getElementById('btnRep').classList.toggle('act');
   if(a==='shuffle_start')  document.getElementById('btnShuf').classList.toggle('act');
   if(a==='toggle_mute')    document.getElementById('btnMute').classList.toggle('act');
-
-  toast(a==='toggle_utsav' ? "SWITCHING MODE..." : "Sent: "+a);
-
-  if (fbConnected && cmdRef) {
-    cmdRef.set({action:a, folder:Number(f)||0, track:Number(t)||0, timestamp:Date.now()});
-  }
-
+  showPending(a);
+  // 🟢 FIX: કમાન્ડ હવે ફક્ત એક જ રસ્તે જાય છે (પહેલાં Firebase + Local બંનેથી જતો એટલે ડબલ એક્ઝિક્યુટ થઈ શકતો) 🟢
+  const viaFB = () => {
+    if (fbConnected && cmdRef) cmdRef.set({action:a, folder:Number(f)||0, track:Number(t)||0, timestamp:Date.now()});
+    else { pendingSeq=null; toast("❌ કનેક્શન નથી"); }
+  };
   if (localConnected || !fbConnected) {
-    let url = `http://${localIP}/control?action=${a}&t=${Date.now()}`;
-    if (f) url += `&folder=${f}`;
-    if (t) url += `&track=${t}`;
-    fetch(url, {signal: AbortSignal.timeout(1500)}).catch(()=>{});
-  }
+    // ESP32 /control f= અને t= માંગે છે (પહેલાં folder=/track= જતું હતું એટલે ગીત સિલેક્ટ ખોટું થતું)
+    let url = `http://${localIP}/control?action=${a}&_t=${Date.now()}`;
+    if (f) url += `&f=${f}`;
+    if (t) url += `&t=${t}`;
+    fetch(url, {signal: AbortSignal.timeout(2500)}).catch(e => {
+      localConnected = false;
+      if (e && e.name === 'TimeoutError') return;
+      viaFB();
+    });
+  } else viaFB();
 }
-
 function syncSettingsToCloud() {
   const btn = document.querySelector('.sync-btn');
   btn.innerText = "⏳ SAVING..."; btn.disabled = true;
@@ -564,7 +592,7 @@ window.onload = () => {
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js?v=4').then(()=>console.log('SW Registered'));
+      navigator.serviceWorker.register('sw.js?v=5').then(()=>console.log('SW Registered'));
     });
   }
 </script>
