@@ -152,7 +152,7 @@ select.f-sel{opacity:0;position:absolute;width:100%;height:100%;left:0;top:0}
       </div>
     </div>
     <div style="margin-top:25px;font-size:13px;color:#888;font-weight:bold;letter-spacing:1px">
-      SARVOPARI CLOUD EDITION SMARAN V2 · ESP32-S3
+      SARVOPARI CLOUD EDITION SMARAN V2 · ESP32-S3 · UI v5
     </div>
   </div>
 
@@ -274,12 +274,21 @@ let lastStatusTime = 0;
 let localPollTimer = null;
 let localIP = LOCAL_IP;
 let pendingSeq=null,pendingAt=0,lastSeq=-1;
-const CMD_TXT={play_mangla:'MANGLA',play:'PLAY',play_arti:"TODAY ARTI",play_godi:"TODAY GODI",play_dhun1:'DHUN MORNING',play_dhun2:'DHUN EVENING',stop:'STOP',vol_u:'VOLUME +',vol_d:'VOLUME -',warning_bell:'BELL',toggle_amp:'AMPLI',toggle_mini:'MINI',toggle_minispk:'M-SPK',toggle_mixer:'MIXER',toggle_mix2:'MIX-2',toggle_spk:'SPIKER',toggle_mute:'MUTE',repeat_toggle:'REPEAT',shuffle_start:'SHUFFLE',f4_n:'NEXT TRACK',f4_p:'PREV TRACK',toggle_utsav:'UTSAV',restart_esp:'RESTART'};
-// 🟢 બટન દબાવતા જ તરત ⏳ મેસેજ; ESP32 કમાન્ડ પૂરો કરે એટલે સાચો મેસેજ. ૪ સેકન્ડમાં જવાબ ન આવે તો ચેતવણી 🟢
+const TG={toggle_amp:['devAmp','AMP: '],toggle_mini:['devMini','MINI: '],toggle_minispk:['devMiniSpk','M-SPK: '],toggle_mixer:['devMixer','MIXER: '],toggle_mix2:['devMix2','MIX2: '],toggle_spk:['devSpk','SPK: '],repeat_toggle:['btnRep','REPEAT '],shuffle_start:['btnShuf','SHUFFLE '],toggle_mute:['btnMute','MUTE ']};
+const FIXED={stop:'STOPPED',warning_bell:'BELL RINGING',play_mangla:'Play: Mangla',play:'PLAYING',play_arti:'Play: Today Arti',play_godi:'Play: Today Godi',play_dhun1:'Play: Dhun M',play_dhun2:'Play: Dhun E',f4_n:'NEXT TRACK',f4_p:'PREV TRACK',toggle_utsav:'SWITCHING MODE...',restart_esp:'RESTARTING...'};
+// 🟢 બટન દબાવતા જ પરિણામ (ON/OFF, Volume 19/18) તરત દેખાય, બટનનું નામ નહિ. ESP32 નો જવાબ આવે એટલે સાચો મેસેજ લાગુ 🟢
+function predictMsg(a){
+  if (TG[a]) { const on=document.getElementById(TG[a][0]).classList.contains('act'); return TG[a][1]+(on?'ON':'OFF'); }
+  if (a==='vol_u'||a==='vol_d') {
+    const vb=document.getElementById('volNum'); let v=parseInt(vb.innerText); if (isNaN(v)) return 'VOLUME';
+    v=Math.max(0,Math.min(30,v+(a==='vol_u'?1:-1))); vb.innerText=v; return 'Volume: '+v;
+  }
+  return FIXED[a]||a.toUpperCase();
+}
 function showPending(a){
   pendingSeq=lastSeq; pendingAt=Date.now();
-  const m=document.getElementById('statusMsg'); m.style.color='#ffc107'; m.style.textShadow='none';
-  m.innerText='⏳ '+(CMD_TXT[a]||a.toUpperCase())+' ...';
+  const m=document.getElementById('statusMsg'); m.style.color='#00e676'; m.style.textShadow='none';
+  m.innerText=predictMsg(a);
 }
 function gate(d){
   if (d.seq!==undefined) {
