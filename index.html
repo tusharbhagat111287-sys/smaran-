@@ -476,6 +476,35 @@ function loadSettingsFromCloud() {
   });
 }
 
+// 🟢🔴 ASLI ADD (5-10-2026): આ ફંક્શન પહેલાં હતું જ નહીં — ફક્ત loadSettingsFromCloud() (Firebase)
+// હતું, LOCAL (ઓફલાઈન, ESP32 ના પોતાના /get_settings) માટે કંઈ જ નહોતું. એટલે ઓફલાઈન વખતે
+// Setting ટેબ હંમેશા જૂનું/ડિફૉલ્ટ જ બતાવતું, ભલે ઓનલાઈનથી ગમે તે સેવ કર્યું હોય.
+function loadSettingsFromLocal() {
+  fetch(`http://${localIP}/get_settings`, {signal: AbortSignal.timeout(2000)})
+    .then(r => r.json())
+    .then(d => {
+      const ub = document.getElementById('bUtsav');
+      const tit = document.getElementById('set-title');
+      if (d.utsavMode == 1) { if(ub)ub.classList.add('act'); if(tit){tit.innerText='🎉 UTSAV MODE SETTINGS';tit.style.color='#9c27b0';} }
+      else { if(ub)ub.classList.remove('act'); if(tit){tit.innerText='⚙️ REGULAR MODE SETTINGS';tit.style.color='#ff9800';} }
+      S_CONF.forEach(c => {
+        const en = document.getElementById(c.id+'_en'); if(en) en.checked = (d[c.v[c.v.length-1]] == 1);
+        if (d[c.v[0]] !== undefined) {
+          let h12 = d[c.v[0]]%12; if(h12==0) h12=12;
+          document.getElementById(c.id+'_s_h').value = h12;
+          document.getElementById(c.id+'_s_m').value = parseInt(d[c.v[1]])<10?'0'+d[c.v[1]]:d[c.v[1]];
+          document.getElementById(c.id+'_s_ap').value = d[c.v[0]]>=12?1:0;
+        }
+        if (c.type==='slot' && d[c.v[2]] !== undefined) {
+          let h12 = d[c.v[2]]%12; if(h12==0) h12=12;
+          document.getElementById(c.id+'_e_h').value = h12;
+          document.getElementById(c.id+'_e_m').value = parseInt(d[c.v[3]])<10?'0'+d[c.v[3]]:d[c.v[3]];
+          document.getElementById(c.id+'_e_ap').value = d[c.v[2]]>=12?1:0;
+        }
+      });
+    }).catch(e => { });
+}
+
 function genSettings() {
   let html = {g:'',a:'',ma:'',ms:'',mx:'',mx2:'',sp:'',lk:''};
   S_CONF.forEach(c => {
@@ -507,7 +536,7 @@ function selectTrack(sel) { if(sel.value) { cmd('play',4,sel.value); sel.selecte
 
 function setDevState(id, s) { const e=document.getElementById(id); if(e) e.classList.toggle("act", !!s); }
 function toast(m) { const t=document.getElementById("toast"); t.innerText=m; t.className="toast-show"; setTimeout(()=>t.className="",2500); }
-function switchView(v) { document.getElementById('view-dash').style.display=v==='dash'?'block':'none'; document.getElementById('view-sett').style.display=v==='sett'?'block':'none'; document.getElementById('tab-dash').classList.toggle('act',v==='dash'); document.getElementById('tab-sett').classList.toggle('act',v==='sett'); }
+function switchView(v) { document.getElementById('view-dash').style.display=v==='dash'?'block':'none'; document.getElementById('view-sett').style.display=v==='sett'?'block':'none'; document.getElementById('tab-dash').classList.toggle('act',v==='dash'); document.getElementById('tab-sett').classList.toggle('act',v==='sett'); if(v==='sett' && !fbConnected) loadSettingsFromLocal(); /* 🟢 ASLI ADD: ઓફલાઈન હોય ત્યારે ESP32 પરથી સીધું તાજું સેટિંગ લાવો */ }
 function openSetTab(id, b) { document.querySelectorAll('.set-cont').forEach(e=>e.classList.remove('act')); document.querySelectorAll('.set-tb').forEach(e=>e.classList.remove('act')); document.getElementById('tc-'+id).classList.add('act'); b.classList.add('act'); }
 function get24(id) { let h=parseInt(document.getElementById(id+'_h').value); let ap=parseInt(document.getElementById(id+'_ap').value); return ap==1?(h==12?12:h+12):(h==12?0:h); }
 
