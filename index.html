@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
 <title>SARVOPARI DHAM NITYAM</title>
-<link rel="manifest" href="manifest.json?v=6">
+<link rel="manifest" href="manifest.json?v=7">
 <link rel="icon" href="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png">
 <link rel="apple-touch-icon" href="https://i.ibb.co/HpDS8yDF/apple-touch-icon.png">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -86,7 +86,7 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
 .track-list { overflow-y: auto; padding: 15px; flex: 1; text-align: left; background: #111; }
 .t-item { padding: 15px; margin-bottom: 10px; background: #1e1e1e; border-radius: 8px; color: #00e5ff; font-size: 14px; font-weight: bold; border: 1px solid #333; cursor: pointer; transition: 0.2s; }
 .t-item:active { background: #2a2a2a; }
-.t-item.active-track { background: #0a2a12; color: #00e676; border: 2px solid #00e676; box-shadow: inset 0 0 10px rgba(0,230,118,0.2); }
+.t-item.active-track { background: #0a2a12; color: #00e676; border: 2px solid #00e676; box-shadow: inset 0 0 10px rgba(0,230,118,0.2), 0 0 10px rgba(0,230,118,0.4); }
 </style>
 </head>
 <body>
@@ -156,7 +156,7 @@ input:checked+span:before{transform:translateX(16px);background:#fff}
       </div>
     </div>
     <div style="margin-top:25px;font-size:13px;color:#888;font-weight:bold;letter-spacing:1px">
-      SARVOPARI CLOUD EDITION SMARAN V2 · ESP32-S3 · UI v6
+      SARVOPARI CLOUD EDITION SMARAN V2 · ESP32-S3 · UI v7
     </div>
   </div>
 
@@ -231,7 +231,7 @@ const S_CONF = [
   {t:'ma',id:'mas1',type:'slot',lbl:'MA1: Morning 1 (Everyday)',c:'#0097a7',v:['maS1H','maS1M','maE1H','maE1M','enMaS1']},
   {t:'ma',id:'mas6',type:'slot',lbl:'MA6: Morning 2 (Everyday)',c:'#0097a7',v:['maS6H','maS6M','maE6H','maE6M','enMaS6']},
   {t:'ma',id:'mas2',type:'slot',lbl:'MA2: Mon-Sat 1',c:'#0097a7',v:['maS2H','maS2M','maE2H','maE2M','enMaS2']},
-    {t:'ma',id:'mas3',type:'slot',lbl:'MA3: Mon-Sat 2',c:'#0097a7',v:['maS3H','maS3M','maE3H','maE3M','enMaS3']},
+  {t:'ma',id:'mas3',type:'slot',lbl:'MA3: Mon-Sat 2',c:'#0097a7',v:['maS3H','maS3M','maE3H','maE3M','enMaS3']},
   {t:'ma',id:'masun',type:'slot',lbl:'MA4: Sun 1',c:'#fbc02d',v:['maSunH','maSunM','maESunH','maESunM','enMaSun']},
   {t:'ma',id:'masun2',type:'slot',lbl:'MA5: Sun 2',c:'#fbc02d',v:['maSun2H','maSun2M','maESun2H','maESun2M','enMaSun2']},
 
@@ -284,6 +284,7 @@ let db, cmdRef, statusRef, setRef;
 let fbConnected = false;    
 let localConnected = false; 
 let curTrack = 1;
+let isF4Playing = false;
 let isSending = false;
 let lastStatusTime = 0;
 let localPollTimer = null;
@@ -360,7 +361,6 @@ function listenStatus() {
     updateUI(d);
   });
 }
-
 function startLocalPoll() {
   if (localPollTimer) return; 
   localPollTimer = setInterval(async () => {
@@ -381,6 +381,7 @@ function startLocalPoll() {
     }
   }, 1000);
 }
+
 function updateUI(d) {
   if (!gate(d)) return;
   if (d.statusMsg !== undefined) {
@@ -397,8 +398,28 @@ function updateUI(d) {
     
     const p = d.playing || false;
     const tn = (d.trackName !== undefined) ? d.trackName : txt;
-    
-    // 🟢 જો ટ્રેક વાગતો હોય, તો ટ્રેકનું નામ અને સમય મેઈન બોક્સમાં ગ્રીન કલરમાં દેખાડો 🟢
+    const isF4 = p && (d.fld !== undefined ? d.fld == 4 : (!tn.includes('Mangla') && !tn.includes('ARTI') && !tn.includes('GODI') && !tn.includes('F3T')));
+    isF4Playing = isF4;
+
+    // 🟢 ESP32 માં જૂનો કોડ હોય તો પણ ગીતના નામ પરથી ટ્રેક નંબર ઓટોમેટિક શોધી લેશે! 🟢
+    if (d.f4track !== undefined) {
+      curTrack = parseInt(d.f4track);
+    } else {
+      let cleanTn = tn.trim();
+      let idx = TRACKS.indexOf(cleanTn);
+      if (idx !== -1) {
+        curTrack = idx + 1;
+      } else {
+        for (let i = 0; i < TRACKS.length; i++) {
+          if (txt.includes(TRACKS[i])) {
+            curTrack = i + 1;
+            break;
+          }
+        }
+      }
+    }
+
+    // 🟢 મેઈન સ્ક્રીનનું ટ્રેક બોક્સ વાગે ત્યારે ગ્રીન કરવા માટે 🟢
     const trkBox = document.getElementById("trackName");
     if (p) { 
        trkBox.innerText = txt; 
@@ -407,6 +428,9 @@ function updateUI(d) {
        trkBox.innerText = TRACKS[curTrack-1] || "-"; 
        trkBox.classList.remove('act'); 
     }
+
+    // 🟢 ફોલ્ડરમાં જે ટ્રેક ચાલુ હોય તેને જ ગ્રીન હાઇલાઇટ કરો 🟢
+    highlightActiveTrack(isF4 ? curTrack : 0);
     
     setDevState("bMan",   p && tn.includes('Mangla'));
     setDevState("bArt",   p && tn.includes('F1T9'));
@@ -414,22 +438,11 @@ function updateUI(d) {
     setDevState("bTodG",  p && tn.includes('GODI'));
     setDevState("bD1",    p && tn.includes('F3T1'));
     setDevState("bD2",    p && tn.includes('F3T2'));
-    setDevState("bDir",   p && (d.fld !== undefined ? d.fld == 4 : (!tn.includes('Mangla') && !tn.includes('ARTI') && !tn.includes('GODI') && !tn.includes('F3T'))));
+    setDevState("bDir",   isF4);
     setDevState("btnStop",!p);
   }
   
   if (d.volume !== undefined) document.getElementById("volNum").innerText = d.volume;
-  
-  // 🟢 ટ્રેક નંબર અપડેટ અને કસ્ટમ લિસ્ટમાં ગ્રીન હાઇલાઇટ 🟢
-  if (d.f4track !== undefined) { 
-      curTrack = d.f4track; 
-      // જો ગીત બંધ હોય તો મેઈન બોક્સમાં માત્ર ગીતનું નામ વાદળી કલરમાં દેખાશે
-      if (!(d.playing || false)) { 
-          document.getElementById("trackName").innerText = TRACKS[curTrack-1]; 
-      }
-      // ફોલ્ડર લિસ્ટમાં જે ગીત સિલેક્ટ છે તેને ગ્રીન કરો
-      highlightActiveTrack(curTrack); 
-  }
   
   setDevState("btnRep",    d.isRepeat);
   setDevState("btnShuf",   d.isShuffle);
@@ -440,7 +453,6 @@ function updateUI(d) {
   setDevState("devMix2",   d.mx2Power); 
   setDevState("devSpk",    d.spkPower);
   setDevState("btnMute",   d.isMute);
-  
   if (d.utsavMode !== undefined) {
     const ub = document.getElementById('bUtsav');
     const tit = document.getElementById('set-title');
@@ -470,6 +482,9 @@ function cmd(a, f, t) {
   if(a==='shuffle_start')  document.getElementById('btnShuf').classList.toggle('act');
   if(a==='toggle_mute')    document.getElementById('btnMute').classList.toggle('act');
   if(a==='toggle_utsav')   document.getElementById('bUtsav').classList.toggle('act'); 
+  if(a==='f4_n') { curTrack = (curTrack % TRACKS.length) + 1; isF4Playing = true; highlightActiveTrack(curTrack); }
+  if(a==='f4_p') { curTrack = (curTrack - 2 + TRACKS.length) % TRACKS.length + 1; isF4Playing = true; highlightActiveTrack(curTrack); }
+  if(a==='stop') { isF4Playing = false; highlightActiveTrack(0); }
   showPending(a);
 
   const viaFB = () => {
@@ -613,21 +628,31 @@ function loadCustomTrackList() {
 // 🟢 કસ્ટમ ટ્રેક લિસ્ટ ખોલવા/બંધ કરવાના ફંક્શન 🟢
 function openTrackModal() { 
   document.getElementById('trackModal').style.display = 'flex'; 
-  highlightActiveTrack(curTrack);
+  highlightActiveTrack(isF4Playing ? curTrack : 0);
+  let act = document.getElementById('trk-' + curTrack);
+  if (act && isF4Playing) {
+    setTimeout(() => act.scrollIntoView({block: 'center', behavior: 'smooth'}), 50);
+  }
 }
 function closeTrackModal() { 
   document.getElementById('trackModal').style.display = 'none'; 
 }
 function selectCustomTrack(idx) { 
+  curTrack = idx;
+  isF4Playing = true;
+  highlightActiveTrack(curTrack);
+  const trkBox = document.getElementById("trackName");
+  if (trkBox) { trkBox.innerText = TRACKS[curTrack-1]; trkBox.classList.add('act'); }
   cmd('play', 4, idx); 
   closeTrackModal(); 
 }
 function highlightActiveTrack(idx) {
   document.querySelectorAll('.t-item').forEach(el => el.classList.remove('active-track'));
-  let act = document.getElementById('trk-' + idx);
-  if (act) act.classList.add('active-track');
+  if (idx > 0) {
+    let act = document.getElementById('trk-' + idx);
+    if (act) act.classList.add('active-track');
+  }
 }
-
 function setDevState(id, s) { const e=document.getElementById(id); if(e) e.classList.toggle("act", !!s); }
 function toast(m) { const t=document.getElementById("toast"); t.innerText=m; t.className="toast-show"; setTimeout(()=>t.className="",2500); }
 function switchView(v) { document.getElementById('view-dash').style.display=v==='dash'?'block':'none'; document.getElementById('view-sett').style.display=v==='sett'?'block':'none'; document.getElementById('tab-dash').classList.toggle('act',v==='dash'); document.getElementById('tab-sett').classList.toggle('act',v==='sett'); if(v==='sett' && !fbConnected) loadSettingsFromLocal(); }
