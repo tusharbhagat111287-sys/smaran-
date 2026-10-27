@@ -398,13 +398,13 @@ function updateUI(d) {
     const p = d.playing || false;
     const tn = (d.trackName !== undefined) ? d.trackName : txt;
     
-    // 🟢 મેઈન સ્ક્રીનનું ટ્રેક બોક્સ વાગે ત્યારે ગ્રીન કરવા માટે 🟢
+    // 🟢 જો ટ્રેક વાગતો હોય, તો ટ્રેકનું નામ અને સમય મેઈન બોક્સમાં ગ્રીન કલરમાં દેખાડો 🟢
     const trkBox = document.getElementById("trackName");
     if (p) { 
        trkBox.innerText = txt; 
        trkBox.classList.add('act'); 
     } else { 
-       trkBox.innerText = TRACKS[curTrack-1]; 
+       trkBox.innerText = TRACKS[curTrack-1] || "-"; 
        trkBox.classList.remove('act'); 
     }
     
@@ -417,12 +417,17 @@ function updateUI(d) {
     setDevState("bDir",   p && (d.fld !== undefined ? d.fld == 4 : (!tn.includes('Mangla') && !tn.includes('ARTI') && !tn.includes('GODI') && !tn.includes('F3T'))));
     setDevState("btnStop",!p);
   }
+  
   if (d.volume !== undefined) document.getElementById("volNum").innerText = d.volume;
   
-  // 🟢 કસ્ટમ લિસ્ટમાં ચાલુ ટ્રેકને ગ્રીન હાઇલાઇટ કરવા 🟢
+  // 🟢 ટ્રેક નંબર અપડેટ અને કસ્ટમ લિસ્ટમાં ગ્રીન હાઇલાઇટ 🟢
   if (d.f4track !== undefined) { 
       curTrack = d.f4track; 
-      if (!(d.playing || false)) { document.getElementById("trackName").innerText = TRACKS[curTrack-1]; }
+      // જો ગીત બંધ હોય તો મેઈન બોક્સમાં માત્ર ગીતનું નામ વાદળી કલરમાં દેખાશે
+      if (!(d.playing || false)) { 
+          document.getElementById("trackName").innerText = TRACKS[curTrack-1]; 
+      }
+      // ફોલ્ડર લિસ્ટમાં જે ગીત સિલેક્ટ છે તેને ગ્રીન કરો
       highlightActiveTrack(curTrack); 
   }
   
@@ -435,6 +440,7 @@ function updateUI(d) {
   setDevState("devMix2",   d.mx2Power); 
   setDevState("devSpk",    d.spkPower);
   setDevState("btnMute",   d.isMute);
+  
   if (d.utsavMode !== undefined) {
     const ub = document.getElementById('bUtsav');
     const tit = document.getElementById('set-title');
