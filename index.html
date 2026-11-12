@@ -212,7 +212,7 @@ const FB_CONFIG = {
 
 const LOCAL_IP = "192.168.4.2"; 
 
-const TRACKS = ["ORDA-SARADHAR","ORA AAVO-GURUJI","ORDA-KUNDAL","MHATMAY CHINTA","SUKH CHINTA MANI","MURTI CHINTA MANI","BLANCK","TERE DWAR apadyo","NVAL SNEHI nathji","Shriji daya karo","Aekalda kem rahevay","Prabhu tam vina","Tum mere swami","Kyare have dekhu","Dukhi divas ne rat","Mara nath mara nath","Aakhadiyo aklay","Dhun_Amrut swami","DHUN VED mandir","JAMO JAMO mara","CHESHTA","RAM & CHESHTA","Track 23","Track 24","Track 25","Track 26","Track 27","Track 28","Track 29","Track 30","Track 31","Track 32","Track 33","Track 34","Track 35","Track 36","Track 37","Track 38","Track 39","Track 40"];
+const TRACKS = ["ORDA-SARADHAR","ORA AAVO-GURUJI","ORDA-KUNDAL","MHATMAY CHINTA","SUKH CHINTA MANI","MURTI CHINTA MANI","THAL CHINTA MANI","TERE DWAR PADYO","NVAL SNEHI nathji","Shriji daya karo","Aekalda kem rahevay","Prabhu tam vina","Tum mere swami","Kyare have dekhu","Dukhi divas ne rat","Mara nath mara nath","Aakhadiyo aklay","Dhun_Amrut swami","DHUN VED mandir","JAMO JAMO mara","CHESHTA","RAM & CHESHTA","VISHVESO&CHESHTA","CHALISA DHUN","ANNAKUT AAROGO","SARJANAM","SHREEJI CHALISA","MO SAM KOUN KUTIL","Track 29","Track 30","Track 31","Track 32","Track 33","Track 34","Track 35","Track 36","Track 37","Track 38","Track 39","Track 40"];
 
 const S_CONF = [
   {t:'g',id:'bm',type:'bell',lbl:'Morning Bell (Everyday)',c:'#d32f2f',v:['bAH','bAM','enBM']},
@@ -488,7 +488,8 @@ function cmd(a, f, t) {
   if(a==='repeat_toggle')  document.getElementById('btnRep').classList.toggle('act');
   if(a==='shuffle_start')  document.getElementById('btnShuf').classList.toggle('act');
   if(a==='toggle_mute')    document.getElementById('btnMute').classList.toggle('act');
-  if(a==='toggle_utsav')   document.getElementById('bUtsav').classList.toggle('act'); 
+  if(a==='toggle_utsav')   document.getElementById('bUtsav').classList.toggle('act');
+  if(a==='restart_esp')    document.getElementById('bUtsav').classList.remove('act'); 
   if(a==='f4_n') { curTrack = (curTrack % TRACKS.length) + 1; isF4Playing = true; highlightActiveTrack(curTrack); }
   if(a==='f4_p') { curTrack = (curTrack - 2 + TRACKS.length) % TRACKS.length + 1; isF4Playing = true; highlightActiveTrack(curTrack); }
   if(a==='stop') { isF4Playing = false; highlightActiveTrack(0); }
